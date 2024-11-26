@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalHire - Smart Hiring for Local Businesses</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white sticky top-0 z-50 border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center space-x-2">
+                        <svg class="h-8 w-8 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        <span class="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-800 text-transparent bg-clip-text">LocalHire</span>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="/login" class="text-gray-600 hover:text-gray-900 font-medium">Login</a>
+                    <a href="/signup" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-all shadow-sm hover:shadow-md font-medium">
+                        Start Free Trial
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="relative overflow-hidden bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+            <div class="relative z-10">
+                <div class="text-center space-y-8 max-w-3xl mx-auto">
+                    <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                        <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        Made for Local Businesses
+                    </span>
+                    <h1 class="text-6xl font-bold text-gray-900 leading-tight">
+                        Hire Local Talent<br/>
+                        <span class="bg-gradient-to-r from-green-600 to-green-800 text-transparent bg-clip-text">Without the Complexity</span>
+                    </h1>
+                    <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                        Simple hiring tools for restaurants, retail stores, service businesses, and local shops. Post jobs locally and find reliable employees without the tech hassle.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="/signup" class="w-full sm:w-auto inline-flex items-center justify-center bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-all shadow-lg hover:shadow-xl font-medium text-lg">
+                            Post Your First Job
+                            <svg class="ml-2 h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14m-7-7l7 7-7 7"/>
+                            </svg>
+                        </a>
+                        <a href="#pricing" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 rounded-lg border-2 border-gray-200 text-gray-600 hover:border-gray-300 hover:text-gray-900 transition-all font-medium text-lg">
+                            View Pricing
+                            <svg class="ml-2 h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="flex items-center justify-center space-x-8 text-sm text-gray-500 pt-4">
+                        <div class="flex items-center">
+                            <svg class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                            No tech skills needed
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Post jobs in 5 minutes
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="bg-white py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl font-bold text-gray-900">
+                    Simple Hiring Tools for Local Businesses
+                </h2>
+                <p class="mt-4 text-lg text-gray-600">
+                    Everything you need to find reliable local employees
+                </p>
+            </div>
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Feature Cards - Redesigned without images -->
+                <div class="bg-gradient-to-br from-green-50 to-green-100/50 rounded-2xl p-8 border border-green-100 flex flex-col h-full">
+                    <div class="bg-white w-12 h-12 rounded-xl shadow-md flex items-center justify-center mb-6">
+                        <svg class="h-6 w-6 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Local Job Board</h3>
+                    <p class="text-gray-600">Post jobs that reach people in your area. Your listings appear on local job sites and community boards.</p>
+                    <div class="mt-6 space-y-3">
+                        <div class="flex items-center text-gray-600">
+                            <svg class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Automatic local distribution
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <svg class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Community site promotion
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-green-50 to-green-100/50 rounded-2xl p-8 border border-green-100 flex flex-col h-full">
+                    <div class="bg-white w-12 h-12 rounded-xl shadow-md flex items-center justify-center mb-6">
+                        <svg class="h-6 w-6 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Simple Applications</h3>
+                    <p class="text-gray-600">Easy application forms that work on any device. Candidates can apply quickly without creating accounts.</p>
+                    <div class="mt-6 space-y-3">
+                        <div class="flex items-center text-gray-600">
+                            <svg class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Mobile-friendly forms
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <svg class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                            No login required
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-green-50 to-green-100/50 rounded-2xl p-8 border border-green-100 flex flex-col h-full">
+                    <div class="bg-white w-12 h-12 rounded-xl shadow-md flex items-center justify-center mb-6">
+                        <svg class="h-6 w-6 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Applicant Management</h3>
+                    <p class="text-gray-600">Keep track of all your applicants in one place. Schedule interviews and send messages without switching apps.</p>
+                    <div class="mt-6 space-y-3">
+                        <div class="flex items-center text-gray-600">
+                            <svg class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Email & text updates
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <svg class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Interview scheduling
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonials - Redesigned without images -->
+    <div class="bg-gray-50 py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900">Trusted by Local Businesses</h2>
+                <p class="mt-4 text-lg text-gray-600">See what other business owners are saying</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Testimonial Cards -->
+                <div class="bg-white rounded-xl p-8 shadow-sm
+                <!-- Testimonial Cards (continued) -->
+                <div class="bg-white rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <span class="text-lg font-bold text-green-700">ST</span>
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="font-semibold text-gray-900">Sarah Thompson</h4>
+                            <p class="text-gray-600">Sarah's Cafe</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Found two great servers in just a week. The local reach made all the difference - candidates actually showed up for interviews!"</p>
+                </div>
+
+                <div class="bg-white rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <span class="text-lg font-bold text-green-700">MJ</span>
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="font-semibold text-gray-900">Mike Johnson</h4>
+                            <p class="text-gray-600">Main Street Hardware</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Simple and effective. No fancy tech required - just post the job and get quality local applicants. Exactly what we needed."</p>
+                </div>
+
+                <div class="bg-white rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <span class="text-lg font-bold text-green-700">LC</span>
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="font-semibold text-gray-900">Lisa Chen</h4>
+                            <p class="text-gray-600">Fresh Market</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Finally, a hiring tool that understands small retail businesses. The text notifications help us respond quickly to applicants."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing Section -->
+    <div class="bg-white py-24" id="pricing">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900">Simple, Fair Pricing</h2>
+                <p class="mt-4 text-lg text-gray-600">No long-term contracts. Cancel anytime.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Basic Plan -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Single Job Post</h3>
+                    <p class="text-4xl font-bold text-gray-900 mb-6">$49<span class="text-lg text-gray-500 font-normal">/month</span></p>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center">
+                            <svg class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                            1 active job posting
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Local job board distribution
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Email & text notifications
+                        </li>
+                    </ul>
+                    <a href="/signup" class="block w-full bg-green-600 text-white text-center py-3 rounded-lg hover:bg-green-700 transition-colors">Get Started</a>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 border-2 border-green-500 hover:shadow-xl transition-shadow relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="bg-green-100 text-green-800 text-sm font-medium px-4 py-1 rounded-full">Most Popular</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Multiple Jobs</h3>
+                    <p class="text-4xl font-bold text-gray-900 mb-6">$99<span class="text-lg text-gray-500 font-normal">/month</span></p>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center">
+                            <svg class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Up to 5 active job postings
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Featured listings on job boards
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Applicant tracking system
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Custom application forms
+                        </li>
+                    </ul>
+                    <a href="/signup" class="block w-full bg-green-600 text-white text-center py-3 rounded-lg hover:bg-green-700 transition-colors">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="bg-gray-50 py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-green-600 rounded-2xl p-8 md:p-16 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                    Start Hiring Local Talent Today
+                </h2>
+                <p class="text-green-100 text-lg mb-8 max-w-2xl mx-auto">
+                    Join hundreds of local businesses finding great employees in their community.
+                </p>
+                <a href="/signup" class="inline-flex items-center bg-white text-green-600 px-8 py-3 rounded-lg hover:bg-green-50 transition-colors text-lg font-medium">
+                    Post Your First Job
+                    <svg class="ml-2 h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14m-7-7l7 7-7 7"/>
+                    </svg>
+                </a>
+                <p class="mt-4 text-green-100">14-day free trial • No credit card required</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="text-center">
+                <span class="text-2xl font-bold text-green-600">LocalHire</span>
+                <p class="text-gray-600 mt-2">
+                    Simple hiring tools for local businesses
+                </p>
+                <div class="mt-8">
+                    <p class="text-gray-500">© 2024 LocalHire. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

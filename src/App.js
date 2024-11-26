@@ -1,24 +1,105 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
+import JobDetail from './pages/JobDetail';
+import PrivateRoute from './components/PrivateRoute';
+import Header from './components/Header';
 
+// Separate the routes component to use the auth hook
+function AppRoutes() {
+  const { isAuthenticated } = useAuth();
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {isAuthenticated && <Header />}
+      <div className={isAuthenticated ? 'pt-16' : ''}>
+        <Routes>
+          <Route 
+            path="/login" 
+            element={
+              !isAuthenticated ? (
+                <Login />
+              ) : (
+                <Navigate to="/dashboard" />
+              )
+            } 
+          />
+          <Route 
+            path="/signup" 
+            element={
+              !isAuthenticated ? (
+                <Signup />
+              ) : (
+                <Navigate to="/dashboard" />
+              )
+            } 
+          />
+          <Route 
+            path="/dashboard" 
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/jobs/:id" 
+            element={
+              <PrivateRoute>
+                <JobDetail />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <PrivateRoute>
+                <div>Profile Page</div>
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/settings" 
+            element={
+              <PrivateRoute>
+                <div>Settings Page</div>
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/billing" 
+            element={
+              <PrivateRoute>
+                <div>Billing Page</div>
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/upgrade" 
+            element={
+              <PrivateRoute>
+                <div>Upgrade Plan Page</div>
+              </PrivateRoute>
+            } 
+          />
+          <Route path="/" element={<Navigate to="/dashboard" />} />
+        </Routes>
+      </div>
+    </div>
+  );
+}
+
+// Main App component with correct provider order
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </Router>
   );
 }
 
