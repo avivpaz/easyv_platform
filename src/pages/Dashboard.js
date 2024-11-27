@@ -85,29 +85,12 @@ const Dashboard = () => {
       </div>
     );
 
-    if (jobs.length === 0) return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 text-center">
-          <Briefcase className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-medium text-gray-900 mb-2">No Jobs Found</h3>
-          <p className="text-gray-500 mb-4">Get started by creating your first job posting.</p>
-          <button
-            onClick={() => setIsCreateModalOpen(true)}
-            className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors mx-auto"
-          >
-            <Plus className="h-5 w-5" />
-            <span>Create Job</span>
-          </button>
-        </div>
-      </div>
-    );
-
   return (
     <div className="min-h-screen bg-gray-50/50">
       {/* Hero and Stats sections remain the same */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
         <div className="max-w-7xl mx-auto px-4 py-12">
-          <h1 className="text-3xl font-bold mb-2">Welcome back!</h1>
+          <h1 className="text-3xl font-bold mb-2">Welcome!</h1>
           <p className="text-blue-100">Here's what's happening with your job listings today.</p>
         </div>
       </div>
@@ -131,7 +114,7 @@ const Dashboard = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <select
+              {/* <select
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
@@ -140,7 +123,7 @@ const Dashboard = () => {
                 <option value="active">Active</option>
                 <option value="draft">Draft</option>
                 <option value="closed">Closed</option>
-              </select>
+              </select> */}
               <button
                 onClick={() => setIsCreateModalOpen(true)}
                 className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -153,6 +136,20 @@ const Dashboard = () => {
         </div>
 
    {/* Job Cards */}
+   {jobs.length === 0 ? (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
+              <Briefcase className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-xl font-medium text-gray-900 mb-2">No Jobs Found</h3>
+              <p className="text-gray-500 mb-4">Get started by creating your first job posting.</p>
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors mx-auto"
+              >
+                <Plus className="h-5 w-5" />
+                <span>Create Job</span>
+              </button>
+            </div>
+          ) : (
 <div className="grid gap-6">
   {jobs.map((job) => (
     <div
@@ -295,8 +292,10 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
+    
   ))}
 </div>
+  )}
         <DeleteDialog 
         isOpen={!!jobToDelete}
         onClose={() => setJobToDelete(null)}
@@ -306,6 +305,7 @@ const Dashboard = () => {
         confirmButtonText="Delete Job"
       />
       </div>
+      
 
       <CreateJobModal 
   isOpen={isCreateModalOpen} 

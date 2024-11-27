@@ -7,6 +7,7 @@ export const authService = {
       email: formData.email,
       password: formData.password,
       organizationName: formData.company,
+      fullName:formData.fullName,
       role: 'admin'
     };
     
