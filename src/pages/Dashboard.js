@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { 
   Briefcase, Users, Calendar, Search, Plus,
   ChevronRight, MapPin, Clock, DollarSign,
-  TrendingUp, Filter, ArrowUp, BarChart, Loader,Trash2
+  TrendingUp, Filter, ArrowUp, BarChart, Loader, Trash2
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
 import CreateJobModal from '../components/CreateJobModal';
@@ -26,7 +26,6 @@ const Dashboard = () => {
       try {
         setLoading(true);
         const data = await jobService.getJobs();
-        console.log('Received data:', data);
         setJobs(Array.isArray(data) ? data : []);
         setError(null);
       } catch (err) {
@@ -38,23 +37,15 @@ const Dashboard = () => {
       }
     };
 
-    const totalJobs = Array.isArray(jobs) ? jobs.length : 0;
-    const totalApplicants = Array.isArray(jobs) 
-      ? jobs.reduce((sum, job) => sum + (job.applicants || 0), 0)
-      : 0;
-    const activeJobs = Array.isArray(jobs) 
-      ? jobs.filter(job => job.status === 'active').length 
-      : 0;
-
     const handleDeleteJob = async (jobId) => {
-        try {
-          await jobService.deleteJob(jobId);
-          await fetchJobs();
-          setJobToDelete(null);
-        } catch (err) {
-          console.error('Error deleting job:', err);
-          setError('Failed to delete job. Please try again later.');
-        }
+      try {
+        await jobService.deleteJob(jobId);
+        await fetchJobs();
+        setJobToDelete(null);
+      } catch (err) {
+        console.error('Error deleting job:', err);
+        setError('Failed to delete job. Please try again later.');
+      }
     };
 
     if (loading) return (
@@ -85,58 +76,10 @@ const Dashboard = () => {
       </div>
     );
 
-  return (
-    <div className="min-h-screen bg-gray-50/50">
-      {/* Hero and Stats sections remain the same */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
-        <div className="max-w-7xl mx-auto px-4 py-12">
-          <h1 className="text-3xl font-bold mb-2">Welcome!</h1>
-          <p className="text-blue-100">Here's what's happening with your job listings today.</p>
-        </div>
-      </div>
-
-      {/* Stats Overview remains the same */}
-      
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Search and Filters Section remains the same */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-100">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <h2 className="text-xl font-semibold text-gray-900">Job Listings</h2>
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search jobs..."
-                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              {/* <select
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-              >
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="draft">Draft</option>
-                <option value="closed">Closed</option>
-              </select> */}
-              <button
-                onClick={() => setIsCreateModalOpen(true)}
-                className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                <Plus className="h-5 w-5" />
-                <span>Create Job</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-   {/* Job Cards */}
-   {jobs.length === 0 ? (
+    const renderContent = () => {
+      if (jobs.length === 0) {
+        return (
+          <div className="max-w-7xl mx-auto px-4 py-8">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
               <Briefcase className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-medium text-gray-900 mb-2">No Jobs Found</h3>
@@ -149,9 +92,39 @@ const Dashboard = () => {
                 <span>Create Job</span>
               </button>
             </div>
-          ) : (
-<div className="grid gap-6">
-  {jobs.map((job) => (
+          </div>
+        );
+      }
+
+      return (
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-100">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <h2 className="text-xl font-semibold text-gray-900">Job Listings</h2>
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search jobs..."
+                    className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+                <button
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <Plus className="h-5 w-5" />
+                  <span>Create Job</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-6">
+            {jobs.map((job) => (
     <div
       key={job._id}
       className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 overflow-hidden group"
@@ -293,30 +266,39 @@ const Dashboard = () => {
       </div>
     </div>
     
-  ))}
-</div>
-  )}
-        <DeleteDialog 
-        isOpen={!!jobToDelete}
-        onClose={() => setJobToDelete(null)}
-        onConfirm={() => handleDeleteJob(jobToDelete?._id)}
-        title="Delete Job Posting"
-        message={`Are you sure you want to delete the job posting "${jobToDelete?.title}"? This will permanently remove all associated data and cannot be undone.`}
-        confirmButtonText="Delete Job"
-      />
-      </div>
-      
-
-      <CreateJobModal 
-  isOpen={isCreateModalOpen} 
-  onClose={() => setIsCreateModalOpen(false)}
-  onSuccess={() => {
-    // Refresh job list or perform other actions after successful creation
-    fetchJobs();
-  }}
-/>
+    ))}
     </div>
-  );
+  </div>
+);
+};
+
+return (
+<div className="min-h-screen bg-gray-50/50">
+  <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+    <div className="max-w-7xl mx-auto px-4 py-12">
+      <h1 className="text-3xl font-bold mb-2">Welcome!</h1>
+      <p className="text-blue-100">Here's what's happening with your job listings today.</p>
+    </div>
+  </div>
+
+  {renderContent()}
+
+  <DeleteDialog 
+    isOpen={!!jobToDelete}
+    onClose={() => setJobToDelete(null)}
+    onConfirm={() => handleDeleteJob(jobToDelete?._id)}
+    title="Delete Job Posting"
+    message={`Are you sure you want to delete the job posting "${jobToDelete?.title}"? This will permanently remove all associated data and cannot be undone.`}
+    confirmButtonText="Delete Job"
+  />
+
+  <CreateJobModal 
+    isOpen={isCreateModalOpen} 
+    onClose={() => setIsCreateModalOpen(false)}
+    onSuccess={fetchJobs}
+  />
+</div>
+);
 };
 
 export default Dashboard;
