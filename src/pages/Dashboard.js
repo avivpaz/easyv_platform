@@ -8,19 +8,12 @@ import {
 import { jobService } from '../services/jobService';
 import CreateJobModal from '../components/CreateJobModal';
 import DeleteDialog from '../components/DeleteDialog';
-const getRelativeTime = (date) => {
-  const now = new Date();
-  const posted = new Date(date);
-  const diffTime = Math.abs(now - posted);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
-  if (diffDays === 0) return 'Today';
-  if (diffDays === 1) return 'Yesterday';
-  if (diffDays < 7) return `${diffDays} days ago`;
-  if (diffDays < 14) return '1 week ago';
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
-  if (diffDays < 60) return '1 month ago';
-  return `${Math.floor(diffDays / 30)} months ago`;
+const formatDate = (date) => {
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
 };
 const Dashboard = () => {
     const [jobs, setJobs] = useState([]);
@@ -342,8 +335,8 @@ return (
                     }`}>
                       {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
                     </span>
-                    <span className="text-xs text-gray-500 whitespace-nowrap">
-                      Posted {getRelativeTime(job.createdAt)}
+                    <span className="text-xs text-gray-500">
+                      {formatDate(job.createdAt)}
                     </span>
                   </div>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-500">
