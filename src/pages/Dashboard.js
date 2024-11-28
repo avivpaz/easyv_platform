@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link ,useNavigate} from 'react-router-dom';
 import { 
   Briefcase, Users, Calendar, Search, Plus,
   ChevronRight, MapPin, Clock, DollarSign,
@@ -8,7 +8,20 @@ import {
 import { jobService } from '../services/jobService';
 import CreateJobModal from '../components/CreateJobModal';
 import DeleteDialog from '../components/DeleteDialog';
-
+const getRelativeTime = (date) => {
+  const now = new Date();
+  const posted = new Date(date);
+  const diffTime = Math.abs(now - posted);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays < 14) return '1 week ago';
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+  if (diffDays < 60) return '1 month ago';
+  return `${Math.floor(diffDays / 30)} months ago`;
+};
 const Dashboard = () => {
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,7 +30,15 @@ const Dashboard = () => {
     const [filterStatus, setFilterStatus] = useState('all');
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [jobToDelete, setJobToDelete] = useState(null);
+    const navigate = useNavigate();
 
+    const handleJobClick = (jobId, event) => {
+      // Prevent navigation if clicking on delete button
+      if (event.target.closest('.delete-button')) {
+        return;
+      }
+      navigate(`/jobs/${jobId}`);
+    };
     useEffect(() => {
       fetchJobs();
     }, []);
@@ -242,28 +263,7 @@ const Dashboard = () => {
       </div>
 
       {/* Footer Stats */}
-      <div className="border-t px-6 py-4 bg-gray-50 flex items-center justify-between">
-        <div className="flex items-center gap-6 text-sm text-gray-500">
-          <span className="flex items-center">
-            <TrendingUp className="h-4 w-4 mr-2 text-green-500" />
-            {job.requiredSkills.length + job.niceToHaveSkills.length} total skills
-          </span>
-          <span className="flex items-center">
-            <Filter className="h-4 w-4 mr-2" />
-            {job.employmentType}
-          </span>
-        </div>
-        <div className="flex items-center gap-2 text-sm font-medium">
-          <span className="text-gray-500">Status:</span>
-          <span className={`${
-            job.status === 'active' ? 'text-green-600' :
-            job.status === 'draft' ? 'text-gray-600' :
-            'text-red-600'
-          }`}>
-            {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
-          </span>
-        </div>
-      </div>
+  
     </div>
     
     ))}
@@ -272,32 +272,139 @@ const Dashboard = () => {
 );
 };
 
+
 return (
-<div className="min-h-screen bg-gray-50/50">
-  <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-2">Welcome!</h1>
-      <p className="text-blue-100">Here's what's happening with your job listings today.</p>
+  <div className="min-h-screen bg-gray-50">
+    {/* Header Section */}
+    <div className="bg-gradient-to-r from-blue-600 to-indigo-700">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <h1 className="text-2xl font-semibold text-white">Job Dashboard</h1>
+        <p className="text-blue-100 mt-1">Manage and track your job listings</p>
+      </div>
     </div>
+
+    {/* Search and Create Section */}
+    <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search jobs..."
+            className="w-full pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap"
+        >
+          <Plus className="h-4 w-4" />
+          <span>Add New Job</span>
+        </button>
+      </div>
+
+      {/* Job Listings */}
+      <div className="grid gap-4">
+        {jobs.map((job) => (
+          <div
+            key={job._id}
+            onClick={(e) => handleJobClick(job._id, e)}
+            className="group bg-white border border-gray-200 rounded-lg hover:border-blue-200 hover:shadow-sm transition-all cursor-pointer relative"
+          >
+            <div className="absolute top-3 right-3 z-10">
+              <button
+                onClick={() => setJobToDelete(job)}
+                className="delete-button p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors opacity-0 group-hover:opacity-100"
+                title="Delete job"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="p-4 sm:p-5">
+              <div className="flex items-start gap-3">
+                <div className="shrink-0">
+                  <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                    <Briefcase className="h-5 w-5 text-blue-600" />
+                  </div>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-3 mb-1">
+                    <h2 className="text-lg font-medium text-gray-900 truncate group-hover:text-blue-600 transition-colors">
+                      {job.title}
+                    </h2>
+                    <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      job.status === 'active' ? 'bg-green-50 text-green-700' :
+                      job.status === 'draft' ? 'bg-gray-50 text-gray-600' :
+                      'bg-red-50 text-red-700'
+                    }`}>
+                      {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
+                    </span>
+                    <span className="text-xs text-gray-500 whitespace-nowrap">
+                      Posted {getRelativeTime(job.createdAt)}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-500">
+                    <div className="flex items-center gap-1">
+                      <MapPin className="h-4 w-4" />
+                      <span>{job.location}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-4 w-4" />
+                      <span>{job.workType}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Users className="h-4 w-4" />
+                      <span>{job.employmentType}</span>
+                    </div>
+                  </div>
+
+                  {/* Skills Section */}
+                  {(job.requiredSkills.length > 0 || job.niceToHaveSkills.length > 0) && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {job.requiredSkills.map((skill, index) => (
+                        <span
+                          key={`req-${index}`}
+                          className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-blue-50 text-blue-700"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                      {job.niceToHaveSkills.map((skill, index) => (
+                        <span
+                          key={`nice-${index}`}
+                          className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-50 text-gray-600"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <DeleteDialog 
+      isOpen={!!jobToDelete}
+      onClose={() => setJobToDelete(null)}
+      onConfirm={() => handleDeleteJob(jobToDelete?._id)}
+      title="Delete Job Posting"
+      message={`Are you sure you want to delete "${jobToDelete?.title}"? This action cannot be undone.`}
+      confirmButtonText="Delete Job"
+    />
+
+    <CreateJobModal 
+      isOpen={isCreateModalOpen} 
+      onClose={() => setIsCreateModalOpen(false)}
+      onSuccess={fetchJobs}
+    />
   </div>
-
-  {renderContent()}
-
-  <DeleteDialog 
-    isOpen={!!jobToDelete}
-    onClose={() => setJobToDelete(null)}
-    onConfirm={() => handleDeleteJob(jobToDelete?._id)}
-    title="Delete Job Posting"
-    message={`Are you sure you want to delete the job posting "${jobToDelete?.title}"? This will permanently remove all associated data and cannot be undone.`}
-    confirmButtonText="Delete Job"
-  />
-
-  <CreateJobModal 
-    isOpen={isCreateModalOpen} 
-    onClose={() => setIsCreateModalOpen(false)}
-    onSuccess={fetchJobs}
-  />
-</div>
 );
 };
 
