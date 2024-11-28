@@ -68,6 +68,14 @@ const JobDetail = () => {
 
   if (!job) return null;
 
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Enhanced Hero Section */}
@@ -105,6 +113,10 @@ const JobDetail = () => {
                         <Briefcase className="h-4 w-4" />
                         {job.employmentType}
                       </span>
+                      <span className="flex items-center gap-1">
+                        <Clock className="h-4 w-4" />
+                        Posted {formatDate(job.createdAt)}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -120,12 +132,12 @@ const JobDetail = () => {
               </button>
             </div>
 
-            {/* Job Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 bg-white/10 rounded-xl mt-6">
+            {/* Job Requirements */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-white/10 rounded-xl mt-6">
               <div>
                 <h3 className="text-sm font-medium text-blue-100 mb-1">Required Skills</h3>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {job.requiredSkills.slice(0, 3).map((skill, index) => (
+                  {job.requiredSkills.map((skill, index) => (
                     <span
                       key={index}
                       className="px-2 py-1 rounded-lg text-sm font-medium bg-white/20 text-white"
@@ -133,27 +145,23 @@ const JobDetail = () => {
                       {skill}
                     </span>
                   ))}
-                  {job.requiredSkills.length > 3 && (
-                    <span className="px-2 py-1 rounded-lg text-sm font-medium bg-white/20 text-white">
-                      +{job.requiredSkills.length - 3} more
-                    </span>
-                  )}
                 </div>
               </div>
-              <div>
-                <h3 className="text-sm font-medium text-blue-100 mb-1">Experience Level</h3>
-                <p className="text-white flex items-center gap-2">
-                  <Users className="h-4 w-4" />
-                  {job.experienceLevel || 'All levels'}
-                </p>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-blue-100 mb-1">Department</h3>
-                <p className="text-white flex items-center gap-2">
-                  <Building2 className="h-4 w-4" />
-                  {job.department || 'General'}
-                </p>
-              </div>
+              {job.niceToHaveSkills && job.niceToHaveSkills.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium text-blue-100 mb-1">Nice to Have</h3>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {job.niceToHaveSkills.map((skill, index) => (
+                      <span
+                        key={index}
+                        className="px-2 py-1 rounded-lg text-sm font-medium bg-white/20 text-white"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -161,11 +169,9 @@ const JobDetail = () => {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Applications Box with proper padding */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100">
           <div className="p-8">
-          <JobCVs jobId={job._id} />
-
+            <JobCVs jobId={job._id} />
           </div>
         </div>
       </div>
