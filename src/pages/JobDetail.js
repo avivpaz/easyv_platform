@@ -16,6 +16,7 @@ const JobDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [copied, setCopied] = useState(false);
   const uploadUrl = `${process.env.REACT_APP_FRONTEND_URL}/jobs/${id}`;
 
   useEffect(() => {
@@ -33,6 +34,16 @@ const JobDetail = () => {
       setError('Failed to load job details');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(uploadUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+    } catch (err) {
+      console.error('Failed to copy:', err);
     }
   };
 
@@ -194,12 +205,21 @@ const JobDetail = () => {
                 className="flex-1 bg-transparent border-none focus:ring-0 text-gray-600"
               />
               <button
-                onClick={() => {
-                  navigator.clipboard.writeText(uploadUrl);
-                }}
-                className="px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+                onClick={handleCopy}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                  copied 
+                    ? 'bg-green-600 hover:bg-green-700' 
+                    : 'bg-blue-600 hover:bg-blue-700'
+                } text-white`}
               >
-                Copy
+                {copied ? (
+                  <>
+                    <CheckCircle className="h-4 w-4" />
+                    Copied!
+                  </>
+                ) : (
+                  'Copy'
+                )}
               </button>
             </div>
             <p className="mt-3 text-sm text-gray-500">
