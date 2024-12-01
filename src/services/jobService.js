@@ -82,5 +82,15 @@ export const jobService = {
       console.error('Error deleting CV:', error);
       throw new Error(error.response?.data?.error || 'Failed to delete CV');
     }
+  },
+  async generateJobDetails(title) {
+    try {
+      const response = await api.post('/jobs/description', { title });
+      return response.data;
+    } catch (error) {
+      console.error('Error generating job details:', error);
+      throw new Error(error.response?.data?.error || 'Failed to generate job details');
+    }
   }
+
 };

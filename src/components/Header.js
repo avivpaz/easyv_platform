@@ -1,4 +1,3 @@
-// components/Header.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -10,13 +9,16 @@ import {
   Crown
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import PricingModal from './PricingModal';
 
 const Header = () => {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isPricingOpen, setIsPricingOpen] = useState(false);
   const { user, organization, logout } = useAuth();
   
   const getInitials = (name) => {
+    if (!name) return 'U';
     return name
       .split(' ')
       .map(word => word[0])
@@ -25,9 +27,9 @@ const Header = () => {
   };
 
   const userInfo = {
-    name: user?.email?.split('@')[0] || 'User',
+    name: user?.name || user?.email?.split('@')[0] || 'User',
     email: user?.email,
-    avatar: user?.name ? getInitials(user.name) : 'U',
+    avatar: getInitials(user?.name),
     plan: organization?.plan || 'free'
   };
 
@@ -41,14 +43,12 @@ const Header = () => {
     }
   };
 
-  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
-
   return (
-    <header className="bg-white border-b border-gray-200 fixed w-full top-0 z-50">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center px-4 py-4">
-          {/* Logo and Navigation */}
-          <div className="flex items-center space-x-8">
+    <>
+      <header className="bg-white border-b border-gray-200 fixed w-full top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
             <Link to="/dashboard" className="flex items-center space-x-2">
               <div className="bg-blue-600 text-white p-2 rounded-lg">
                 <svg 
@@ -69,126 +69,115 @@ const Header = () => {
                 {organization?.name || 'CV Portal'}
               </span>
             </Link>
-            
-            {/* <nav className="hidden md:flex items-center space-x-4">
-              <Link 
-                to="/dashboard" 
-                className="px-3 py-2 text-gray-500 hover:text-gray-900 rounded-md text-sm font-medium"
-              >
-                Dashboard
-              </Link>
-              <Link 
-                to="/jobs" 
-                className="px-3 py-2 text-gray-500 hover:text-gray-900 rounded-md text-sm font-medium"
-              >
-                Jobs
-              </Link>
-              <Link 
-                to="/candidates" 
-                className="px-3 py-2 text-gray-500 hover:text-gray-900 rounded-md text-sm font-medium"
-              >
-                Candidates
-              </Link>
-            </nav> */}
-          </div>
 
-          {/* User Menu */}
-          <div className="flex items-center space-x-4">
-            {userInfo.plan === 'free' && (
-              <Link
-                to="/upgrade"
-                className="hidden md:flex items-center space-x-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity"
-              >
-                <Crown className="w-4 h-4" />
-                <span>Upgrade</span>
-              </Link>
-            )}
-
-            <div className="relative">
-              <button
-                onClick={toggleDropdown}
-                className="flex items-center space-x-3 focus:outline-none"
-              >
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center">
-                    <span className="text-sm font-medium">{userInfo.avatar}</span>
-                  </div>
-                  <span className="hidden md:inline-block text-sm font-medium text-gray-700">
-                    {userInfo.name}
-                  </span>
-                </div>
-                <ChevronDown className="w-4 h-4 text-gray-500" />
-              </button>
-
-              {/* Dropdown Menu */}
-              {isDropdownOpen && (
-                <div 
-                  className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-100 py-1"
-                  onMouseLeave={() => setIsDropdownOpen(false)}
+            {/* Right side buttons */}
+            <div className="flex items-center space-x-4">
+              {/* Upgrade Button */}
+              {userInfo.plan === 'free' && (
+                <button
+                  onClick={() => setIsPricingOpen(true)}
+                  className="hidden md:flex items-center space-x-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity"
                 >
-                  {/* User Info */}
-                  <div className="px-4 py-3 border-b border-gray-100">
-                    <p className="text-sm font-medium text-gray-900">{userInfo.name}</p>
-                    <p className="text-sm text-gray-500">{userInfo.email}</p>
+                  <Crown className="w-4 h-4" />
+                  <span>Upgrade</span>
+                </button>
+              )}
+
+              {/* User Menu */}
+              <div className="relative">
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="flex items-center space-x-3 focus:outline-none"
+                >
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center">
+                      <span className="text-sm font-medium">{userInfo.avatar}</span>
+                    </div>
+                    <span className="hidden md:inline-block text-sm font-medium text-gray-700">
+                      {userInfo.name}
+                    </span>
                   </div>
+                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                </button>
 
-                  {/* Menu Items */}
-                  <div className="py-1">
-                    <Link
-                      to="/profile"
-                      className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      <User className="w-4 h-4" />
-                      <span>Your Profile</span>
-                    </Link>
-                    
-                    <Link
-                      to="/settings"
-                      className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      <Settings className="w-4 h-4" />
-                      <span>Settings</span>
-                    </Link>
+                {/* Dropdown Menu */}
+                {isDropdownOpen && (
+                  <div 
+                    className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-50"
+                    onMouseLeave={() => setIsDropdownOpen(false)}
+                  >
+                    {/* User Info */}
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <p className="text-sm font-medium text-gray-900">{userInfo.name}</p>
+                      <p className="text-sm text-gray-500">{userInfo.email}</p>
+                    </div>
 
-                    {userInfo.plan === 'free' && (
+                    {/* Menu Items */}
+                    <div className="py-1">
                       <Link
-                        to="/upgrade"
-                        className="flex items-center space-x-3 px-4 py-2 text-sm text-purple-600 hover:bg-gray-50"
+                        to="/profile"
+                        className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                         onClick={() => setIsDropdownOpen(false)}
                       >
-                        <Crown className="w-4 h-4" />
-                        <span>Upgrade Plan</span>
+                        <User className="w-4 h-4" />
+                        <span>Your Profile</span>
                       </Link>
-                    )}
+                      
+                      <Link
+                        to="/settings"
+                        className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        <Settings className="w-4 h-4" />
+                        <span>Settings</span>
+                      </Link>
 
-                    <Link
-                      to="/billing"
-                      className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      <CreditCard className="w-4 h-4" />
-                      <span>Billing</span>
-                    </Link>
+                      {userInfo.plan === 'free' && (
+                        <button
+                          onClick={() => {
+                            setIsDropdownOpen(false);
+                            setIsPricingOpen(true);
+                          }}
+                          className="flex items-center space-x-3 px-4 py-2 text-sm text-purple-600 hover:bg-gray-50 w-full text-left"
+                        >
+                          <Crown className="w-4 h-4" />
+                          <span>Upgrade Plan</span>
+                        </button>
+                      )}
 
-                    <div className="border-t border-gray-100 my-1"></div>
+                      <Link
+                        to="/billing"
+                        className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        <CreditCard className="w-4 h-4" />
+                        <span>Billing</span>
+                      </Link>
 
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center space-x-3 px-4 py-2 text-sm text-red-600 hover:bg-gray-50 w-full text-left"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      <span>Sign out</span>
-                    </button>
+                      <div className="border-t border-gray-100 my-1"></div>
+
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center space-x-3 px-4 py-2 text-sm text-red-600 hover:bg-gray-50 w-full text-left"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Sign out</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Pricing Modal */}
+      <PricingModal 
+        isOpen={isPricingOpen}
+        onClose={() => setIsPricingOpen(false)}
+      />
+    </>
   );
 };
 
