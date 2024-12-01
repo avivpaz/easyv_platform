@@ -83,9 +83,9 @@ export const jobService = {
       throw new Error(error.response?.data?.error || 'Failed to delete CV');
     }
   },
-  async generateJobDetails(title) {
+  async generateJobDetails(title,description) {
     try {
-      const response = await api.post('/jobs/description', { title });
+      const response = await api.post('/jobs/description', { title,description });
       return response.data;
     } catch (error) {
       console.error('Error generating job details:', error);
