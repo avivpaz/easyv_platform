@@ -1,8 +1,6 @@
 // services/jobService.js
 import api from './api';
 
-
-  
 export const jobService = {
   async getJobs() {
     try {

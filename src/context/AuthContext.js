@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import storageService from '../services/storageService';
+import WelcomePopup from '../components/WelcomePopup';
 
 const AuthContext = createContext(null);
 
@@ -9,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(storageService.getUser());
   const [organization, setOrganization] = useState(storageService.getOrganization());
+  const [showWelcomePopup, setShowWelcomePopup] = useState(false);
 
   const login = async (authData) => {
     storageService.setToken(authData.token);
@@ -17,22 +19,37 @@ export const AuthProvider = ({ children }) => {
     
     setUser(authData.user);
     setOrganization(authData.organization);
+
+    // Check if organization needs setup using the needsSetup flag
+    if (authData.organization?.needsSetup) {
+      setShowWelcomePopup(true);
+    }
+
     navigate('/dashboard');
   };
 
   const logout = async () => {
     try {
-      // Clear all storage
       storageService.clearAll();
-      // Reset state
       setUser(null);
       setOrganization(null);
-      // Navigate to login
+      setShowWelcomePopup(false); // Reset popup state on logout
       navigate('/login');
     } catch (error) {
       console.error('Logout error:', error);
       throw error;
     }
+  };
+
+  // Update organization data after welcome popup submission
+  const updateOrganization = (updatedOrgData) => {
+    const newOrgData = {
+      ...organization,
+      ...updatedOrgData,
+      needsSetup: false // Mark as setup complete
+    };
+    setOrganization(newOrgData);
+    storageService.setOrganization(newOrgData);
   };
 
   return (
@@ -41,12 +58,23 @@ export const AuthProvider = ({ children }) => {
       organization,
       login, 
       logout,
+      updateOrganization,
       isAuthenticated: !!storageService.getToken(),
       isPro: organization?.plan === 'pro'
     }}>
       {children}
+      <WelcomePopup 
+        isOpen={showWelcomePopup} 
+        onClose={() => setShowWelcomePopup(false)}
+        onSuccess={(updatedData) => {
+          updateOrganization(updatedData);
+          setShowWelcomePopup(false);
+        }}
+      />
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
+
+export default AuthContext;
