@@ -197,21 +197,26 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
             ...prev, 
             title: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
           }))}
-          className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-transform: capitalize          "
+          className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-transform: capitalize"
           placeholder="e.g. Senior Frontend Developer"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
-        <textarea
-          required
-          value={formData.shortDescription}
-          onChange={(e) => setFormData(prev => ({ ...prev, shortDescription: e.target.value }))}
-          rows={4}
-          className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-          placeholder="Enter a brief overview of the role and main responsibilities..."
-        />
+        <label className="block text-sm font-medium text-gray-700 mb-1">Tell us about the role</label>
+        <div className="relative">
+          <textarea
+            required
+            value={formData.shortDescription}
+            onChange={(e) => setFormData(prev => ({ ...prev, shortDescription: e.target.value }))}
+            rows={4}
+            className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+            placeholder="Share a few key points about the role and we'll help you generate a complete job description..."
+          />
+          <p className="mt-1.5 text-sm text-gray-500">
+            We'll use AI to generate a comprehensive job description based on your input
+          </p>
+        </div>
       </div>
     </div>
   );
