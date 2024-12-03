@@ -93,9 +93,10 @@ const WelcomePopup = ({ isOpen, onClose }) => {
         </button>
 
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-900">Welcome to JobBoard!</h2>
+          <h2 className="text-2xl font-semibold text-gray-900">Welcome to RightCruiter!</h2>
           <p className="text-gray-600 mt-2">
-            Let's complete your organization profile to get started
+            {/* Let's complete your organization profile to get started */}
+            1 Minute and you are up and running!
           </p>
         </div>
 
@@ -141,7 +142,7 @@ const WelcomePopup = ({ isOpen, onClose }) => {
           {/* Description */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Organization Description <span className="text-red-500">*</span>
+            Describe your organization to attract the right candidates <span className="text-red-500">*</span>
             </label>
             <textarea
               value={formData.description}
@@ -156,7 +157,7 @@ const WelcomePopup = ({ isOpen, onClose }) => {
           {/* Website URL */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Website URL <span className="text-gray-500 text-xs">(optional)</span>
+            Add your website for candidates to learn more<span className="text-gray-500 text-xs">(optional)</span>
             </label>
             <div className="relative">
               <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -173,7 +174,7 @@ const WelcomePopup = ({ isOpen, onClose }) => {
           {/* LinkedIn URL */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              LinkedIn URL <span className="text-gray-500 text-xs">(optional)</span>
+            Link your LinkedIn profile for additional credibility <span className="text-gray-500 text-xs">(optional)</span>
             </label>
             <div className="relative">
               <Linkedin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />

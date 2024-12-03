@@ -182,7 +182,7 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
   const renderStep1 = () => (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Which role are you hiring for?</label>
             <input
       type="text"
       required
@@ -197,7 +197,7 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Tell us about the role</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Can you share a few key points about this role?</label>
         <div className="relative">
         <textarea
   required
@@ -208,7 +208,7 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
   placeholder="Share a few key points about the role..."
 />
           <p className="mt-1.5 text-sm text-gray-500">
-            We'll use AI to generate a comprehensive job description based on your input
+Our AI will turn your input into a comprehensive and professional job description
           </p>
         </div>
       </div>
@@ -230,7 +230,7 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
 
       {/* Required Skills */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Required Skills</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">What are the must-have skills for this role?</label>
         <div className="flex gap-2 mb-2">
               <input
         type="text"
@@ -266,7 +266,7 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
 
       {/* Nice-to-have Skills */}
       <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">Nice-to-have Skills</label>
+  <label className="block text-sm font-medium text-gray-700 mb-2">Are there any bonus skills you'd like to highlight?</label>
   <div className="flex gap-2 mb-2">
     <input
       type="text"
@@ -309,20 +309,20 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Work Type</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Where will the work happen?</label>
           <select
             value={formData.workType}
             onChange={(e) => setFormData(prev => ({ ...prev, workType: e.target.value }))}
             className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
             >
-            <option value="remote">Remote</option>
             <option value="hybrid">Hybrid</option>
-            <option value="onsite">On-site</option>
+            <option value="remote">Remote</option>
+            <option value="onsite">In-Office</option>
           </select>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Employment Type</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">What’s the employment type?</label>
           <select
             value={formData.employmentType}
             onChange={(e) => setFormData(prev => ({ ...prev, employmentType: e.target.value }))}
@@ -338,7 +338,7 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
         <div className="col-span-2">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             <MapPin className="h-4 w-4 inline mr-1 text-gray-400" />
-            Location
+            Where is the job located? 
           </label>
           <input
   ref={locationInputRef}
@@ -364,8 +364,8 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
             <h2 className="text-2xl font-semibold text-gray-900">Create New Job</h2>
             <p className="text-sm text-gray-500 mt-1">
               Step {currentStep} of 3: {
-                currentStep === 1 ? "Basic Information" :
-                currentStep === 2 ? "Job Details & Skills" :
+                currentStep === 1 ? "The Basics" :
+                currentStep === 2 ? "Define the Role" :
                 "Work Preferences"
               }
             </p>
@@ -427,7 +427,7 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
                   </>
                 ) : (
                   <>
-                    Next
+                    Continue
                     <ArrowRight className="h-4 w-4" />
                   </>
                 )}
@@ -440,7 +440,7 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
                 disabled={!formData.description || formData.requiredSkills.length === 0}
                 className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-light disabled:opacity-50 flex items-center gap-2"
               >
-                Next
+                Continue
                 <ArrowRight className="h-4 w-4" />
               </button>
             )}
