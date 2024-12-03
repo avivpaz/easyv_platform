@@ -145,7 +145,7 @@ const Dashboard = () => {
             className="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors whitespace-nowrap"
           >
             <Plus className="h-4 w-4" />
-            <span>Add New Job</span>
+            <span>Create Job Listing</span>
           </button>
         </div>
 

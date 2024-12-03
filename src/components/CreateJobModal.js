@@ -205,7 +205,7 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
   onChange={(e) => setFormData(prev => ({ ...prev, shortDescription: e.target.value }))}
   rows={4}
   className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors resize-none"
-  placeholder="Share a few key points about the role..."
+  placeholder="Looking for an experienced frontend developer to lead our web applications team. Should have strong React expertise, mentor other developers, and drive technical architecture. Must care deeply about code quality and user experience"
 />
           <p className="mt-1.5 text-sm text-gray-500">
 Our AI will turn your input into a comprehensive and professional job description
