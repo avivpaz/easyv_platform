@@ -477,8 +477,8 @@ const JobCVs = ({ jobId }) => {
       ) : filteredCVs.length === 0 ? (
         <div className="text-center py-12">
           <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900">No Applications Yet</h3>
-          <p className="text-sm text-gray-500">No CVs have been submitted for this position.</p>
+          <h3 className="text-lg font-medium text-gray-900">Still waiting for applications? </h3>
+          <p className="text-sm text-gray-500">Share this listing on more platforms or invite candidates directly to apply!</p>
         </div>
       ) : isReviewMode ? (
         <ReviewModeCard

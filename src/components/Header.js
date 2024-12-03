@@ -50,26 +50,17 @@ const Header = () => {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <Link to="/dashboard" className="flex items-center space-x-2">
-              <div className="bg-primary text-white p-2 rounded-lg">
-                <svg 
-                  className="w-6 h-6" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" 
-                  />
-                </svg>
+            <div className="w-6 h-6 bg-primary flex items-center justify-center rounded-lg">
+              <img 
+                  src="/logo.png" 
+                  alt="Logo"
+                  className="w-8 h-8 object-contain"
+                />
               </div>
               <span className="text-xl font-bold text-gray-900">
-                {organization?.name || 'CV Portal'}
+              RightCruiter
               </span>
             </Link>
-
             {/* Right side buttons */}
             <div className="flex items-center space-x-4">
               {/* Upgrade Button */}
