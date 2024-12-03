@@ -35,10 +35,10 @@ const Login = () => {
   return (
     <div className="min-h-screen flex bg-gray-50">
       {/* Left Panel - Decorative */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-indigo-700 p-12 text-white">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary to-primary-light p-12 text-white">
         <div className="max-w-md">
           <h1 className="text-4xl font-bold mb-6">Welcome Back!</h1>
-          <p className="text-blue-100 text-lg mb-8">
+          <p className="text-secondary-light text-lg mb-8">
             Sign in to access your dashboard and manage your job postings.
           </p>
           <div className="bg-white/10 rounded-xl p-6">
@@ -46,7 +46,7 @@ const Login = () => {
               <UserCircle2 className="h-8 w-8" />
               <div>
                 <h3 className="font-semibold">Easy Management</h3>
-                <p className="text-blue-100 text-sm">Track and manage all your job postings in one place</p>
+                <p className="text-secondary-light text-sm">Track and manage all your job postings in one place</p>
               </div>
             </div>
             <div className="border-t border-white/10 my-4" />
@@ -54,7 +54,7 @@ const Login = () => {
               <Lock className="h-8 w-8" />
               <div>
                 <h3 className="font-semibold">Secure Access</h3>
-                <p className="text-blue-100 text-sm">Your data is protected with enterprise-grade security</p>
+                <p className="text-secondary-light text-sm">Your data is protected with enterprise-grade security</p>
               </div>
             </div>
           </div>
@@ -66,10 +66,10 @@ const Login = () => {
         <div className="max-w-md w-full space-y-8">
           {/* Logo and Title */}
           <div className="text-center">
-            <div className="bg-blue-600 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <div className="bg-primary w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4">
               <UserCircle2 className="h-8 w-8 text-white" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Sign In</h2>
+            <h2 className="text-3xl font-bold text-primary-dark mb-2">Sign In</h2>
             <p className="text-gray-500">Enter your credentials to access your account</p>
           </div>
 
@@ -93,7 +93,7 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="mt-8 space-y-6">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-primary-dark mb-1">
                   Email address
                 </label>
                 <div className="relative">
@@ -103,7 +103,7 @@ const Login = () => {
                   <input
                     type="email"
                     required
-                    className="appearance-none block w-full pl-11 pr-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    className="appearance-none block w-full pl-11 pr-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 text-sm"
                     placeholder="Enter your email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -113,7 +113,7 @@ const Login = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-primary-dark mb-1">
                   Password
                 </label>
                 <div className="relative">
@@ -123,7 +123,7 @@ const Login = () => {
                   <input
                     type={showPassword ? "text" : "password"}
                     required
-                    className="appearance-none block w-full pl-11 pr-10 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    className="appearance-none block w-full pl-11 pr-10 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 text-sm"
                     placeholder="Enter your password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -148,7 +148,7 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {loading ? (
                   <>
@@ -167,7 +167,7 @@ const Login = () => {
             <div className="text-center">
               <div className="text-sm">
                 <span className="text-gray-500">Don't have an account?</span>{' '}
-                <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
+                <Link to="/signup" className="font-medium text-primary hover:text-primary-light">
                   Create one now
                 </Link>
               </div>

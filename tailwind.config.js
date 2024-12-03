@@ -1,3 +1,4 @@
+// tailwind.config.js
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
@@ -5,11 +6,17 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Already included in default Tailwind
+        primary: {
+          DEFAULT: '#6a2c70',
+          light: '#8d3a95',
+          dark: '#471e4b',
+        },
+        secondary: {
+          DEFAULT: '#FEACC6',
+          light: '#ffdee9',
+        }
       }
-    },
+    }
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-  ],
+  plugins: [],
 }

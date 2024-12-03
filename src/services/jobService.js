@@ -7,7 +7,7 @@ export const jobService = {
       const response = await api.get('/jobs');
       console.log('API Response:', response); // Debug log
       // Handle different response structures
-      const jobsData = response.data || [];
+      const jobsData = response.data.jobs || [];
       return Array.isArray(jobsData) ? jobsData : [];
     } catch (error) {
       console.error('Error in jobService:', error);

@@ -6,10 +6,10 @@ const PricingCard = ({ title, price, features, isPopular, checkoutUrl, currentPl
   const isCurrentPlan = currentPlan === title.toLowerCase();
   
   return (
-    <div className={`relative bg-white rounded-2xl ${isPopular ? 'border-2 border-blue-500' : 'border border-gray-200'}`}>
+    <div className={`relative bg-white rounded-2xl ${isPopular ? 'border-2 border-primary' : 'border border-gray-200'}`}>
       {isPopular && (
         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-          <span className="bg-blue-500 text-white text-sm font-medium px-4 py-1 rounded-full">
+          <span className="bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm font-medium px-4 py-1 rounded-full">
             Most Popular
           </span>
         </div>
@@ -25,7 +25,7 @@ const PricingCard = ({ title, price, features, isPopular, checkoutUrl, currentPl
         <ul className="mt-6 space-y-3">
           {features.map((feature, index) => (
             <li key={index} className="flex items-start space-x-3">
-              <Check className="w-4 h-4 text-blue-500 flex-shrink-0" />
+              <Check className="w-4 h-4 text-primary flex-shrink-0" />
               <span className="text-sm text-gray-600">{feature}</span>
             </li>
           ))}
@@ -41,7 +41,11 @@ const PricingCard = ({ title, price, features, isPopular, checkoutUrl, currentPl
         ) : (
           <a
             href={checkoutUrl}
-            className="mt-6 block w-full bg-blue-600 text-white text-center py-2 px-4 rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors"
+            className={`mt-6 block w-full text-center py-2 px-4 rounded-lg font-medium text-sm transition-colors ${
+              price === 0 
+                ? 'bg-primary text-white hover:bg-primary-light'
+                : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:opacity-90'
+            }`}
           >
             {price === 0 ? 'Get Started' : 'Upgrade Now'}
           </a>
@@ -114,7 +118,7 @@ const PricingModal = ({ isOpen, onClose }) => {
           <div className="relative">
             <button
               onClick={onClose}
-              className="absolute right-0 top-0 text-gray-400 hover:text-gray-500"
+              className="absolute right-0 top-0 text-gray-400 hover:text-gray-500 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>

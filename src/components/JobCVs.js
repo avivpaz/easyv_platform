@@ -11,7 +11,7 @@ import { cvService } from '../services/cvService';
 
 const Status = ({ status }) => {
   const colors = {
-    pending: 'bg-yellow-100 text-yellow-800',
+    pending: 'bg-secondary text-primary-dark',
     approved: 'bg-green-100 text-green-700',
     rejected: 'bg-red-100 text-red-800'
   };
@@ -63,8 +63,8 @@ const ReviewModeCard = ({ cv, onNext, onPrevious, currentIndex, total, updateCVS
 
       <div className="p-3 md:p-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
         <div className="flex items-center gap-2 md:gap-4">
-          <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-blue-100 flex items-center justify-center">
-            <Users className="h-4 w-4 md:h-5 md:w-5 text-blue-600" />
+          <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-primary/5 flex items-center justify-center">
+            <Users className="h-4 w-4 md:h-5 md:w-5 text-primary" />
           </div>
           <div>
             <h3 className="font-medium text-sm md:text-base text-gray-900">{cv.candidate.fullName}</h3>
@@ -73,21 +73,21 @@ const ReviewModeCard = ({ cv, onNext, onPrevious, currentIndex, total, updateCVS
         </div>
         <div className="flex items-center gap-2 md:gap-4">
           <Status status={cv.status} />
-          <div className="bg-gray-800 text-white px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm">
+          <div className="bg-primary-dark text-white px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm">
             {currentIndex + 1} / {total}
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 p-4 md:p-6 flex-grow overflow-auto">
-        <div className="bg-blue-50/50 p-3 md:p-4 rounded-xl">
-          <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
-            <GraduationCap className="h-4 w-4 text-blue-600" />
-            Education
-          </h4>
+            <div className="bg-primary/5 p-3 md:p-4 rounded-xl">
+        <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
+          <GraduationCap className="h-4 w-4 text-primary" />
+          Education
+        </h4>
           <div className="space-y-3">
             {cv.candidate.education?.map((edu, index) => (
-              <div key={index} className="bg-white p-2 md:p-3 rounded-lg border-l-4 border-blue-500 shadow-sm">
+              <div key={index} className="bg-white p-2 md:p-3 rounded-lg border-l-4 border-primary shadow-sm">
                 <p className="font-medium text-sm md:text-base text-gray-900">{edu.degree}</p>
                 <p className="text-xs md:text-sm text-gray-600">{edu.institution}</p>
                 <p className="text-xs md:text-sm text-gray-500">{edu.year}</p>
@@ -96,14 +96,14 @@ const ReviewModeCard = ({ cv, onNext, onPrevious, currentIndex, total, updateCVS
           </div>
         </div>
 
-        <div className="bg-green-50/50 p-3 md:p-4 rounded-xl">
+        <div className="bg-secondary/20 p-3 md:p-4 rounded-xl">
           <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
-            <Briefcase className="h-4 w-4 text-green-600" />
+            <Briefcase className="h-4 w-4 text-primary" />
             Experience
           </h4>
           <div className="space-y-3">
             {cv.candidate.experience?.map((exp, index) => (
-              <div key={index} className="bg-white p-2 md:p-3 rounded-lg border-l-4 border-green-500 shadow-sm">
+              <div key={index} className="bg-white p-2 md:p-3 rounded-lg border-l-4 border-primary shadow-sm">
                 <div className="flex items-center justify-between cursor-pointer"
                      onClick={() => setExpandedExp(expandedExp === index ? null : index)}>
                   <div>
@@ -121,7 +121,7 @@ const ReviewModeCard = ({ cv, onNext, onPrevious, currentIndex, total, updateCVS
                   )}
                 </div>
                 {expandedExp === index && exp.responsibilities && (
-                  <div className="mt-2 pl-2 md:pl-3 border-l-2 border-green-200 space-y-1">
+                  <div className="mt-2 pl-2 md:pl-3 border-l-2 border-secondary space-y-1">
                     {exp.responsibilities.map((resp, idx) => (
                       <p key={idx} className="text-xs md:text-sm text-gray-600">• {resp}</p>
                     ))}
@@ -132,15 +132,15 @@ const ReviewModeCard = ({ cv, onNext, onPrevious, currentIndex, total, updateCVS
           </div>
         </div>
 
-        <div className="bg-purple-50/50 p-3 md:p-4 rounded-xl">
-          <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
-            <Code className="h-4 w-4 text-purple-600" />
-            Skills
-          </h4>
+        <div className="bg-gray-50 p-3 md:p-4 rounded-xl">
+  <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
+    <Code className="h-4 w-4 text-primary" />
+    Skills
+  </h4>
           <div className="flex flex-wrap gap-2">
             {cv.candidate.skills?.map((skill, index) => (
               <span key={index} 
-                className="px-2 py-1 rounded-lg text-xs md:text-sm bg-white text-purple-700 border border-purple-200">
+                className="px-2 py-1 rounded-lg text-xs md:text-sm bg-white text-primary-dark border border-primary/20">
                 {skill}
               </span>
             ))}
@@ -213,8 +213,8 @@ const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
       <div className="p-3 md:p-4 cursor-pointer hover:bg-gray-50 flex items-center justify-between"
            onClick={onToggle}>
         <div className="flex items-center gap-2 md:gap-4">
-          <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-blue-100 flex items-center justify-center">
-            <Users className="h-4 w-4 md:h-5 md:w-5 text-blue-600" />
+          <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-primary/5 flex items-center justify-center">
+            <Users className="h-4 w-4 md:h-5 md:w-5 text-primary" />
           </div>
           <div>
             <h3 className="font-medium text-sm md:text-base text-gray-900">{cv.candidate.fullName}</h3>
@@ -233,14 +233,14 @@ const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
       {isExpanded && (
         <>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 p-4 md:p-6 flex-grow overflow-auto">
-            <div className="bg-blue-50/50 p-3 md:p-4 rounded-xl">
-              <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
-                <GraduationCap className="h-4 w-4 text-blue-600" />
-                Education
-              </h4>
+          <div className="bg-primary/5 p-3 md:p-4 rounded-xl">
+  <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
+    <GraduationCap className="h-4 w-4 text-primary" />
+    Education
+  </h4>
               <div className="space-y-3">
                 {cv.candidate.education?.map((edu, index) => (
-                  <div key={index} className="bg-white p-2 md:p-3 rounded-lg border-l-4 border-blue-500 shadow-sm">
+                  <div key={index} className="bg-white p-2 md:p-3 rounded-lg border-l-4 border-primary shadow-sm">
                     <p className="font-medium text-sm md:text-base text-gray-900">{edu.degree}</p>
                     <p className="text-xs md:text-sm text-gray-600">{edu.institution}</p>
                     <p className="text-xs md:text-sm text-gray-500">{edu.year}</p>
@@ -249,14 +249,14 @@ const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
               </div>
             </div>
 
-            <div className="bg-green-50/50 p-3 md:p-4 rounded-xl">
+            <div className="bg-secondary/20 p-3 md:p-4 rounded-xl">
               <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
-                <Briefcase className="h-4 w-4 text-green-600" />
+                <Briefcase className="h-4 w-4 text-primary" />
                 Experience
               </h4>
               <div className="space-y-3">
-              {cv.candidate.experience?.map((exp, index) => (
-                  <div key={index} className="bg-white p-2 md:p-3 rounded-lg border-l-4 border-green-500 shadow-sm">
+                {cv.candidate.experience?.map((exp, index) => (
+                  <div key={index} className="bg-white p-2 md:p-3 rounded-lg border-l-4 border-primary shadow-sm">
                     <div className="flex items-center justify-between cursor-pointer"
                          onClick={() => setExpandedExp(expandedExp === index ? null : index)}>
                       <div>
@@ -274,7 +274,7 @@ const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
                       )}
                     </div>
                     {expandedExp === index && exp.responsibilities && (
-                      <div className="mt-2 pl-2 md:pl-3 border-l-2 border-green-200 space-y-1">
+                      <div className="mt-2 pl-2 md:pl-3 border-l-2 border-secondary space-y-1">
                         {exp.responsibilities.map((resp, idx) => (
                           <p key={idx} className="text-xs md:text-sm text-gray-600">• {resp}</p>
                         ))}
@@ -285,15 +285,15 @@ const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
               </div>
             </div>
 
-            <div className="bg-purple-50/50 p-3 md:p-4 rounded-xl">
-              <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
-                <Code className="h-4 w-4 text-purple-600" />
-                Skills
-              </h4>
+            <div className="bg-gray-50 p-3 md:p-4 rounded-xl">
+  <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
+    <Code className="h-4 w-4 text-primary" />
+    Skills
+  </h4>
               <div className="flex flex-wrap gap-2">
                 {cv.candidate.skills?.map((skill, index) => (
                   <span key={index} 
-                    className="px-2 py-1 rounded-lg text-xs md:text-sm bg-white text-purple-700 border border-purple-200">
+                    className="px-2 py-1 rounded-lg text-xs md:text-sm bg-white text-primary-dark border border-primary/20">
                     {skill}
                   </span>
                 ))}
@@ -330,7 +330,6 @@ const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
     </div>
   );
 };
-
 const JobCVs = ({ jobId }) => {
   const [cvs, setCvs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -419,7 +418,7 @@ const JobCVs = ({ jobId }) => {
                       }}
                       className={`px-2 md:px-3 py-1 rounded-lg text-xs md:text-sm font-medium border transition-colors ${
                         filters.includes(status)
-                          ? 'bg-blue-50 border-blue-200 text-blue-700'
+                          ? 'bg-primary/5 border-primary/20 text-primary'
                           : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
                       }`}
                     >
@@ -458,7 +457,7 @@ const JobCVs = ({ jobId }) => {
         <div className="flex gap-2 md:gap-3">
           <button
             onClick={() => setShowUploadModal(true)}
-            className="flex items-center gap-1 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-xs md:text-sm"
+            className="flex items-center gap-1 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-primary text-white rounded-lg hover:bg-primary-light text-xs md:text-sm"
           >
             <Upload className="h-4 w-4" />
             <span className="hidden md:inline">Upload CVs</span>
@@ -469,7 +468,7 @@ const JobCVs = ({ jobId }) => {
 
       {loading ? (
         <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       ) : error ? (
         <div className="bg-red-50 text-red-700 p-4 rounded-lg text-sm">
@@ -529,7 +528,7 @@ const JobCVs = ({ jobId }) => {
               />
               <button
                 onClick={() => navigator.clipboard.writeText(uploadUrl)}
-                className="px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+                className="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary-light text-sm"
               >
                 Copy
               </button>

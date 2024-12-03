@@ -1,4 +1,3 @@
-// components/UploadModal.js
 import React, { useState } from 'react';
 import { Upload, X, FileText } from 'lucide-react';
 import { jobService } from '../services/jobService';
@@ -71,7 +70,7 @@ const UploadModal = ({ isOpen, onClose, jobId, onSuccess }) => {
 
         <div
           className={`border-2 border-dashed rounded-lg p-8 text-center ${
-            isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+            isDragging ? 'border-primary bg-primary/5' : 'border-gray-300'
           }`}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -80,7 +79,7 @@ const UploadModal = ({ isOpen, onClose, jobId, onSuccess }) => {
           <Upload className="h-12 w-12 text-gray-400 mx-auto" />
           <p className="mt-2 text-sm text-gray-600">
             Drag and drop CV files here, or
-            <label className="mx-2 text-blue-600 hover:text-blue-500 cursor-pointer">
+            <label className="mx-2 text-primary hover:text-primary-light cursor-pointer transition-colors">
               browse
               <input
                 type="file"
@@ -101,7 +100,7 @@ const UploadModal = ({ isOpen, onClose, jobId, onSuccess }) => {
           <div className={`mt-4 p-4 rounded-md ${
             uploadStatus.status === 'error' ? 'bg-red-50 text-red-700' :
             uploadStatus.status === 'success' ? 'bg-green-50 text-green-700' :
-            'bg-blue-50 text-blue-700'
+            'bg-primary/5 text-primary'
           }`}>
             {uploadStatus.message}
           </div>
@@ -117,12 +116,12 @@ const UploadModal = ({ isOpen, onClose, jobId, onSuccess }) => {
               {files.map((file, index) => (
                 <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
                   <div className="flex items-center">
-                    <FileText className="h-5 w-5 text-gray-400 mr-2" />
+                    <FileText className="h-5 w-5 text-primary mr-2" />
                     <span className="text-sm text-gray-600">{file.name}</span>
                   </div>
                   <button
                     onClick={() => removeFile(index)}
-                    className="text-gray-400 hover:text-red-600"
+                    className="text-gray-400 hover:text-red-600 transition-colors"
                   >
                     <X className="h-5 w-5" />
                   </button>
@@ -136,14 +135,14 @@ const UploadModal = ({ isOpen, onClose, jobId, onSuccess }) => {
         <div className="mt-6 flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleUpload}
             disabled={files.length === 0}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-light disabled:opacity-50 transition-colors"
           >
             Upload
           </button>

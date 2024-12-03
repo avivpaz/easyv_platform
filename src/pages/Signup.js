@@ -45,10 +45,10 @@ const SignUp = () => {
   return (
     <div className="min-h-screen flex bg-gray-50">
       {/* Left Panel - Decorative */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-indigo-700 p-12 text-white">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary to-primary-light p-12 text-white">
         <div className="max-w-md">
           <h1 className="text-4xl font-bold mb-6">Join Our Platform</h1>
-          <p className="text-blue-100 text-lg mb-8">
+          <p className="text-secondary-light text-lg mb-8">
             Create an account to start managing your recruitment process efficiently.
           </p>
           <div className="space-y-6">
@@ -59,7 +59,7 @@ const SignUp = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold mb-1">For Companies</h3>
-                  <p className="text-blue-100 text-sm">
+                  <p className="text-secondary-light text-sm">
                     Post jobs, manage applications, and find the perfect candidates
                   </p>
                 </div>
@@ -73,7 +73,7 @@ const SignUp = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold mb-1">Easy to Use</h3>
-                  <p className="text-blue-100 text-sm">
+                  <p className="text-secondary-light text-sm">
                     Intuitive interface designed for efficient recruitment
                   </p>
                 </div>
@@ -88,10 +88,10 @@ const SignUp = () => {
         <div className="max-w-md w-full">
           {/* Logo and Title */}
           <div className="text-center">
-            <div className="bg-blue-600 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <div className="bg-primary w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4">
               <UserCircle2 className="h-8 w-8 text-white" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h2>
+            <h2 className="text-3xl font-bold text-primary-dark mb-2">Create Account</h2>
             <p className="text-gray-500 mb-8">Fill in the details to get started</p>
           </div>
 
@@ -115,7 +115,7 @@ const SignUp = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-primary-dark mb-1">
                   Full Name
                 </label>
                 <div className="relative">
@@ -125,7 +125,7 @@ const SignUp = () => {
                   <input
                     type="text"
                     required
-                    className="appearance-none block w-full pl-11 pr-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    className="appearance-none block w-full pl-11 pr-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 text-sm"
                     placeholder="Enter your full name"
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
@@ -135,7 +135,7 @@ const SignUp = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-primary-dark mb-1">
                   Company Name
                 </label>
                 <div className="relative">
@@ -145,7 +145,7 @@ const SignUp = () => {
                   <input
                     type="text"
                     required
-                    className="appearance-none block w-full pl-11 pr-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    className="appearance-none block w-full pl-11 pr-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 text-sm"
                     placeholder="Enter your company name"
                     value={formData.company}
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
@@ -155,7 +155,7 @@ const SignUp = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-primary-dark mb-1">
                   Email Address
                 </label>
                 <div className="relative">
@@ -165,7 +165,7 @@ const SignUp = () => {
                   <input
                     type="email"
                     required
-                    className="appearance-none block w-full pl-11 pr-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    className="appearance-none block w-full pl-11 pr-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 text-sm"
                     placeholder="Enter your email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -175,7 +175,7 @@ const SignUp = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-primary-dark mb-1">
                   Password
                 </label>
                 <div className="relative">
@@ -185,7 +185,7 @@ const SignUp = () => {
                   <input
                     type={showPassword ? "text" : "password"}
                     required
-                    className="appearance-none block w-full pl-11 pr-10 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    className="appearance-none block w-full pl-11 pr-10 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 text-sm"
                     placeholder="Create a password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -206,7 +206,7 @@ const SignUp = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-primary-dark mb-1">
                   Confirm Password
                 </label>
                 <div className="relative">
@@ -216,7 +216,7 @@ const SignUp = () => {
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     required
-                    className="appearance-none block w-full pl-11 pr-10 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 text-sm"
+                    className="appearance-none block w-full pl-11 pr-10 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 text-sm"
                     placeholder="Confirm your password"
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
@@ -241,7 +241,7 @@ const SignUp = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {loading ? (
                   <>
@@ -260,7 +260,7 @@ const SignUp = () => {
             <div className="text-center mt-4">
               <div className="text-sm">
                 <span className="text-gray-500">Already have an account?</span>{' '}
-                <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+                <Link to="/login" className="font-medium text-primary hover:text-primary-light">
                   Sign in instead
                 </Link>
               </div>

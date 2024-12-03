@@ -31,17 +31,14 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
   const initializeGooglePlaces = useCallback(() => {
     if (isGoogleLoaded && locationInputRef.current) {
       try {
-        // Clear any existing autocomplete
         if (autocompleteRef.current) {
           window.google?.maps?.event?.clearInstanceListeners(autocompleteRef.current);
         }
 
-        // Initialize new autocomplete
         autocompleteRef.current = new window.google.maps.places.Autocomplete(locationInputRef.current, {
           types: ['(cities)']
         });
 
-        // Add place_changed listener
         const placeChangedListener = autocompleteRef.current.addListener('place_changed', () => {
           const place = autocompleteRef.current.getPlace();
           if (place.address_components) {
@@ -73,7 +70,6 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
     }
   }, [isGoogleLoaded]);
 
-  // Google Maps script loading
   useEffect(() => {
     let scriptElement = document.querySelector(`script[src="${GOOGLE_MAPS_URL}"]`);
     
@@ -104,7 +100,6 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
     };
   }, []);
 
-  // Initialize Places Autocomplete when step 3 is active
   useEffect(() => {
     if (currentStep === 3 && isOpen) {
       const cleanup = initializeGooglePlaces();
@@ -114,7 +109,6 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
     }
   }, [currentStep, isOpen, initializeGooglePlaces]);
 
-  
   const generateJobDetails = async () => {
     setIsGenerating(true);
     setError(null);
@@ -189,30 +183,30 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
     <div className="space-y-6">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
-        <input
-          type="text"
-          required
-          value={formData.title}
-          onChange={(e) => setFormData(prev => ({ 
-            ...prev, 
-            title: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
-          }))}
-          className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-transform: capitalize"
-          placeholder="e.g. Senior Frontend Developer"
-        />
+            <input
+      type="text"
+      required
+      value={formData.title}
+      onChange={(e) => setFormData(prev => ({ 
+        ...prev, 
+        title: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+      }))}
+      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
+      placeholder="e.g. Senior Frontend Developer"
+    />
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Tell us about the role</label>
         <div className="relative">
-          <textarea
-            required
-            value={formData.shortDescription}
-            onChange={(e) => setFormData(prev => ({ ...prev, shortDescription: e.target.value }))}
-            rows={4}
-            className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-            placeholder="Share a few key points about the role and we'll help you generate a complete job description..."
-          />
+        <textarea
+  required
+  value={formData.shortDescription}
+  onChange={(e) => setFormData(prev => ({ ...prev, shortDescription: e.target.value }))}
+  rows={4}
+  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors resize-none"
+  placeholder="Share a few key points about the role..."
+/>
           <p className="mt-1.5 text-sm text-gray-500">
             We'll use AI to generate a comprehensive job description based on your input
           </p>
@@ -230,38 +224,38 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
           value={formData.description}
           onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
           rows={6}
-          className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
+          className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors resize-none"
+          />
       </div>
 
       {/* Required Skills */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">Required Skills</label>
         <div className="flex gap-2 mb-2">
-          <input
-            type="text"
-            value={skillInputs.required}
-            onChange={(e) => setSkillInputs(prev => ({ ...prev, required: e.target.value }))}
-            onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill('required'))}
-            className="flex-1 px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Add required skills"
-          />
+              <input
+        type="text"
+        value={skillInputs.required}
+        onChange={(e) => setSkillInputs(prev => ({ ...prev, required: e.target.value }))}
+        onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill('required'))}
+        className="flex-1 px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
+        placeholder="Add required skills"
+      />
           <button
             type="button"
             onClick={() => addSkill('required')}
-            className="p-2.5 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100"
+            className="p-2.5 bg-primary/5 text-primary rounded-xl hover:bg-primary/10"
           >
             <Plus className="h-5 w-5" />
           </button>
         </div>
         <div className="flex flex-wrap gap-2 min-h-[40px] p-3 bg-gray-50 rounded-xl border border-gray-100">
           {formData.requiredSkills.map((skill, index) => (
-            <span key={index} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm">
+            <span key={index} className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full text-sm">
               {skill}
               <button
                 type="button"
                 onClick={() => removeSkill('required', skill)}
-                className="hover:text-blue-900"
+                className="hover:text-primary-dark"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -272,39 +266,42 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
 
       {/* Nice-to-have Skills */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Nice-to-have Skills</label>
-        <div className="flex gap-2 mb-2">
-          <input
-            type="text"
-            value={skillInputs.niceToHave}
-            onChange={(e) => setSkillInputs(prev => ({ ...prev, niceToHave: e.target.value }))}
-            onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill('niceToHave'))}
-            className="flex-1 px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Add nice-to-have skills"
-          />
-          <button
-            type="button"
-            onClick={() => addSkill('niceToHave')}
-            className="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-100"
-          >
-            <Plus className="h-5 w-5" />
-          </button>
-        </div>
-        <div className="flex flex-wrap gap-2 min-h-[40px] p-3 bg-gray-50 rounded-xl border border-gray-100">
-          {formData.niceToHaveSkills.map((skill, index) => (
-            <span key={index} className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm">
-              {skill}
-              <button
-                type="button"
-                onClick={() => removeSkill('niceToHave', skill)}
-                className="hover:text-emerald-900"
-              >
-                <X className="h-3.5 w-3.5" />
-              </button>
-            </span>
-          ))}
-        </div>
-      </div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">Nice-to-have Skills</label>
+  <div className="flex gap-2 mb-2">
+    <input
+      type="text"
+      value={skillInputs.niceToHave}
+      onChange={(e) => setSkillInputs(prev => ({ ...prev, niceToHave: e.target.value }))}
+      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill('niceToHave'))}
+      className="flex-1 px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
+      placeholder="Add nice-to-have skills"
+    />
+    <button
+      type="button"
+      onClick={() => addSkill('niceToHave')}
+      className="p-2.5 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200"
+    >
+      <Plus className="h-5 w-5" />
+    </button>
+  </div>
+  <div className="flex flex-wrap gap-2 min-h-[40px] p-3 bg-gray-50 rounded-xl border border-gray-100">
+    {formData.niceToHaveSkills.map((skill, index) => (
+      <span
+        key={index}
+        className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+      >
+        {skill}
+        <button
+          type="button"
+          onClick={() => removeSkill('niceToHave', skill)}
+          className="hover:text-gray-900"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </span>
+    ))}
+  </div>
+</div>
     </div>
   );
 
@@ -316,8 +313,8 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
           <select
             value={formData.workType}
             onChange={(e) => setFormData(prev => ({ ...prev, workType: e.target.value }))}
-            className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
+            className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
+            >
             <option value="remote">Remote</option>
             <option value="hybrid">Hybrid</option>
             <option value="onsite">On-site</option>
@@ -329,7 +326,7 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
           <select
             value={formData.employmentType}
             onChange={(e) => setFormData(prev => ({ ...prev, employmentType: e.target.value }))}
-            className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
           >
             <option value="full-time">Full-time</option>
             <option value="part-time">Part-time</option>
@@ -344,13 +341,13 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
             Location
           </label>
           <input
-            ref={locationInputRef}
-            type="text"
-            value={formData.location}
-            onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-            className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder={isGoogleLoaded ? "Start typing a city name..." : "Loading location search..."}
-          />
+  ref={locationInputRef}
+  type="text"
+  value={formData.location}
+  onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
+  placeholder={isGoogleLoaded ? "Start typing a city name..." : "Loading location search..."}
+/>
         </div>
       </div>
     </div>
@@ -361,27 +358,27 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
   return (
     <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl max-w-3xl w-full shadow-xl max-h-[90vh] overflow-hidden flex flex-col">
-{/* Header */}
-<div className="flex items-center justify-between p-6 border-b">
-  <div>
-    <h2 className="text-2xl font-semibold text-gray-900">Create New Job</h2>
-    <p className="text-sm text-gray-500 mt-1">
-      Step {currentStep} of 3: {
-        currentStep === 1 ? "Basic Information" :
-        currentStep === 2 ? "Job Details & Skills" :
-        "Work Preferences"
-      }
-    </p>
-  </div>
-  <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
-    <X className="h-5 w-5 text-gray-500" />
-  </button>
-</div>
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b">
+          <div>
+            <h2 className="text-2xl font-semibold text-gray-900">Create New Job</h2>
+            <p className="text-sm text-gray-500 mt-1">
+              Step {currentStep} of 3: {
+                currentStep === 1 ? "Basic Information" :
+                currentStep === 2 ? "Job Details & Skills" :
+                "Work Preferences"
+              }
+            </p>
+          </div>
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
+            <X className="h-5 w-5 text-gray-500" />
+          </button>
+        </div>
 
         {/* Progress Bar */}
         <div className="w-full bg-gray-100 h-1">
           <div 
-            className="bg-blue-500 h-1 transition-all duration-300"
+            className="bg-primary h-1 transition-all duration-300"
             style={{ width: `${(currentStep / 3) * 100}%` }}
           />
         </div>
@@ -421,7 +418,7 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
               <button
                 onClick={generateJobDetails}
                 disabled={!formData.title || !formData.shortDescription || isGenerating}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+                className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-light disabled:opacity-50 flex items-center gap-2"
               >
                 {isGenerating ? (
                   <>
@@ -441,7 +438,7 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
               <button
                 onClick={() => setCurrentStep(3)}
                 disabled={!formData.description || formData.requiredSkills.length === 0}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+                className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-light disabled:opacity-50 flex items-center gap-2"
               >
                 Next
                 <ArrowRight className="h-4 w-4" />
@@ -452,7 +449,7 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
               <button
                 onClick={handleSubmit}
                 disabled={loading || !formData.location}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+                className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-light disabled:opacity-50 flex items-center gap-2"
               >
                 {loading ? (
                   <>
@@ -479,7 +476,7 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
       {(loading || isGenerating) && (
         <div className="absolute inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center">
           <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-lg">
-            <Loader2 className="h-5 w-5 animate-spin text-blue-500" />
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
             <span className="text-sm font-medium text-gray-700">
               {loading ? 'Publishing job...' : 'Generating details...'}
             </span>

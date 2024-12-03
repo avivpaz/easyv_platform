@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
 import JobCVs from '../components/JobCVs';
+import { useAuth } from '../context/AuthContext';
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -17,7 +18,8 @@ const JobDetail = () => {
   const [error, setError] = useState(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [copied, setCopied] = useState(false);
-  const uploadUrl = `${process.env.REACT_APP_FRONTEND_URL}/jobs/${id}`;
+  const { organization } = useAuth();
+  const uploadUrl = `${process.env.REACT_APP_FRONTEND_URL}/${organization?.id}/jobs/${id}`;
   
   useEffect(() => {
     fetchJob();
@@ -59,7 +61,7 @@ const JobDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto" />
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" />
           <p className="mt-4 text-gray-600">Loading job details...</p>
         </div>
       </div>
@@ -76,7 +78,7 @@ const JobDetail = () => {
           </div>
           <button 
             onClick={() => navigate('/dashboard')}
-            className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg"
+            className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light"
           >
             Back to Dashboard
           </button>
@@ -89,14 +91,14 @@ const JobDetail = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+      <div className="bg-gradient-to-r from-primary to-primary-light text-white">
         <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
           <div className="flex flex-col space-y-6">
             {/* Header */}
             <div className="flex justify-between items-center">
               <button
                 onClick={() => navigate('/dashboard')}
-                className="flex items-center text-blue-100 hover:text-white"
+                className="flex items-center text-secondary-light hover:text-white"
               >
                 <ArrowLeft className="h-5 w-5 md:h-4 md:w-4 md:mr-2" />
                 <span className="hidden md:inline">Back to Dashboard</span>
@@ -117,7 +119,7 @@ const JobDetail = () => {
               </div>
               <div className="flex-1">
                 <h1 className="text-xl md:text-3xl font-bold mb-3 md:mb-4">{job.title}</h1>
-                <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-6 text-sm md:text-base text-blue-100">
+                <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-6 text-sm md:text-base text-secondary-light">
                   <span className="flex items-center gap-1">
                     <MapPin className="h-4 w-4 flex-shrink-0" />
                     <span className="truncate">{job.location}</span>
@@ -138,38 +140,38 @@ const JobDetail = () => {
               </div>
             </div>
 
-            {/* Skills */}
-            <div className="grid md:grid-cols-2 gap-6 p-4 md:p-6 bg-white/10 rounded-xl">
-              <div>
-                <h3 className="text-sm font-medium text-blue-100 mb-2">Required Skills</h3>
-                <div className="flex flex-wrap gap-2">
-                  {job.requiredSkills.map((skill, index) => (
-                    <span
-                      key={index}
-                      className="px-2 py-1 rounded-lg text-xs md:text-sm font-medium bg-white/20"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              
-              {job.niceToHaveSkills?.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-medium text-blue-100 mb-2">Nice to Have</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {job.niceToHaveSkills.map((skill, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 rounded-lg text-xs md:text-sm font-medium bg-white/20"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+       {/* Skills section with switched colors */}
+<div className="grid md:grid-cols-2 gap-6 p-4 md:p-6 bg-white/10 rounded-xl">
+  <div>
+    <h3 className="text-sm font-medium text-secondary-light mb-2">Required Skills</h3>
+    <div className="flex flex-wrap gap-2">
+      {job.requiredSkills.map((skill, index) => (
+        <span
+          key={index}
+          className="px-2 py-1 rounded-lg text-xs md:text-sm font-medium bg-white/10 text-secondary-light"
+        >
+          {skill}
+        </span>
+      ))}
+    </div>
+  </div>
+  
+  {job.niceToHaveSkills?.length > 0 && (
+    <div>
+      <h3 className="text-sm font-medium text-secondary-light mb-2">Nice to Have</h3>
+      <div className="flex flex-wrap gap-2">
+        {job.niceToHaveSkills.map((skill, index) => (
+          <span
+            key={index}
+            className="px-2 py-1 rounded-lg text-xs md:text-sm font-medium bg-primary/20 text-secondary-light border border-white/10"
+          >
+            {skill}
+          </span>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
           </div>
         </div>
       </div>
@@ -188,7 +190,7 @@ const JobDetail = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center z-50 p-4">
           <div className="bg-white rounded-t-xl md:rounded-xl p-4 md:p-6 w-full max-w-lg">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">Share Position</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Share Position</h3>
               <button onClick={() => setShowShareModal(false)} className="text-gray-500">
                 <X className="h-5 w-5" />
               </button>
@@ -203,8 +205,8 @@ const JobDetail = () => {
               <button
                 onClick={handleCopy}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm ${
-                  copied ? 'bg-green-600' : 'bg-blue-600'
-                } text-white`}
+                  copied ? 'bg-green-600' : 'bg-primary'
+                } hover:bg-primary-light text-white`}
               >
                 {copied ? (
                   <>

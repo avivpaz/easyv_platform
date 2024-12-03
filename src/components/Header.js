@@ -50,7 +50,7 @@ const Header = () => {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <Link to="/dashboard" className="flex items-center space-x-2">
-              <div className="bg-blue-600 text-white p-2 rounded-lg">
+              <div className="bg-primary text-white p-2 rounded-lg">
                 <svg 
                   className="w-6 h-6" 
                   fill="none" 
@@ -90,7 +90,7 @@ const Header = () => {
                   className="flex items-center space-x-3 focus:outline-none"
                 >
                   <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center">
                       <span className="text-sm font-medium">{userInfo.avatar}</span>
                     </div>
                     <span className="hidden md:inline-block text-sm font-medium text-gray-700">
@@ -116,7 +116,7 @@ const Header = () => {
                     <div className="py-1">
                       <Link
                         to="/profile"
-                        className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 transition-colors"
                         onClick={() => setIsDropdownOpen(false)}
                       >
                         <User className="w-4 h-4" />
@@ -125,7 +125,7 @@ const Header = () => {
                       
                       <Link
                         to="/settings"
-                        className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 transition-colors"
                         onClick={() => setIsDropdownOpen(false)}
                       >
                         <Settings className="w-4 h-4" />
@@ -138,7 +138,7 @@ const Header = () => {
                             setIsDropdownOpen(false);
                             setIsPricingOpen(true);
                           }}
-                          className="flex items-center space-x-3 px-4 py-2 text-sm text-purple-600 hover:bg-gray-50 w-full text-left"
+                          className="flex items-center space-x-3 px-4 py-2 text-sm text-primary hover:bg-primary/5 w-full text-left transition-colors"
                         >
                           <Crown className="w-4 h-4" />
                           <span>Upgrade Plan</span>
@@ -147,7 +147,7 @@ const Header = () => {
 
                       <Link
                         to="/billing"
-                        className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 transition-colors"
                         onClick={() => setIsDropdownOpen(false)}
                       >
                         <CreditCard className="w-4 h-4" />
@@ -158,7 +158,7 @@ const Header = () => {
 
                       <button
                         onClick={handleLogout}
-                        className="flex items-center space-x-3 px-4 py-2 text-sm text-red-600 hover:bg-gray-50 w-full text-left"
+                        className="flex items-center space-x-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left transition-colors"
                       >
                         <LogOut className="w-4 h-4" />
                         <span>Sign out</span>
