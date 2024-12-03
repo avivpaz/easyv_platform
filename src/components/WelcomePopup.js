@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Upload, X, Globe, Linkedin,AlertCircle } from 'lucide-react';
-import {organizationService} from '../services/organizationService';
+import { Upload, X, Globe, Linkedin, AlertCircle } from 'lucide-react';
+import { organizationService } from '../services/organizationService';
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
 
@@ -32,7 +32,7 @@ const WelcomePopup = ({ isOpen, onClose }) => {
   };
 
   const validateUrl = (url) => {
-    if (!url) return true; // Optional fields can be empty
+    if (!url) return true;
     try {
       new URL(url);
       return true;
@@ -44,7 +44,6 @@ const WelcomePopup = ({ isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
       
-    // Validate URLs
     if (!validateUrl(formData.website)) {
       setError('Please enter a valid website URL');
       return;
@@ -88,7 +87,7 @@ const WelcomePopup = ({ isOpen, onClose }) => {
       <div className="bg-white rounded-xl max-w-md w-full p-6 relative">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+          className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 transition-colors"
         >
           <X className="h-5 w-5" />
         </button>
@@ -107,34 +106,36 @@ const WelcomePopup = ({ isOpen, onClose }) => {
               Organization Logo
             </label>
             <div className="flex items-center justify-center w-full">
-            <label className={`flex flex-col items-center justify-center w-full h-40 border-2 ${logoError ? 'border-red-300' : 'border-gray-300'} border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 relative`}>
-              {formData.logoPreview ? (
-                <img
-                  src={formData.logoPreview}
-                  alt="Preview"
-                  className="w-full h-full object-contain p-4"
+              <label className={`flex flex-col items-center justify-center w-full h-40 border-2 ${
+                logoError ? 'border-red-300' : 'border-gray-300'
+              } border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors relative`}>
+                {formData.logoPreview ? (
+                  <img
+                    src={formData.logoPreview}
+                    alt="Preview"
+                    className="w-full h-full object-contain p-4"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <Upload className={`h-12 w-12 mb-3 ${logoError ? 'text-red-400' : 'text-primary/60'}`} />
+                    <p className="text-sm text-gray-500">Click to upload logo</p>
+                    <p className="text-xs text-gray-400 mt-1">PNG up to 2MB</p>
+                  </div>
+                )}
+                <input
+                  type="file"
+                  className="hidden"
+                  accept=".png"
+                  onChange={handleLogoChange}
                 />
-              ) : (
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <Upload className={`h-12 w-12 mb-3 ${logoError ? 'text-red-400' : 'text-gray-400'}`} />
-                  <p className="text-sm text-gray-500">Click to upload logo</p>
-                  <p className="text-xs text-gray-400 mt-1">PNG up to 2MB</p>
-                </div>
-              )}
-              <input
-                type="file"
-                className="hidden"
-                accept=".png"
-                onChange={handleLogoChange}
-              />
-            </label>
-          </div>
-          {logoError && (
-            <div className="flex items-center gap-2 mt-2 text-red-600 text-sm">
-              <AlertCircle className="h-4 w-4" />
-              <span>{logoError}</span>
+              </label>
             </div>
-          )}
+            {logoError && (
+              <div className="flex items-center gap-2 mt-2 text-red-600 text-sm">
+                <AlertCircle className="h-4 w-4" />
+                <span>{logoError}</span>
+              </div>
+            )}
           </div>
 
           {/* Description */}
@@ -145,7 +146,7 @@ const WelcomePopup = ({ isOpen, onClose }) => {
             <textarea
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
               rows="4"
               placeholder="Tell us about your organization..."
               required
@@ -163,7 +164,7 @@ const WelcomePopup = ({ isOpen, onClose }) => {
                 type="url"
                 value={formData.website}
                 onChange={(e) => setFormData(prev => ({ ...prev, website: e.target.value }))}
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
                 placeholder="https://yourcompany.com"
               />
             </div>
@@ -180,7 +181,7 @@ const WelcomePopup = ({ isOpen, onClose }) => {
                 type="url"
                 value={formData.linkedinUrl}
                 onChange={(e) => setFormData(prev => ({ ...prev, linkedinUrl: e.target.value }))}
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
                 placeholder="https://linkedin.com/company/yourcompany"
               />
             </div>
@@ -194,14 +195,14 @@ const WelcomePopup = ({ isOpen, onClose }) => {
             <button
               type="button"
               onClick={handleSkip}
-              className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+              className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
             >
               Skip for now
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light disabled:opacity-50 transition-colors"
             >
               {loading ? 'Saving...' : 'Save Profile'}
             </button>
