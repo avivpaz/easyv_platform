@@ -191,7 +191,7 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
         ...prev, 
         title: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
       }))}
-      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
+      className="w-full  px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors capitalize"
       placeholder="e.g. Senior Frontend Developer"
     />
       </div>
@@ -217,8 +217,21 @@ Our AI will turn your input into a comprehensive and professional job descriptio
 
   const renderStep2 = () => (
     <div className="space-y-6">
+     <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
+        <input
+          type="text"
+          value={formData.title}
+          onChange={(e) => setFormData(prev => ({ 
+            ...prev, 
+            title: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
+          }))}
+          className="text-lg font-semibold text-gray-900 w-full px-3 py-1.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 focus:bg-white focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+        />
+      </div>
+
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Full Description</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Here’s what we’ve got so far! Edit or add more details about the role if needed</label>
         <textarea
           required
           value={formData.description}
