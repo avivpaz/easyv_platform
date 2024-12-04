@@ -5,9 +5,6 @@ export const organizationService = {
   async updateOrganization(organizationId, formData) {
     try {
       const response = await api.put(`/organizations/${organizationId}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
       });
       console.log('Update Organization Response:', response);
       return response.data;
@@ -33,9 +30,6 @@ export const organizationService = {
       formData.append('logo', logoFile);
 
       const response = await api.put(`/organizations/${organizationId}/logo`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
       });
       console.log('Update Logo Response:', response);
       return response.data;
