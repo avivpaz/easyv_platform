@@ -4,8 +4,8 @@ import { User, Building2, Upload, AlertCircle, Globe, Linkedin, Mail, UserCircle
 import { organizationService } from '../services/organizationService';
 
 const SettingsPage = () => {
-  const { user, organization } = useAuth();
-  const [activeTab, setActiveTab] = useState('profile');
+    const { user, organization, updateOrganization } = useAuth();
+    const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -53,7 +53,11 @@ const SettingsPage = () => {
         formData.append('logo', orgData.logo);
       }
 
-      await organizationService.updateOrganization(organization.id, formData);
+      const updatedOrg = await organizationService.updateOrganization(organization.id, formData);
+      
+      // Update the organization in AuthContext
+      updateOrganization(updatedOrg);
+      
       setSuccess('Organization details updated successfully');
     } catch (err) {
       setError('Failed to update organization details');
