@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   ChevronDown,
-  User,
   Settings,
   CreditCard,
   LogOut,
@@ -13,6 +12,7 @@ import PricingModal from './PricingModal';
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isPricingOpen, setIsPricingOpen] = useState(false);
   const { user, organization, logout } = useAuth();
@@ -43,6 +43,11 @@ const Header = () => {
     }
   };
 
+  const handleNavigation = (path) => {
+    setIsDropdownOpen(false);
+    navigate(path);
+  };
+
   return (
     <>
       <header className="bg-white border-b border-gray-200 fixed w-full top-0 z-40">
@@ -50,17 +55,18 @@ const Header = () => {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <Link to="/dashboard" className="flex items-center space-x-2">
-            <div className="w-6 h-6 bg-primary flex items-center justify-center rounded-lg">
-              <img 
+              <div className="w-6 h-6 bg-primary flex items-center justify-center rounded-lg">
+                <img 
                   src="/logo.png" 
                   alt="Logo"
                   className="w-8 h-8 object-contain"
                 />
               </div>
               <span className="text-xl font-bold text-gray-900">
-              RightCruiter
+                RightCruiter
               </span>
             </Link>
+
             {/* Right side buttons */}
             <div className="flex items-center space-x-4">
               {/* Upgrade Button */}
@@ -105,23 +111,17 @@ const Header = () => {
 
                     {/* Menu Items */}
                     <div className="py-1">
-                      <Link
-                        to="/profile"
-                        className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 transition-colors"
-                        onClick={() => setIsDropdownOpen(false)}
-                      >
-                        <User className="w-4 h-4" />
-                        <span>Your Profile</span>
-                      </Link>
-                      
-                      <Link
-                        to="/settings"
-                        className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 transition-colors"
-                        onClick={() => setIsDropdownOpen(false)}
+                      <button
+                        onClick={() => handleNavigation('/settings')}
+                        className={`flex items-center space-x-3 px-4 py-2 text-sm w-full text-left ${
+                          location.pathname === '/settings' 
+                            ? 'text-primary bg-primary/5' 
+                            : 'text-gray-700 hover:bg-primary/5'
+                        } transition-colors`}
                       >
                         <Settings className="w-4 h-4" />
                         <span>Settings</span>
-                      </Link>
+                      </button>
 
                       {userInfo.plan === 'free' && (
                         <button
@@ -136,14 +136,17 @@ const Header = () => {
                         </button>
                       )}
 
-                      <Link
-                        to="/billing"
-                        className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 transition-colors"
-                        onClick={() => setIsDropdownOpen(false)}
+                      <button
+                        onClick={() => handleNavigation('/billing')}
+                        className={`flex items-center space-x-3 px-4 py-2 text-sm w-full text-left ${
+                          location.pathname === '/billing'
+                            ? 'text-primary bg-primary/5'
+                            : 'text-gray-700 hover:bg-primary/5'
+                        } transition-colors`}
                       >
                         <CreditCard className="w-4 h-4" />
                         <span>Billing</span>
-                      </Link>
+                      </button>
 
                       <div className="border-t border-gray-100 my-1"></div>
 

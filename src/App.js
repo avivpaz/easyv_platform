@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import JobDetail from './pages/JobDetail';
 import PrivateRoute from './components/PrivateRoute';
 import Header from './components/Header';
+import SettingsPage from './pages/SettingsPage';
 
 // Separate the routes component to use the auth hook
 function AppRoutes() {
@@ -54,18 +55,10 @@ function AppRoutes() {
             } 
           />
           <Route 
-            path="/profile" 
-            element={
-              <PrivateRoute>
-                <div>Profile Page</div>
-              </PrivateRoute>
-            } 
-          />
-          <Route 
             path="/settings" 
             element={
               <PrivateRoute>
-                <div>Settings Page</div>
+                <SettingsPage />
               </PrivateRoute>
             } 
           />
