@@ -70,7 +70,7 @@ const Header = () => {
             {/* Right side buttons */}
             <div className="flex items-center space-x-4">
               {/* Upgrade Button */}
-              {userInfo.plan === 'free' && (
+              {/* {userInfo.plan === 'free' && ( */}
                 <button
                   onClick={() => setIsPricingOpen(true)}
                   className="hidden md:flex items-center space-x-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity"
@@ -78,7 +78,7 @@ const Header = () => {
                   <Crown className="w-4 h-4" />
                   <span>Upgrade</span>
                 </button>
-              )}
+              {/* )} */}
 
               {/* User Menu */}
               <div className="relative">

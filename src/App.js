@@ -8,6 +8,8 @@ import JobDetail from './pages/JobDetail';
 import PrivateRoute from './components/PrivateRoute';
 import Header from './components/Header';
 import SettingsPage from './pages/SettingsPage';
+import ThankYou from './pages/ThankYou';
+import { ModalProvider } from './context/ModalContext';
 
 // Separate the routes component to use the auth hook
 function AppRoutes() {
@@ -75,6 +77,15 @@ function AppRoutes() {
             element={
               <PrivateRoute>
                 <div>Upgrade Plan Page</div>
+              </PrivateRoute>
+            } 
+          />
+          
+            <Route 
+            path="/thank-you" 
+            element={
+              <PrivateRoute>
+                <ThankYou />
               </PrivateRoute>
             } 
           />

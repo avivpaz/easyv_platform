@@ -1,4 +1,3 @@
-// context/AuthContext.js
 import React, { createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import storageService from '../services/storageService';
@@ -20,7 +19,6 @@ export const AuthProvider = ({ children }) => {
     setUser(authData.user);
     setOrganization(authData.organization);
 
-    // Check if organization needs setup using the needsSetup flag
     if (authData.organization?.needsSetup) {
       setShowWelcomePopup(true);
     }
@@ -33,7 +31,7 @@ export const AuthProvider = ({ children }) => {
       storageService.clearAll();
       setUser(null);
       setOrganization(null);
-      setShowWelcomePopup(false); // Reset popup state on logout
+      setShowWelcomePopup(false);
       navigate('/login');
     } catch (error) {
       console.error('Logout error:', error);
@@ -41,17 +39,26 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Update organization data after welcome popup submission
   const updateOrganization = (updatedOrgData) => {
     const newOrgData = {
       ...organization,
       ...updatedOrgData,
-      needsSetup: false // Mark as setup complete
+      needsSetup: false
     };
     setOrganization(newOrgData);
     storageService.setOrganization(newOrgData);
   };
 
+  const updateSubscription = (subscriptionData) => {
+    const updatedOrg = {
+      ...organization,
+      plan: subscriptionData.plan, // This will be 'professional'
+      subscription: subscriptionData
+    };
+    setOrganization(updatedOrg);
+    storageService.setOrganization(updatedOrg);
+  };
+  
   return (
     <AuthContext.Provider value={{ 
       user, 
@@ -59,6 +66,7 @@ export const AuthProvider = ({ children }) => {
       login, 
       logout,
       updateOrganization,
+      updateSubscription, // Add the new method to context
       isAuthenticated: !!storageService.getToken(),
       isPro: organization?.plan === 'pro'
     }}>

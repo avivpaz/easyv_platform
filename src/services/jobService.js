@@ -53,6 +53,9 @@ export const jobService = {
       formData.append('jobId', jobId);
 
       const response = await api.post(`/jobs/${jobId}/cv`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
       });
       return response.data;
     } catch (error) {

@@ -5,6 +5,9 @@ export const organizationService = {
   async updateOrganization(organizationId, formData) {
     try {
       const response = await api.put(`/organizations/${organizationId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       console.log('Update Organization Response:', response);
       return response.data;
@@ -30,6 +33,9 @@ export const organizationService = {
       formData.append('logo', logoFile);
 
       const response = await api.put(`/organizations/${organizationId}/logo`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       console.log('Update Logo Response:', response);
       return response.data;
@@ -39,6 +45,28 @@ export const organizationService = {
     }
   },
 
+  async updateUpgrade(organizationId, subscriptionData) {
+    try {
+      const response = await api.put(`/organizations/${organizationId}/upgrade`, {
+        checkoutId: subscriptionData.checkoutId,
+        customerId: subscriptionData.customerId,
+        status: subscriptionData.status,
+        plan: subscriptionData.plan,
+        amount: subscriptionData.amount,
+        billing: {
+          interval: subscriptionData.billing.interval,
+          amount: subscriptionData.billing.amount
+        },
+        updatedAt: new Date().toISOString()
+      });
+  
+      console.log('Update Subscription Response:', response);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating subscription:', error);
+      throw new Error(error.response?.data?.error || 'Failed to update subscription');
+    }
+  },
   async deleteLogo(organizationId) {
     try {
       const response = await api.delete(`/organizations/${organizationId}/logo`);
