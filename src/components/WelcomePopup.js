@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Upload, X, Globe, Linkedin, AlertCircle } from 'lucide-react';
+import { Upload, X, Globe, Linkedin, AlertCircle, Palette } from 'lucide-react';
 import { organizationService } from '../services/organizationService';
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
@@ -12,7 +12,8 @@ const WelcomePopup = ({ isOpen, onClose }) => {
     logo: null,
     logoPreview: null,
     website: organization?.website || '',
-    linkedinUrl: organization?.linkedinUrl || ''
+    linkedinUrl: organization?.linkedinUrl || '',
+    brandColor: organization?.brandColor || '#000000'
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -41,6 +42,10 @@ const WelcomePopup = ({ isOpen, onClose }) => {
     }
   };
 
+  const validateHexColor = (color) => {
+    return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
       
@@ -52,6 +57,10 @@ const WelcomePopup = ({ isOpen, onClose }) => {
       setError('Please enter a valid LinkedIn URL');
       return;
     }
+    if (!validateHexColor(formData.brandColor)) {
+      setError('Please enter a valid hex color code');
+      return;
+    }
   
     setLoading(true);
     setError(null);
@@ -59,6 +68,7 @@ const WelcomePopup = ({ isOpen, onClose }) => {
     try {
       const formDataObj = new FormData();
       formDataObj.append('description', formData.description);
+      formDataObj.append('brandColor', formData.brandColor);
       if (formData.logo) {
         formDataObj.append('logo', formData.logo);
       }
@@ -95,7 +105,6 @@ const WelcomePopup = ({ isOpen, onClose }) => {
         <div className="text-center mb-6">
           <h2 className="text-2xl font-semibold text-gray-900">Welcome to RightCruiter!</h2>
           <p className="text-gray-600 mt-2">
-            {/* Let's complete your organization profile to get started */}
             1 Minute and you are up and running!
           </p>
         </div>
@@ -139,10 +148,40 @@ const WelcomePopup = ({ isOpen, onClose }) => {
             )}
           </div>
 
+          {/* Brand Color */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Brand Color <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <Palette className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <div className="flex gap-4">
+                <input
+                  type="color"
+                  value={formData.brandColor}
+                  onChange={(e) => setFormData(prev => ({ ...prev, brandColor: e.target.value }))}
+                  className="h-10 w-20 cursor-pointer border border-gray-300 rounded"
+                />
+                <input
+                  type="text"
+                  value={formData.brandColor}
+                  onChange={(e) => setFormData(prev => ({ ...prev, brandColor: e.target.value }))}
+                  className="pl-10 flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
+                  placeholder="#000000"
+                  pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+                  required
+                />
+              </div>
+              <p className="mt-1 text-sm text-gray-500">
+                Choose your brand color. This will be used across your organization's profile.
+              </p>
+            </div>
+          </div>
+
           {/* Description */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-            Describe your organization to attract the right candidates <span className="text-red-500">*</span>
+              Describe your organization to attract the right candidates <span className="text-red-500">*</span>
             </label>
             <textarea
               value={formData.description}
@@ -157,7 +196,7 @@ const WelcomePopup = ({ isOpen, onClose }) => {
           {/* Website URL */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-            Add your website for candidates to learn more<span className="text-gray-500 text-xs">(optional)</span>
+              Add your website for candidates to learn more <span className="text-gray-500 text-xs">(optional)</span>
             </label>
             <div className="relative">
               <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -174,7 +213,7 @@ const WelcomePopup = ({ isOpen, onClose }) => {
           {/* LinkedIn URL */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-            Link your LinkedIn profile for additional credibility <span className="text-gray-500 text-xs">(optional)</span>
+              Link your LinkedIn profile for additional credibility <span className="text-gray-500 text-xs">(optional)</span>
             </label>
             <div className="relative">
               <Linkedin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -203,7 +242,8 @@ const WelcomePopup = ({ isOpen, onClose }) => {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light disabled:opacity-50 transition-colors"
+              className="flex-1 px-4 py-2 text-white rounded-lg hover:opacity-90 disabled:opacity-50 transition-colors"
+              style={{ backgroundColor: validateHexColor(formData.brandColor) ? formData.brandColor : '#000000' }}
             >
               {loading ? 'Saving...' : 'Save and Continue'}
             </button>

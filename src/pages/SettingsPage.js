@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, Building2, Upload, AlertCircle, Globe, Linkedin, Mail, UserCircle } from 'lucide-react';
+import { User, Building2, Upload, Globe, Linkedin, Mail, UserCircle } from 'lucide-react';
 import { organizationService } from '../services/organizationService';
 
 const SettingsPage = () => {
@@ -20,6 +20,7 @@ const SettingsPage = () => {
     description: organization?.description || '',
     website: organization?.website || '',
     linkedinUrl: organization?.linkedinUrl || '',
+    brandColor: organization?.brandColor || '#000000',
     logo: null,
     logoPreview: organization?.logoUrl || null
   });
@@ -49,6 +50,7 @@ const SettingsPage = () => {
       formData.append('description', orgData.description);
       formData.append('website', orgData.website);
       formData.append('linkedinUrl', orgData.linkedinUrl);
+      formData.append('brandColor', orgData.brandColor);
       if (orgData.logo) {
         formData.append('logo', orgData.logo);
       }
@@ -208,7 +210,32 @@ const SettingsPage = () => {
                     required
                   />
                 </div>
-
+                <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Brand Color
+            </label>
+            <div className="relative">
+              <div className="flex gap-4">
+                <input
+                  type="color"
+                  value={orgData.brandColor}
+                  onChange={(e) => setOrgData(prev => ({ ...prev, brandColor: e.target.value }))}
+                  className="h-10 w-20 cursor-pointer border border-gray-300 rounded"
+                />
+                <input
+                  type="text"
+                  value={orgData.brandColor}
+                  onChange={(e) => setOrgData(prev => ({ ...prev, brandColor: e.target.value }))}
+                  className="pl-10 flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
+                  placeholder="#000000"
+                  pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+                />
+              </div>
+              <p className="mt-1 text-sm text-gray-500">
+                Choose your brand color. This will be used across your organization's profile.
+              </p>
+            </div>
+          </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Description
@@ -221,7 +248,7 @@ const SettingsPage = () => {
                     required
                   />
                 </div>
-
+                          
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Website
