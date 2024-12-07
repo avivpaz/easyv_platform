@@ -273,6 +273,7 @@ const SettingsPage = () => {
                     <input
                       type="url"
                       value={orgData.linkedinUrl}
+                      placeholder="https://linkedin.com/company/yourcompany"
                       onChange={(e) => setOrgData(prev => ({ ...prev, linkedinUrl: e.target.value }))}
                       className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
                     />
