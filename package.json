@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "aws-amplify": "^6.10.2",
     "axios": "^1.7.7",
     "classnames": "^2.5.1",
     "cors": "^2.8.5",
@@ -43,9 +44,11 @@
     ]
   },
   "devDependencies": {
+    "@aws-amplify/backend": "^1.8.0",
+    "@aws-amplify/backend-cli": "^1.4.2",
     "autoprefixer": "^10.4.20",
-    "aws-cdk": "^2.171.1",
-    "aws-cdk-lib": "^2.171.1",
+    "aws-cdk": "^2.172.0",
+    "aws-cdk-lib": "^2.172.0",
     "constructs": "^10.4.2",
     "cross-env": "^7.0.3",
     "esbuild": "^0.24.0",
