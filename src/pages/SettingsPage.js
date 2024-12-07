@@ -258,6 +258,7 @@ const SettingsPage = () => {
                     <input
                       type="url"
                       value={orgData.website}
+                      placeholder="https://yourcompany.com"
                       onChange={(e) => setOrgData(prev => ({ ...prev, website: e.target.value }))}
                       className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
                     />
