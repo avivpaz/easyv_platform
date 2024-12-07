@@ -186,7 +186,6 @@ const ReviewModeCard = ({ cv, onNext, onPrevious, currentIndex, total, updateCVS
     </div>
   );
 };
-
 const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
   const [expandedExp, setExpandedExp] = useState(null);
 
@@ -209,7 +208,7 @@ const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
   };
 
   return (
-    <div className={`bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden ${isExpanded ? 'h-[80vh] md:h-[85vh]' : ''}`}>
+    <div className={`bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden ${isExpanded ? 'h-[80vh] md:h-[85vh] flex flex-col' : ''}`}>
       <div className="p-3 md:p-4 cursor-pointer hover:bg-gray-50 flex items-center justify-between"
            onClick={onToggle}>
         <div className="flex items-center gap-2 md:gap-4">
@@ -232,71 +231,73 @@ const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
 
       {isExpanded && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 p-4 md:p-6 flex-grow overflow-auto">
-          <div className="bg-primary/5 p-3 md:p-4 rounded-xl">
-  <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
-    <GraduationCap className="h-4 w-4 text-primary" />
-    Education
-  </h4>
-              <div className="space-y-3">
-                {cv.candidate.education?.map((edu, index) => (
-                  <div key={index} className="bg-white p-2 md:p-3 rounded-lg border-l-4 border-primary shadow-sm">
-                    <p className="font-medium text-sm md:text-base text-gray-900">{edu.degree}</p>
-                    <p className="text-xs md:text-sm text-gray-600">{edu.institution}</p>
-                    <p className="text-xs md:text-sm text-gray-500">{edu.year}</p>
-                  </div>
-                ))}
+          <div className="flex-1 overflow-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 p-4 md:p-6">
+              <div className="bg-primary/5 p-3 md:p-4 rounded-xl">
+                <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
+                  <GraduationCap className="h-4 w-4 text-primary" />
+                  Education
+                </h4>
+                <div className="space-y-3">
+                  {cv.candidate.education?.map((edu, index) => (
+                    <div key={index} className="bg-white p-2 md:p-3 rounded-lg border-l-4 border-primary shadow-sm">
+                      <p className="font-medium text-sm md:text-base text-gray-900">{edu.degree}</p>
+                      <p className="text-xs md:text-sm text-gray-600">{edu.institution}</p>
+                      <p className="text-xs md:text-sm text-gray-500">{edu.year}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <div className="bg-secondary/20 p-3 md:p-4 rounded-xl">
-              <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
-                <Briefcase className="h-4 w-4 text-primary" />
-                Experience
-              </h4>
-              <div className="space-y-3">
-                {cv.candidate.experience?.map((exp, index) => (
-                  <div key={index} className="bg-white p-2 md:p-3 rounded-lg border-l-4 border-primary shadow-sm">
-                    <div className="flex items-center justify-between cursor-pointer"
-                         onClick={() => setExpandedExp(expandedExp === index ? null : index)}>
-                      <div>
-                        <p className="font-medium text-sm md:text-base text-gray-900">{exp.position}</p>
-                        <p className="text-xs md:text-sm text-gray-600">{exp.company}</p>
-                        <p className="text-xs md:text-sm text-gray-500">{exp.dates}</p>
+              <div className="bg-secondary/20 p-3 md:p-4 rounded-xl">
+                <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
+                  <Briefcase className="h-4 w-4 text-primary" />
+                  Experience
+                </h4>
+                <div className="space-y-3">
+                  {cv.candidate.experience?.map((exp, index) => (
+                    <div key={index} className="bg-white p-2 md:p-3 rounded-lg border-l-4 border-primary shadow-sm">
+                      <div className="flex items-center justify-between cursor-pointer"
+                           onClick={() => setExpandedExp(expandedExp === index ? null : index)}>
+                        <div>
+                          <p className="font-medium text-sm md:text-base text-gray-900">{exp.position}</p>
+                          <p className="text-xs md:text-sm text-gray-600">{exp.company}</p>
+                          <p className="text-xs md:text-sm text-gray-500">{exp.dates}</p>
+                        </div>
+                        {exp.responsibilities?.length > 0 && (
+                          <button className="p-1 hover:bg-gray-50 rounded-full">
+                            {expandedExp === index ? 
+                              <ChevronUp className="h-4 w-4 text-gray-400" /> : 
+                              <ChevronDown className="h-4 w-4 text-gray-400" />
+                            }
+                          </button>
+                        )}
                       </div>
-                      {exp.responsibilities?.length > 0 && (
-                        <button className="p-1 hover:bg-gray-50 rounded-full">
-                          {expandedExp === index ? 
-                            <ChevronUp className="h-4 w-4 text-gray-400" /> : 
-                            <ChevronDown className="h-4 w-4 text-gray-400" />
-                          }
-                        </button>
+                      {expandedExp === index && exp.responsibilities && (
+                        <div className="mt-2 pl-2 md:pl-3 border-l-2 border-secondary space-y-1">
+                          {exp.responsibilities.map((resp, idx) => (
+                            <p key={idx} className="text-xs md:text-sm text-gray-600">• {resp}</p>
+                          ))}
+                        </div>
                       )}
                     </div>
-                    {expandedExp === index && exp.responsibilities && (
-                      <div className="mt-2 pl-2 md:pl-3 border-l-2 border-secondary space-y-1">
-                        {exp.responsibilities.map((resp, idx) => (
-                          <p key={idx} className="text-xs md:text-sm text-gray-600">• {resp}</p>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <div className="bg-gray-50 p-3 md:p-4 rounded-xl">
-  <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
-    <Code className="h-4 w-4 text-primary" />
-    Skills
-  </h4>
-              <div className="flex flex-wrap gap-2">
-                {cv.candidate.skills?.map((skill, index) => (
-                  <span key={index} 
-                    className="px-2 py-1 rounded-lg text-xs md:text-sm bg-white text-primary-dark border border-primary/20">
-                    {skill}
-                  </span>
-                ))}
+              <div className="bg-gray-50 p-3 md:p-4 rounded-xl">
+                <h4 className="flex items-center gap-2 text-gray-800 font-medium mb-3 text-sm md:text-base">
+                  <Code className="h-4 w-4 text-primary" />
+                  Skills
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {cv.candidate.skills?.map((skill, index) => (
+                    <span key={index} 
+                      className="px-2 py-1 rounded-lg text-xs md:text-sm bg-white text-primary-dark border border-primary/20">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -330,6 +331,7 @@ const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
     </div>
   );
 };
+
 const JobCVs = ({ jobId }) => {
   const [cvs, setCvs] = useState([]);
   const [loading, setLoading] = useState(true);
