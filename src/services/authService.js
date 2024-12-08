@@ -7,7 +7,7 @@ export const authService = {
       email: formData.email,
       password: formData.password,
       organizationName: formData.company,
-      fullName:formData.fullName,
+      fullName: formData.fullName,
       role: 'admin'
     };
     
@@ -20,15 +20,14 @@ export const authService = {
     return response.data;
   },
 
+  async googleLogin(googleToken) {
+    const response = await api.post('/auth/google', { token: googleToken });
+    return response.data;
+  },
+
   async logout() {
     try {
-      // Optional: Call backend logout endpoint if you have one
-      // await api.post('/auth/logout');
-      
-      // Clear all auth data
       localStorage.clear();
-      
-      // Optional: Clear any API cache or reset API state
       return { success: true };
     } catch (error) {
       console.error('Logout error:', error);

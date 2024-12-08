@@ -10,6 +10,7 @@ import Header from './components/Header';
 import SettingsPage from './pages/SettingsPage';
 import ThankYou from './pages/ThankYou';
 import { ModalProvider } from './context/ModalContext';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // Separate the routes component to use the auth hook
 function AppRoutes() {
@@ -99,11 +100,13 @@ function AppRoutes() {
 // Main App component with correct provider order
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <AppRoutes />
-      </AuthProvider>
-    </Router>
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+      <Router>
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
+      </Router>
+    </GoogleOAuthProvider>
   );
 }
 

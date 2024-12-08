@@ -113,17 +113,7 @@ const SettingsPage = () => {
 
           {/* Content */}
           <div className="p-6">
-            {success && (
-              <div className="mb-4 p-4 bg-green-50 text-green-700 rounded-lg">
-                {success}
-              </div>
-            )}
-            
-            {error && (
-              <div className="mb-4 p-4 bg-red-50 text-red-700 rounded-lg">
-                {error}
-              </div>
-            )}
+         
 
             {activeTab === 'profile' ? (
               <form onSubmit={handleProfileSubmit} className="space-y-6">
@@ -288,13 +278,28 @@ const SettingsPage = () => {
                 >
                   {loading ? 'Saving...' : 'Save Organization Settings'}
                 </button>
+                <div className=''>
+            {success && (
+              <div className="mb-4 p-4 bg-green-50 text-green-700 rounded-lg">
+                {success}
+              </div>
+            )}
+            
+            {error && (
+              <div className="mb-4 p-4 bg-red-50 text-red-700 rounded-lg">
+                {error}
+              </div>
+            )}
+            </div>
               </form>
             )}
+            
           </div>
+          
         </div>
       </div>
     </div>
   );
-};
+};  
 
 export default SettingsPage;

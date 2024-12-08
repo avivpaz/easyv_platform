@@ -1,32 +1,34 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/authService';
-import { Eye, EyeOff, UserCircle2, Mail, Lock } from 'lucide-react';
+import { UserCircle2, Building } from 'lucide-react';
+import { useGoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const googleLogin = useGoogleLogin({
+    onSuccess: response => handleGoogleLogin(response.access_token),
+    onError: error => {
+      console.error('Google login error:', error);
+      setError('Failed to authenticate with Google');
+    }
+  });
+
+  const handleGoogleLogin = async (token) => {
     setError('');
     setLoading(true);
-
     try {
-      const response = await authService.login(formData);
+      const response = await authService.googleLogin(token);
       await login(response);
       navigate('/dashboard');
     } catch (err) {
-      console.error('Login error:', err);
-      setError(err.response?.data?.error || 'Failed to login');
+      console.error('Google login error:', err);
+      setError(err.response?.data?.error || 'Failed to authenticate with Google');
     } finally {
       setLoading(false);
     }
@@ -37,31 +39,43 @@ const Login = () => {
       {/* Left Panel - Decorative */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary to-primary-light p-12 text-white">
         <div className="max-w-md">
-          <h1 className="text-4xl font-bold mb-6">Welcome Back!</h1>
+          <h1 className="text-4xl font-bold mb-6">Welcome!</h1>
           <p className="text-secondary-light text-lg mb-8">
             Sign in to access your dashboard and manage your job postings.
           </p>
-          <div className="bg-white/10 rounded-xl p-6">
-            <div className="flex items-center gap-4 mb-4">
-              <UserCircle2 className="h-8 w-8" />
-              <div>
-                <h3 className="font-semibold">Easy Management</h3>
-                <p className="text-secondary-light text-sm">Track and manage all your job postings in one place</p>
+          <div className="space-y-6">
+            <div className="bg-white/10 rounded-xl p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/10 p-3 rounded-lg">
+                  <Building className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">For Companies</h3>
+                  <p className="text-secondary-light text-sm">
+                    Post jobs, manage applications, and find the perfect candidates
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="border-t border-white/10 my-4" />
-            <div className="flex items-center gap-4">
-              <Lock className="h-8 w-8" />
-              <div>
-                <h3 className="font-semibold">Secure Access</h3>
-                <p className="text-secondary-light text-sm">Your data is protected with enterprise-grade security</p>
+            
+            <div className="bg-white/10 rounded-xl p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/10 p-3 rounded-lg">
+                  <UserCircle2 className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Easy to Use</h3>
+                  <p className="text-secondary-light text-sm">
+                    Intuitive interface designed for efficient recruitment
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Right Panel - Login Form */}
+      {/* Right Panel - Auth Form */}
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="max-w-md w-full space-y-8">
           {/* Logo and Title */}
@@ -69,8 +83,8 @@ const Login = () => {
             <div className="bg-primary w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4">
               <UserCircle2 className="h-8 w-8 text-white" />
             </div>
-            <h2 className="text-3xl font-bold text-primary-dark mb-2">Sign In</h2>
-            <p className="text-gray-500">Enter your credentials to access your account</p>
+            <h2 className="text-3xl font-bold text-primary-dark mb-2">Get Started</h2>
+            <p className="text-gray-500 mb-8">Use your Google account to continue</p>
           </div>
 
           {/* Error Message */}
@@ -89,90 +103,31 @@ const Login = () => {
             </div>
           )}
 
-          {/* Login Form */}
-          <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-primary-dark mb-1">
-                  Email address
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="email"
-                    required
-                    className="appearance-none block w-full pl-11 pr-3 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 text-sm"
-                    placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    disabled={loading}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-primary-dark mb-1">
-                  Password
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    required
-                    className="appearance-none block w-full pl-11 pr-10 py-2.5 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 text-sm"
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    disabled={loading}
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-500" />
-                    ) : (
-                      <Eye className="h-5 w-5 text-gray-400 hover:text-gray-500" />
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Signing in...
-                  </>
-                ) : (
-                  'Sign in to your account'
-                )}
-              </button>
-            </div>
-
-            <div className="text-center">
-              <div className="text-sm">
-                <span className="text-gray-500">Don't have an account?</span>{' '}
-                <Link to="/signup" className="font-medium text-primary hover:text-primary-light">
-                  Create one now
-                </Link>
-              </div>
-            </div>
-          </form>
+          <button
+            onClick={() => googleLogin()}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-3 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <svg className="animate-spin h-5 w-5 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Authenticating...</span>
+              </>
+            ) : (
+              <>
+                <svg className="h-5 w-5" viewBox="0 0 24 24">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                Continue with Google
+              </>
+            )}
+          </button>
         </div>
       </div>
     </div>
