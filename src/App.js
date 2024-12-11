@@ -8,6 +8,7 @@ import JobDetail from './pages/JobDetail';
 import PrivateRoute from './components/PrivateRoute';
 import Header from './components/Header';
 import SettingsPage from './pages/SettingsPage';
+import BillingPage from './pages/BillingPage';
 import ThankYou from './pages/ThankYou';
 import { ModalProvider } from './context/ModalContext';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -69,7 +70,7 @@ function AppRoutes() {
             path="/billing" 
             element={
               <PrivateRoute>
-                <div>Billing Page</div>
+                <BillingPage/>
               </PrivateRoute>
             } 
           />

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { initializePaddle } from '../utils/paddle';
@@ -7,13 +7,11 @@ import { upgradeEvents } from '../utils/events';
 
 const PricingModal = ({ isOpen, onClose }) => {
   const { organization, updateSubscription } = useAuth();
-  const currentPlan = organization?.plan || 'free';
+  const currentPlan = organization?.plan || '';
 
   useEffect(() => {
-    // Subscribe to upgrade success events
     const unsubscribe = upgradeEvents.subscribe(() => {
       console.log('Upgrade event received in PricingModal');
-      // Close the modal after successful upgrade
       onClose();
     });
 
@@ -69,7 +67,6 @@ const PricingModal = ({ isOpen, onClose }) => {
       priceId: process.env.REACT_APP_PADDLE_ENTERPRISE_PRICE_ID
     }
   ];
-
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto" onClick={onClose}>

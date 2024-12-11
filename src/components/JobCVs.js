@@ -8,7 +8,7 @@ import {
 import { jobService } from '../services/jobService';
 import UploadModal from './UploadModal';
 import { cvService } from '../services/cvService';
-
+import CopyButton from './CopyButton'
 const Status = ({ status }) => {
   const colors = {
     pending: 'bg-secondary text-primary-dark',
@@ -67,8 +67,17 @@ const ReviewModeCard = ({ cv, onNext, onPrevious, currentIndex, total, updateCVS
             <Users className="h-4 w-4 md:h-5 md:w-5 text-primary" />
           </div>
           <div>
-            <h3 className="font-medium text-sm md:text-base text-gray-900">{cv.candidate.fullName}</h3>
-            <p className="text-xs md:text-sm text-gray-500">{cv.candidate.email}</p>
+          <h3 className="font-medium text-sm md:text-base text-gray-900">{cv.candidate.fullName}</h3>
+            <div className="flex items-center gap-1">
+              <p className="text-xs md:text-sm text-gray-500">{cv.candidate.email}</p>
+              <CopyButton text={cv.candidate.email} label="email" />
+            </div>
+            {cv.candidate.phone && (
+              <div className="flex items-center gap-1">
+                <p className="text-xs md:text-sm text-gray-500">{cv.candidate.phone}</p>
+                <CopyButton text={cv.candidate.phone} label="phone" />
+              </div>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-2 md:gap-4">
@@ -216,8 +225,17 @@ const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
             <Users className="h-4 w-4 md:h-5 md:w-5 text-primary" />
           </div>
           <div>
-            <h3 className="font-medium text-sm md:text-base text-gray-900">{cv.candidate.fullName}</h3>
-            <p className="text-xs md:text-sm text-gray-500">{cv.candidate.email}</p>
+          <h3 className="font-medium text-sm md:text-base text-gray-900">{cv.candidate.fullName}</h3>
+            <div className="flex items-center gap-1">
+              <p className="text-xs md:text-sm text-gray-500">{cv.candidate.email}</p>
+              <CopyButton text={cv.candidate.email} label="email" />
+            </div>
+            {cv.candidate.phone && (
+              <div className="flex items-center gap-1">
+                <p className="text-xs md:text-sm text-gray-500">{cv.candidate.phone}</p>
+                <CopyButton text={cv.candidate.phone} label="phone" />
+              </div>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-2 md:gap-4">
