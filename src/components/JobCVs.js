@@ -9,6 +9,8 @@ import { jobService } from '../services/jobService';
 import UploadModal from './UploadModal';
 import { cvService } from '../services/cvService';
 import CopyButton from './CopyButton'
+import PDFViewerModal from './PDFViewerModal';
+
 const Status = ({ status }) => {
   const colors = {
     pending: 'bg-secondary text-primary-dark',
@@ -25,6 +27,7 @@ const Status = ({ status }) => {
 
 const ReviewModeCard = ({ cv, onNext, onPrevious, currentIndex, total, updateCVStatus }) => {
   const [expandedExp, setExpandedExp] = useState(null);
+  const [isPdfOpen, setIsPdfOpen] = useState(false);  // Add this line
 
   const handleKeep = async () => {
     try {
@@ -174,12 +177,14 @@ const ReviewModeCard = ({ cv, onNext, onPrevious, currentIndex, total, updateCVS
           Applied {new Date(cv.createdAt).toLocaleDateString()}
         </div>
         <div className="flex items-center gap-2 md:gap-3">
-          <a href={cv.fileUrl} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1 md:py-1.5 text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg text-xs md:text-sm">
-            <Download className="h-3 w-3 md:h-4 md:w-4" />
-            <span className="hidden md:inline">Download CV</span>
-            <span className="md:hidden">CV</span>
-          </a>
+        <button
+    onClick={() => setIsPdfOpen(true)}
+    className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1 md:py-1.5 text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg text-xs md:text-sm"
+  >
+    <FileText className="h-3 w-3 md:h-4 md:w-4" />
+    <span className="hidden md:inline">View CV</span>
+    <span className="md:hidden">View</span>
+  </button>
           <button onClick={handleRemove}
             className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1 md:py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 text-xs md:text-sm">
             <ThumbsDown className="h-3 w-3 md:h-4 md:w-4" />
@@ -192,11 +197,17 @@ const ReviewModeCard = ({ cv, onNext, onPrevious, currentIndex, total, updateCVS
           </button>
         </div>
       </div>
+      <PDFViewerModal
+      isOpen={isPdfOpen}
+      onClose={() => setIsPdfOpen(false)}
+      fileUrl={cv.fileUrl}
+    />
     </div>
   );
 };
 const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
   const [expandedExp, setExpandedExp] = useState(null);
+  const [isPdfOpen, setIsPdfOpen] = useState(false);  // Add this line
 
   const handleKeep = async () => {
     try {
@@ -326,12 +337,14 @@ const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
               Applied {new Date(cv.createdAt).toLocaleDateString()}
             </div>
             <div className="flex items-center gap-2 md:gap-3">
-              <a href={cv.fileUrl} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1 md:py-1.5 text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg text-xs md:text-sm">
-                <Download className="h-3 w-3 md:h-4 md:w-4" />
-                <span className="hidden md:inline">Download CV</span>
-                <span className="md:hidden">CV</span>
-              </a>
+            <button
+    onClick={() => setIsPdfOpen(true)}
+    className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1 md:py-1.5 text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg text-xs md:text-sm"
+  >
+    <FileText className="h-3 w-3 md:h-4 md:w-4" />
+    <span className="hidden md:inline">View CV</span>
+    <span className="md:hidden">View</span>
+  </button>
               <button onClick={handleRemove}
                 className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1 md:py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 text-xs md:text-sm">
                 <ThumbsDown className="h-3 w-3 md:h-4 md:w-4" />
@@ -346,8 +359,14 @@ const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
           </div>
         </>
       )}
+        <PDFViewerModal
+      isOpen={isPdfOpen}
+      onClose={() => setIsPdfOpen(false)}
+      fileUrl={cv.fileUrl}
+    />
     </div>
   );
+  
 };
 
 const JobCVs = ({ jobId }) => {
