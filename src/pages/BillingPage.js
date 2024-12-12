@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Crown, ExternalLink, AlertCircle, Loader } from 'lucide-react';
-import { openCancellationModal } from '../utils/paddle';
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString('en-US', {
@@ -61,7 +60,7 @@ const BillingPage = () => {
       if (!subscription?.customerId) {
         throw new Error('No subscription found');
       }
-      await openCancellationModal(subscription.customerId);
+
     } catch (err) {
       console.error('Error canceling subscription:', err);
       setError('Failed to cancel subscription. Please try again later.');

@@ -1,3 +1,4 @@
+// components/Header.js
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -9,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import PricingModal from './PricingModal';
+import CreditsDisplay from './CreditsDisplay';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -30,7 +32,7 @@ const Header = () => {
     name: user?.name || user?.email?.split('@')[0] || 'User',
     email: user?.email,
     avatar: getInitials(user?.name),
-    plan: organization?.plan || 'free'
+    credits: organization?.credits || 0
   };
 
   const handleLogout = async () => {
@@ -69,16 +71,10 @@ const Header = () => {
 
             {/* Right side buttons */}
             <div className="flex items-center space-x-4">
-              {/* Upgrade Button */}
-              {/* {userInfo.plan === 'free' && ( */}
-                <button
-                  onClick={() => setIsPricingOpen(true)}
-                  className="hidden md:flex items-center space-x-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity"
-                >
-                  <Crown className="w-4 h-4" />
-                  <span>Upgrade</span>
-                </button>
-              {/* )} */}
+              <CreditsDisplay 
+                credits={userInfo.credits}
+                onPurchaseClick={() => setIsPricingOpen(true)}
+              />
 
               {/* User Menu */}
               <div className="relative">
@@ -107,6 +103,9 @@ const Header = () => {
                     <div className="px-4 py-3 border-b border-gray-100">
                       <p className="text-sm font-medium text-gray-900">{userInfo.name}</p>
                       <p className="text-sm text-gray-500">{userInfo.email}</p>
+                      <p className="text-sm text-primary mt-1">
+                        {userInfo.credits} CV Credits Available
+                      </p>
                     </div>
 
                     {/* Menu Items */}
@@ -114,38 +113,24 @@ const Header = () => {
                       <button
                         onClick={() => handleNavigation('/settings')}
                         className={`flex items-center space-x-3 px-4 py-2 text-sm w-full text-left ${
-                          location.pathname === '/settings' 
-                            ? 'text-primary bg-primary/5' 
-                            : 'text-gray-700 hover:bg-primary/5'
+                          location.pathname === '/settings'
+                          ? 'text-primary bg-primary/5' 
+                          : 'text-gray-700 hover:bg-primary/5'
                         } transition-colors`}
                       >
                         <Settings className="w-4 h-4" />
                         <span>Settings</span>
                       </button>
 
-                      {userInfo.plan === 'free' && (
-                        <button
-                          onClick={() => {
-                            setIsDropdownOpen(false);
-                            setIsPricingOpen(true);
-                          }}
-                          className="flex items-center space-x-3 px-4 py-2 text-sm text-primary hover:bg-primary/5 w-full text-left transition-colors"
-                        >
-                          <Crown className="w-4 h-4" />
-                          <span>Upgrade Plan</span>
-                        </button>
-                      )}
-
                       <button
-                        onClick={() => handleNavigation('/billing')}
-                        className={`flex items-center space-x-3 px-4 py-2 text-sm w-full text-left ${
-                          location.pathname === '/billing'
-                            ? 'text-primary bg-primary/5'
-                            : 'text-gray-700 hover:bg-primary/5'
-                        } transition-colors`}
+                        onClick={() => {
+                          setIsDropdownOpen(false);
+                          setIsPricingOpen(true);
+                        }}
+                        className="flex items-center space-x-3 px-4 py-2 text-sm text-primary hover:bg-primary/5 w-full text-left transition-colors"
                       >
                         <CreditCard className="w-4 h-4" />
-                        <span>Billing</span>
+                        <span>Purchase Credits</span>
                       </button>
 
                       <div className="border-t border-gray-100 my-1"></div>
@@ -170,6 +155,10 @@ const Header = () => {
       <PricingModal 
         isOpen={isPricingOpen}
         onClose={() => setIsPricingOpen(false)}
+        onPurchaseComplete={() => {
+          setIsPricingOpen(false);
+          // Refresh organization data to update credits
+        }}
       />
     </>
   );

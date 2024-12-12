@@ -9,7 +9,6 @@ import PrivateRoute from './components/PrivateRoute';
 import Header from './components/Header';
 import SettingsPage from './pages/SettingsPage';
 import BillingPage from './pages/BillingPage';
-import ThankYou from './pages/ThankYou';
 import { ModalProvider } from './context/ModalContext';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
@@ -82,15 +81,7 @@ function AppRoutes() {
               </PrivateRoute>
             } 
           />
-          
-            <Route 
-            path="/thank-you" 
-            element={
-              <PrivateRoute>
-                <ThankYou />
-              </PrivateRoute>
-            } 
-          />
+        
           <Route path="/" element={<Navigate to="/dashboard" />} />
         </Routes>
       </div>

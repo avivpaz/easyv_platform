@@ -49,12 +49,27 @@ export const AuthProvider = ({ children }) => {
     storageService.setOrganization(newOrgData);
   };
 
-  const updateSubscription = (subscriptionData) => {
+  const addCredits = (creditData) => {
+    console.log('Adding credits:', creditData);
+    
+    if (!creditData || typeof creditData.credits === 'undefined') {
+      console.error('Invalid credit data received:', creditData);
+      return;
+    }
+
+    const currentCredits = organization?.credits || 0;
+    const creditsToAdd = parseInt(creditData.credits) || 0;
+    
+    console.log('Current credits:', currentCredits);
+    console.log('Credits to add:', creditsToAdd);
+
     const updatedOrg = {
       ...organization,
-      plan: subscriptionData.plan, // This will be 'professional'
-      subscription: subscriptionData
+      credits: currentCredits + creditsToAdd
     };
+
+    console.log('Updated organization:', updatedOrg);
+    
     setOrganization(updatedOrg);
     storageService.setOrganization(updatedOrg);
   };
@@ -66,8 +81,8 @@ export const AuthProvider = ({ children }) => {
       login, 
       logout,
       updateOrganization,
-      updateSubscription, // Add the new method to context
       isAuthenticated: !!storageService.getToken(),
+      addCredits,
       isPro: organization?.plan === 'pro'
     }}>
       {children}
