@@ -4,7 +4,7 @@ import { upgradeEvents } from './events';
 export const initializePaddle = async (addCredits) => {
   try {
     await paddleInit({
-      environment: process.env.NODE_ENV === 'production' ? 'production' : 'sandbox',
+      environment: process.env.NODE_ENV === 'production' ? 'sandbox' : 'sandbox',
       seller: parseInt(process.env.REACT_APP_PADDLE_VENDOR_ID, 10),
       eventCallback: async (event) => {
         console.log('Paddle event received:', event.name);
