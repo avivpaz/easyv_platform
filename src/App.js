@@ -1,5 +1,5 @@
 // App.js
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -9,12 +9,11 @@ import PrivateRoute from './components/PrivateRoute';
 import Header from './components/Header';
 import SettingsPage from './pages/SettingsPage';
 import BillingPage from './pages/BillingPage';
-import { ModalProvider } from './context/ModalContext';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-// Separate the routes component to use the auth hook
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -41,14 +40,10 @@ function AppRoutes() {
               )
             } 
           />
-          <Route 
-            path="/dashboard" 
-            element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
-            } 
-          />
+          {/* Allow Dashboard access without PrivateRoute wrapper */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          
+          {/* Keep other routes protected */}
           <Route 
             path="/jobs/:id" 
             element={
@@ -81,7 +76,7 @@ function AppRoutes() {
               </PrivateRoute>
             } 
           />
-        
+          
           <Route path="/" element={<Navigate to="/dashboard" />} />
         </Routes>
       </div>
@@ -89,7 +84,6 @@ function AppRoutes() {
   );
 }
 
-// Main App component with correct provider order
 function App() {
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>

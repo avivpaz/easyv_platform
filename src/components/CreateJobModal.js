@@ -1,12 +1,19 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { X, Building2, MapPin, Briefcase, Plus, Loader2, ArrowRight, ArrowLeft } from 'lucide-react';
 import { jobService } from '../services/jobService';
-import debounce from 'lodash/debounce';
+import { useAuth } from '../context/AuthContext';
+import LoginModal from './LoginModal';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBAKK100KsCI3XMAdDWK_I7jp1RHJN185s';
 const GOOGLE_MAPS_URL = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&loading=async`;
 
-const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
+const CreateJobModal = ({ 
+  isOpen, 
+  onClose, 
+  onSuccess, 
+  initialDescription = '', 
+  autoSubmit = false 
+}) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     title: '',
@@ -27,7 +34,46 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
   const locationInputRef = useRef(null);
   const autocompleteRef = useRef(null);
   const [isGoogleLoaded, setIsGoogleLoaded] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [pendingSubmission, setPendingSubmission] = useState(null);
+  const { isAuthenticated } = useAuth();
+  useEffect(() => {
+    if (isOpen && initialDescription) {
+      setFormData(prev => ({
+        ...prev,
+        shortDescription: initialDescription
+      }));
+      
+      if (autoSubmit) {
+        generateJobDetails(initialDescription);
+      }
+    }
+  }, [isOpen, initialDescription, autoSubmit]);
 
+
+  useEffect(() => {
+    if (isOpen) {
+      // Save current scroll position and add scroll lock
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+    } else {
+      // Restore scroll position and remove scroll lock
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    }
+
+    return () => {
+      // Cleanup - ensure scroll is restored when component unmounts
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+    };
+  }, [isOpen]);
   const initializeGooglePlaces = useCallback(() => {
     if (isGoogleLoaded && locationInputRef.current) {
       try {
@@ -109,14 +155,16 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
     }
   }, [currentStep, isOpen, initializeGooglePlaces]);
 
-  const generateJobDetails = async () => {
+  const generateJobDetails = async (description = null) => {
     setIsGenerating(true);
     setError(null);
     
     try {
-      const generatedData = await jobService.generateJobDetails(formData.title, formData.shortDescription);
+      const descriptionToUse = description || formData.shortDescription;
+      const generatedData = await jobService.generateJobDetails(descriptionToUse);
       setFormData(prev => ({
         ...prev,
+        title: generatedData.title || prev.title,
         description: generatedData.description || prev.description,
         requiredSkills: generatedData.requiredSkills || prev.requiredSkills,
         niceToHaveSkills: generatedData.niceToHaveSkills || prev.niceToHaveSkills
@@ -128,7 +176,6 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
       setIsGenerating(false);
     }
   };
-
   const addSkill = (type) => {
     const input = skillInputs[type].trim();
     if (input) {
@@ -151,10 +198,31 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // If not authenticated, show login modal and save form data
+    if (!isAuthenticated) {
+      setPendingSubmission({
+        ...formData,
+        status: 'active'
+      });
+      setShowLoginModal(true);
+      return;
+    }
+
     setLoading(true);
     try {
+      await submitJob(formData);
+    } catch (err) {
+      setError(err.message || 'Failed to create job.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const submitJob = async (jobData) => {
+    try {
       await jobService.createJob({
-        ...formData,
+        ...jobData,
         status: 'active'
       });
       
@@ -173,42 +241,39 @@ const CreateJobModal = ({ isOpen, onClose, onSuccess }) => {
       if (onSuccess) onSuccess();
       onClose();
     } catch (err) {
-      setError(err.message || 'Failed to create job.');
-    } finally {
-      setLoading(false);
+      throw err;
     }
   };
-
+  
+  const handleLoginSuccess = async () => {
+    setShowLoginModal(false);
+    if (pendingSubmission) {
+      setLoading(true);
+      try {
+        await submitJob(pendingSubmission);
+        setPendingSubmission(null);
+      } catch (err) {
+        setError(err.message || 'Failed to create job.');
+      } finally {
+        setLoading(false);
+      }
+    }
+  }
   const renderStep1 = () => (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Which role are you hiring for?</label>
-            <input
-      type="text"
-      required
-      value={formData.title}
-      onChange={(e) => setFormData(prev => ({ 
-        ...prev, 
-        title: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
-      }))}
-      className="w-full  px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors capitalize"
-      placeholder="e.g. Senior Frontend Developer"
-    />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Can you share a few key points about this role?</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Tell us about the role you're hiring for</label>
         <div className="relative">
-        <textarea
-  required
-  value={formData.shortDescription}
-  onChange={(e) => setFormData(prev => ({ ...prev, shortDescription: e.target.value }))}
-  rows={4}
-  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors resize-none"
-  placeholder="Looking for an experienced frontend developer to lead our web applications team. Should have strong React expertise, mentor other developers, and drive technical architecture. Must care deeply about code quality and user experience"
-/>
+          <textarea
+            required
+            value={formData.shortDescription}
+            onChange={(e) => setFormData(prev => ({ ...prev, shortDescription: e.target.value }))}
+            rows={6}
+            className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors resize-none"
+            placeholder="Describe the role you're looking to fill. Include key responsibilities, requirements, and what makes this position unique. Our AI will generate a comprehensive job post based on your description."
+          />
           <p className="mt-1.5 text-sm text-gray-500">
-Our AI will turn your input into a comprehensive and professional job description
+            Our AI will generate a job title and comprehensive description based on your input
           </p>
         </div>
       </div>
@@ -383,9 +448,11 @@ Our AI will turn your input into a comprehensive and professional job descriptio
               }
             </p>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
-            <X className="h-5 w-5 text-gray-500" />
-          </button>
+          {isAuthenticated && (
+    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
+      <X className="h-5 w-5 text-gray-500" />
+    </button>
+  )}
         </div>
 
         {/* Progress Bar */}
@@ -420,17 +487,12 @@ Our AI will turn your input into a comprehensive and professional job descriptio
           </div>
           
           <div className="flex gap-3">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-white"
-            >
-              Cancel
-            </button>
+        
 
             {currentStep === 1 && (
               <button
                 onClick={generateJobDetails}
-                disabled={!formData.title || !formData.shortDescription || isGenerating}
+                disabled={!formData.shortDescription || isGenerating}
                 className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-light disabled:opacity-50 flex items-center gap-2"
               >
                 {isGenerating ? (
@@ -484,7 +546,14 @@ Our AI will turn your input into a comprehensive and professional job descriptio
           </div>
         )}
       </div>
-
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => {
+          setShowLoginModal(false);
+          setPendingSubmission(null);
+        }}
+        onSuccess={handleLoginSuccess}
+      />
       {/* Loading Overlay */}
       {(loading || isGenerating) && (
         <div className="absolute inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center">

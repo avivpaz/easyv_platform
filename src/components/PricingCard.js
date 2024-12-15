@@ -1,7 +1,5 @@
 import React from 'react';
-import { X } from 'lucide-react';
-import { getPaddleInstance } from '@paddle/paddle-js';
-
+  
 const PricingCard = ({ 
   title, 
   credits, 

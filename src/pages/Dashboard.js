@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate,useSearchParams } from 'react-router-dom';
 import { 
   Briefcase, Users, Calendar, Search, Plus,
   ChevronRight, MapPin, Clock, DollarSign,
@@ -8,6 +8,7 @@ import {
 import { jobService } from '../services/jobService';
 import CreateJobModal from '../components/CreateJobModal';
 import DeleteDialog from '../components/DeleteDialog';
+import { useAuth } from '../context/AuthContext';
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString('en-US', {
@@ -19,14 +20,40 @@ const formatDate = (date) => {
 
 const Dashboard = () => {
   const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [jobToDelete, setJobToDelete] = useState(null);
+  const [initialJobDescription, setInitialJobDescription] = useState('');
+  const [autoSubmit, setAutoSubmit] = useState(false);
+  
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { isAuthenticated, logout } = useAuth();  // Get logout from useAuth
 
+  useEffect(() => {
+    const createJob = searchParams.get('createJob');
+    const prompt = searchParams.get('prompt');
+    if (createJob === 'true' && prompt) {
+      const decodedPrompt = decodeURIComponent(prompt);
+      setInitialJobDescription(decodedPrompt);
+      setAutoSubmit(true);
+      setIsCreateModalOpen(true);
+      // Clean up URL without triggering a refresh
+      setSearchParams({}, { replace: true });
+    }else
+     {
+      if (isAuthenticated)
+        fetchJobs();
+     else{
+      logout()
+     }
+    }
+
+  }, [isAuthenticated]);
+  
   const handleJobClick = (jobId, event) => {
     if (event.target.closest('.delete-button')) {
       return;
@@ -34,9 +61,7 @@ const Dashboard = () => {
     navigate(`/jobs/${jobId}`);
   };
 
-  useEffect(() => {
-    fetchJobs();
-  }, []);
+  
 
   const fetchJobs = async () => {
     try {
@@ -248,10 +273,16 @@ const Dashboard = () => {
         confirmButtonText="Delete Job"
       />
 
-      <CreateJobModal 
+<CreateJobModal 
         isOpen={isCreateModalOpen} 
-        onClose={() => setIsCreateModalOpen(false)}
+        onClose={() => {
+          setIsCreateModalOpen(false);
+          setInitialJobDescription('');
+          setAutoSubmit(false);
+        }}
         onSuccess={fetchJobs}
+        initialDescription={initialJobDescription}
+        autoSubmit={autoSubmit}
       />
     </div>
   );

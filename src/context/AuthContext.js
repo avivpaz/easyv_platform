@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import storageService from '../services/storageService';
 import WelcomePopup from '../components/WelcomePopup';
@@ -7,23 +7,54 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(storageService.getUser());
-  const [organization, setOrganization] = useState(storageService.getOrganization());
+  const [user, setUser] = useState(null);
+  const [organization, setOrganization] = useState(null);
   const [showWelcomePopup, setShowWelcomePopup] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Start with loading true
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Initialize auth state
+  useEffect(() => {
+    const initializeAuth = () => {
+      try {
+        const token = storageService.getToken();
+        const storedUser = storageService.getUser();
+        const storedOrg = storageService.getOrganization();
+
+        if (token && storedUser) {
+          setUser(storedUser);
+          setOrganization(storedOrg);
+        }
+      } catch (error) {
+        console.error('Auth initialization error:', error);
+        storageService.clearAll();
+      } finally {
+        setIsLoading(false);
+        setIsInitialized(true);
+      }
+    };
+
+    initializeAuth();
+  }, []);
 
   const login = async (authData) => {
-    storageService.setToken(authData.token);
-    storageService.setUser(authData.user);
-    storageService.setOrganization(authData.organization);
-    
-    setUser(authData.user);
-    setOrganization(authData.organization);
+    try {
+      storageService.setToken(authData.token);
+      storageService.setUser(authData.user);
+      storageService.setOrganization(authData.organization);
+      
+      setUser(authData.user);
+      setOrganization(authData.organization);
 
-    if (authData.organization?.needsSetup) {
-      setShowWelcomePopup(true);
+      if (authData.organization?.needsSetup) {
+        setShowWelcomePopup(true);
+      }
+
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
     }
-
-    navigate('/dashboard');
   };
 
   const logout = async () => {
@@ -50,8 +81,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const addCredits = (creditData) => {
-    console.log('Adding credits:', creditData);
-    
     if (!creditData || typeof creditData.credits === 'undefined') {
       console.error('Invalid credit data received:', creditData);
       return;
@@ -60,31 +89,33 @@ export const AuthProvider = ({ children }) => {
     const currentCredits = organization?.credits || 0;
     const creditsToAdd = parseInt(creditData.credits) || 0;
     
-    console.log('Current credits:', currentCredits);
-    console.log('Credits to add:', creditsToAdd);
-
     const updatedOrg = {
       ...organization,
       credits: currentCredits + creditsToAdd
     };
-
-    console.log('Updated organization:', updatedOrg);
     
     setOrganization(updatedOrg);
     storageService.setOrganization(updatedOrg);
   };
-  
+
+  const value = {
+    user,
+    organization,
+    login,
+    logout,
+    updateOrganization,
+    isAuthenticated: !!storageService.getToken() && isInitialized,
+    isLoading,
+    addCredits,
+    isPro: organization?.plan === 'pro'
+  };
+
+  if (!isInitialized) {
+    return null; // or a loading spinner
+  }
+
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      organization,
-      login, 
-      logout,
-      updateOrganization,
-      isAuthenticated: !!storageService.getToken(),
-      addCredits,
-      isPro: organization?.plan === 'pro'
-    }}>
+    <AuthContext.Provider value={value}>
       {children}
       <WelcomePopup 
         isOpen={showWelcomePopup} 
@@ -98,6 +129,12 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
 
 export default AuthContext;
