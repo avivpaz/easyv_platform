@@ -128,6 +128,18 @@ const Login = () => {
               </>
             )}
           </button>
+          <div className="text-center text-sm text-gray-500">
+            <p>
+              By continuing, you agree to our{' '}
+              <a href="https://www.rightcruiter.com/terms-of-use" className="text-primary hover:text-primary-dark underline">
+                Terms of Use
+              </a>{' '}
+              and{' '}
+              <a href="https://www.rightcruiter.com/privacy-policy" className="text-primary hover:text-primary-dark underline">
+                Privacy Policy
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
