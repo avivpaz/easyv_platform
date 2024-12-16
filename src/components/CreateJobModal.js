@@ -160,7 +160,7 @@ const CreateJobModal = ({
     setError(null);
     
     try {
-      const descriptionToUse = description || formData.shortDescription;
+      const descriptionToUse = description;
       const generatedData = await jobService.generateJobDetails(descriptionToUse);
       setFormData(prev => ({
         ...prev,
@@ -491,8 +491,8 @@ const CreateJobModal = ({
 
             {currentStep === 1 && (
               <button
-                onClick={generateJobDetails}
-                disabled={!formData.shortDescription || isGenerating}
+              onClick={() => generateJobDetails(formData.shortDescription)}
+              disabled={!formData.shortDescription || isGenerating}
                 className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-light disabled:opacity-50 flex items-center gap-2"
               >
                 {isGenerating ? (
