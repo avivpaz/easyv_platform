@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Upload, X, FileText, CheckCircle, 
-  MapPin, Clock, Code, Building2,
+  MapPin, Clock, Code, ExternalLink,
   Briefcase, Star, ArrowLeft, Users,
   Building, Link, Share2, Loader2
 } from 'lucide-react';
@@ -87,6 +87,10 @@ const JobDetail = () => {
     }
   };
 
+  const handleViewInNewTab = () => {
+    window.open(longUrl, '_blank');
+  };
+
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -142,14 +146,24 @@ const JobDetail = () => {
                 <ArrowLeft className="h-5 w-5 md:h-4 md:w-4 md:mr-2" />
                 <span className="hidden md:inline">Back to Dashboard</span>
               </button>
-              <button
-                onClick={() => setShowShareModal(true)}
-                className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
-              >
-                <Share2 className="h-4 w-4" />
-                <span className="hidden md:inline">Share Position</span>
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleViewInNewTab}
+                  className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  <span className="hidden md:inline">View</span>
+                </button>
+                <button
+                  onClick={() => setShowShareModal(true)}
+                  className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+                >
+                  <Share2 className="h-4 w-4" />
+                  <span className="hidden md:inline">Share Position</span>
+                </button>
+              </div>
             </div>
+
 
             {/* Job Info */}
             <div className="flex flex-col md:flex-row md:items-start md:gap-4">
