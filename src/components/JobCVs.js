@@ -49,6 +49,15 @@ const ReviewModeCard = ({ cv, onNext, onPrevious, currentIndex, total, updateCVS
     }
   };
 
+  const getSubmissionTypeText = (cv) => {
+    if (cv.submissionType === "text") {
+      return "Website Application";
+    }
+    if (cv.fileUrl) {
+      return "CV File Upload";
+    }
+    return "Other";
+  };
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden h-[80vh] md:h-[85vh] flex flex-col relative">
       <div className="hidden md:block absolute top-1/2 -translate-y-1/2 left-4">
@@ -172,10 +181,14 @@ const ReviewModeCard = ({ cv, onNext, onPrevious, currentIndex, total, updateCVS
       </div>
 
       <div className="bg-gray-50 px-3 md:px-6 py-3 md:py-4 flex flex-col md:flex-row md:items-center justify-between border-t border-gray-200 gap-2 md:gap-0">
-        <div className="flex items-center text-xs md:text-sm text-gray-600">
-          <Clock className="h-4 w-4 mr-1 md:mr-2" />
-          Applied {new Date(cv.createdAt).toLocaleDateString()}
-        </div>
+      <div className="flex items-center text-xs md:text-sm text-gray-600">
+  <Clock className="h-4 w-4 mr-1 md:mr-2" />
+  Applied {new Date(cv.createdAt).toLocaleDateString()}
+  {cv.submissionType && (
+    <div className="inline-flex items-center ml-2 px-2 py-1 rounded-full text-xs font-medium bg-secondary/20 text-primary-dark border border-primary/10 gap-1.5">
+  <FileText className="h-3.5 w-3.5" />  {getSubmissionTypeText(cv)}
+</div>  )}
+</div>
         <div className="flex items-center gap-2 md:gap-3">
         <button
     onClick={() => setIsPdfOpen(true)}
@@ -225,6 +238,16 @@ const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
     } catch (error) {
       console.error('Error rejecting CV:', error);
     }
+  };
+
+  const getSubmissionTypeText = (cv) => {
+    if (cv.submissionType === "text") {
+      return "Website Application";
+    }
+    if (cv.fileUrl) {
+      return "CV File Upload";
+    }
+    return "Other";
   };
 
   return (
@@ -332,10 +355,16 @@ const CompactCVCard = ({ cv, isExpanded, onToggle, updateCVStatus }) => {
           </div>
 
           <div className="bg-gray-50 px-3 md:px-6 py-3 md:py-4 flex flex-col md:flex-row md:items-center justify-between border-t border-gray-200 gap-2 md:gap-0">
-            <div className="flex items-center text-xs md:text-sm text-gray-600">
-              <Clock className="h-4 w-4 mr-1 md:mr-2" />
-              Applied {new Date(cv.createdAt).toLocaleDateString()}
-            </div>
+          <div className="flex items-center text-xs md:text-sm text-gray-600">
+  <Clock className="h-4 w-4 mr-1 md:mr-2" />
+  Applied {new Date(cv.createdAt).toLocaleDateString()}
+  {cv.submissionType && (
+    <div className="inline-flex items-center ml-2 px-2 py-1 rounded-full text-xs font-medium bg-secondary/20 text-primary-dark border border-primary/10 gap-1.5">
+    <FileText className="h-3.5 w-3.5" />
+    {getSubmissionTypeText(cv)}
+</div>
+  )}
+</div>
             <div className="flex items-center gap-2 md:gap-3">
             <button
     onClick={() => setIsPdfOpen(true)}
