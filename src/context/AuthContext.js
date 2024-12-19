@@ -98,6 +98,27 @@ export const AuthProvider = ({ children }) => {
     storageService.setOrganization(updatedOrg);
   };
 
+  const setCredits = (amount) => {
+    if (!amount || typeof amount !== 'number' || amount <= 0) {
+      throw new Error('Invalid deduction amount');
+    }
+    const updatedOrg = {
+      ...organization,
+      credits: amount,
+      lastCreditUpdate: new Date().toISOString()
+    };
+    const currentCredits = organization?.credits || 0;
+
+    setOrganization(updatedOrg);
+    storageService.setOrganization(updatedOrg);
+
+    return {
+      success: true,
+      previousCredits: currentCredits,
+      newCredits: amount
+      };
+  };
+
   const value = {
     user,
     organization,
@@ -107,6 +128,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!storageService.getToken() && isInitialized,
     isLoading,
     addCredits,
+    setCredits,
     isPro: organization?.plan === 'pro'
   };
 

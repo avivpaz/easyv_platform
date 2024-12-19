@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { X, Building2, MapPin, Briefcase, Plus, Loader2, ArrowRight, ArrowLeft } from 'lucide-react';
+import { X, Building2, MapPin, Sparkles, Plus, Loader2, ArrowRight, ArrowLeft } from 'lucide-react';
 import { jobService } from '../services/jobService';
 import { useAuth } from '../context/AuthContext';
 import LoginModal from './LoginModal';
@@ -50,6 +50,24 @@ const CreateJobModal = ({
     }
   }, [isOpen, initialDescription, autoSubmit]);
 
+  const loadingMessages = [
+    "Crafting the perfect job post ✨",
+    "Sprinkling some magic dust 🪄",
+    "Making your job stand out 🌟",
+    "Adding that special touch ✨"
+  ];
+  
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+  
+  useEffect(() => {
+    let interval;
+    if (isGenerating) {
+      interval = setInterval(() => {
+        setLoadingMessageIndex(prev => (prev + 1) % loadingMessages.length);
+      }, 2000);
+    }
+    return () => clearInterval(interval);
+  }, [isGenerating]);
 
   useEffect(() => {
     if (isOpen) {
@@ -154,6 +172,7 @@ const CreateJobModal = ({
       };
     }
   }, [currentStep, isOpen, initializeGooglePlaces]);
+
 
   const generateJobDetails = async (description = null) => {
     setIsGenerating(true);
@@ -556,14 +575,17 @@ const CreateJobModal = ({
       />
       {/* Loading Overlay */}
       {(loading || isGenerating) && (
-        <div className="absolute inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center">
-          <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-lg">
-            <Loader2 className="h-5 w-5 animate-spin text-primary" />
-            <span className="text-sm font-medium text-gray-700">
-              {loading ? 'Publishing job...' : 'Generating details...'}
-            </span>
-          </div>
-        </div>
+         <div className="absolute inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center">
+         <div className="flex flex-col items-center gap-3 p-6 bg-white rounded-xl shadow-lg">
+           <div className="flex items-center gap-3">
+             <Loader2 className="h-5 w-5 animate-spin text-primary" />
+             <Sparkles className="h-5 w-5 animate-pulse text-yellow-400" />
+           </div>
+           <span className="text-base font-medium text-gray-700 animate-fade-in">
+             {loading ? 'Publishing your masterpiece...' : loadingMessages[loadingMessageIndex]}
+           </span>
+         </div>
+       </div>
       )}
     </div>
   );

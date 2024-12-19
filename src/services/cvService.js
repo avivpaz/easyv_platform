@@ -4,7 +4,7 @@ import api from './api';
 export const cvService = {
   async updateCVStatus(cvId, status) {
     try {
-      const response = await api.put(`/cv/${cvId}/status`, { status });
+      const response = await api.put(`/cvs/${cvId}/status`, { status });
       console.log('Update CV Status Response:', response);
       return response.data;
     } catch (error) {
@@ -15,7 +15,7 @@ export const cvService = {
   
   async deleteCV(cvId) {
     try {
-      const response = await api.delete(`/cv/${cvId}`);
+      const response = await api.delete(`/cvs/${cvId}`);
       console.log('Delete CV Response:', response);
       return response.data;
     } catch (error) {
@@ -39,7 +39,7 @@ export const cvService = {
 
   async downloadCV(cvId) {
     try {
-      const response = await api.get(`/cv/${cvId}/download`, {
+      const response = await api.get(`/cvs/${cvId}/download`, {
         responseType: 'blob'
       });
       return response.data;
