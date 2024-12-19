@@ -6,6 +6,7 @@ import {
     ChevronUp, ThumbsUp, ThumbsDown, Unlock
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
+import { cvService } from '../services/cvService';
 import UploadModal from './UploadModal';
 import {cvVisibilityService} from '../services/cvVisibilityService'
 import CVCard from './CVCard';  // Import the unified CVCard component
@@ -47,17 +48,23 @@ const JobCVs = ({ jobId }) => {
     fetchCVs();
   };
 
-  const updateCVStatus = (cvId, newStatus) => {
-    setCvData(prevData => {
-      const updateCV = (cvArray) => 
-        cvArray.map(cv => cv._id === cvId ? { ...cv, status: newStatus } : cv);
+  const updateCVStatus = async (cvId, newStatus) => {
+    try {
+      await cvService.updateCVStatus(cvId, newStatus);
+      setCvData(prevData => {
+        const updateCV = (cvArray) => 
+          cvArray.map(cv => cv._id === cvId ? { ...cv, status: newStatus } : cv);
 
-      return {
-        ...prevData,
-        locked: updateCV(prevData.locked),
-        unlocked: updateCV(prevData.unlocked)
-      };
-    });
+        return {
+          ...prevData,
+          locked: updateCV(prevData.locked),
+          unlocked: updateCV(prevData.unlocked)
+        };
+      });
+    } catch (error) {
+      console.error('Error updating CV status:', error);
+      setError('Failed to update CV status');
+    }
   };
 
   const handleUnlock = async (cvId) => {
