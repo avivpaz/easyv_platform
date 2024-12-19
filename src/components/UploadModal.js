@@ -42,9 +42,10 @@ const UploadModal = ({ isOpen, onClose, jobId, onSuccess }) => {
       setUploadStatus({ status: 'uploading', message: 'Uploading CVs...' });
       const response = await jobService.uploadCVs(jobId, files);
       
-      // Handle the CV duplication error
       if (response.failed?.length > 0) {
         const duplicateFiles = response.failed.filter(f => f.error === 'cv_duplication');
+        const invalidFiles = response.failed.filter(f => f.error === 'invalid_file');
+        
         if (duplicateFiles.length > 0) {
           setUploadStatus({
             status: 'error',
@@ -52,8 +53,15 @@ const UploadModal = ({ isOpen, onClose, jobId, onSuccess }) => {
           });
           return;
         }
+      
+        if (invalidFiles.length > 0) {
+          setUploadStatus({
+            status: 'error',
+            message: `${invalidFiles.map(f => f.fileName).join(', ')} ${invalidFiles.length === 1 ? 'is' : 'are'} invalid.`
+          });
+          return;
+        }
       }
-
       if (response.successful?.length > 0) {
         setUploadStatus({ status: 'success', message: 'CVs uploaded successfully!' });
         onSuccess();

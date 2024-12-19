@@ -111,12 +111,9 @@ const SettingsPage = () => {
             </nav>
           </div>
 
-          {/* Content */}
           <div className="p-6">
-         
-
             {activeTab === 'profile' ? (
-              <form onSubmit={handleProfileSubmit} className="space-y-6">
+              <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Full Name
@@ -126,9 +123,8 @@ const SettingsPage = () => {
                     <input
                       type="text"
                       value={profileData.fullName}
-                      onChange={(e) => setProfileData(prev => ({ ...prev, fullName: e.target.value }))}
-                      className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
-                      required
+                      className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+                      disabled
                     />
                   </div>
                 </div>
@@ -142,27 +138,21 @@ const SettingsPage = () => {
                     <input
                       type="email"
                       value={profileData.email}
-                      onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
-                      className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
-                      required
+                      className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+                      disabled
                     />
                   </div>
                 </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark disabled:opacity-50"
-                >
-                  {loading ? 'Saving...' : 'Save Profile'}
-                </button>
-              </form>
+              </div>
             ) : (
               <form onSubmit={handleOrgSubmit} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                     Organization Logo
                   </label>
+                  <p className="text-sm text-gray-500 mb-2">
+                  For best results, use a 1:1 ratio logo (500x500 recommended)
+                  </p>
                   <div className="flex items-center justify-center w-full">
                     <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
                       {orgData.logoPreview ? (
