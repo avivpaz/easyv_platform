@@ -60,7 +60,7 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
 
   const handlePurchase = async (planDetails) => {
     try {
-      const paddle =await initializePaddle(addCredits);
+      const paddle =await initializePaddle(addCredits,onPurchaseComplete);
       const checkoutData = {
         items: [{
           priceId: plans.find(p => p.title === planDetails.tier).priceId,

@@ -1,7 +1,6 @@
 import { getPaddleInstance, initializePaddle as paddleInit } from '@paddle/paddle-js';
-import { upgradeEvents } from './events';
 
-export const initializePaddle = async (addCredits) => {
+export const initializePaddle = async (addCredits,onPurchaseComplete) => {
   try {
     await paddleInit({
       environment: process.env.NODE_ENV === 'production' ? 'sandbox' : 'sandbox',
@@ -25,9 +24,8 @@ export const initializePaddle = async (addCredits) => {
             addCredits({
               credits: parseInt(customData.credits)
             });
-
+            onPurchaseComplete()
             // Emit the upgrade event for any UI updates
-            upgradeEvents.emit();
             
           } catch (error) {
             console.error('Error updating credits display:', error);

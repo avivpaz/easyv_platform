@@ -312,7 +312,7 @@ const CVCard = ({
         className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1 md:py-1.5 text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg text-xs md:text-sm"
       >
         <FileText className="h-3 w-3 md:h-4 md:w-4" />
-        <span className="hidden md:inline">View Text</span>
+        <span className="hidden md:inline">View Application</span>
         <span className="md:hidden">Text</span>
       </button>
     )}
