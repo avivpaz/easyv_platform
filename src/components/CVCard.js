@@ -152,10 +152,7 @@ const CVCard = ({
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-4">
               <h3 className="font-semibold text-gray-900 truncate">
-                {cv.visibility === 'locked' ? 
-                  cv.candidate.fullName.replace(/(?<=^[\w-]{3})./g, '*') : 
-                  cv.candidate.fullName
-                }
+                { cv.candidate.fullName}
               </h3>
               <div className="flex items-center gap-3 flex-shrink-0">
               {cv.visibility != 'locked' && (
