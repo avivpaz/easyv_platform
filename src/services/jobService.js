@@ -89,6 +89,17 @@ export const jobService = {
       console.error('Error generating job details:', error);
       throw new Error(error.response?.data?.error || 'Failed to generate job details');
     }
+  },
+  async getSocialShareText(jobId, platform = 'linkedin') {
+    try {
+      const response = await api.get(`/jobs/${jobId}/social-share`, {
+        params: { platform }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error generating social share text:', error);
+      throw new Error(error.response?.data?.error || 'Failed to generate social share text');
+    }
   }
 
 };

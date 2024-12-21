@@ -10,6 +10,7 @@ import { jobService } from '../services/jobService';
 import JobCVs from '../components/JobCVs';
 import { useAuth } from '../context/AuthContext';
 import { urlShortenerService } from '../services/urlShortenerService';
+import ShareModal from '../components/ShareModal';
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -24,7 +25,7 @@ const JobDetail = () => {
   const [shorteningUrl, setShorteningUrl] = useState(false);
   const { organization } = useAuth();
   const longUrl = `${process.env.REACT_APP_FRONTEND_URL}/${organization?.id}/jobs/${id}`;
-  
+
   useEffect(() => {
     fetchJob();
   }, [id]);
@@ -63,30 +64,13 @@ const JobDetail = () => {
       setShorteningUrl(false);
     }
   };
-  const getSocialShareText = () => {
-    if (!job) return '';
-    const shareUrl = shortUrl || longUrl;
-    return `🚀 Exciting opportunity! We're hiring a ${job.title}!\n\n` +
-           `📍 ${job.location}\n` +
-           `💼 ${job.employmentType} | ${job.workType}\n\n` +
-           `Key skills: ${job.requiredSkills.slice(0, 3).join(', ')}\n\n` +
-           `Apply now: ${shareUrl}`;
-  };
+
 
   useEffect(() => {
     fetchJob();
   }, [id]);
 
-  const handleCopy = async (text, setCopiedState) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedState(true);
-      setTimeout(() => setCopiedState(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
+ 
   const handleViewInNewTab = () => {
     window.open(longUrl, '_blank');
   };
@@ -238,88 +222,14 @@ const JobDetail = () => {
         </div>
       </div>
 
-      {/* Share Modal */}
-      {showShareModal && (
-    <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-     <div className="bg-white rounded-t-xl md:rounded-xl p-4 md:p-6 w-full max-w-lg">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Share Position</h3>
-            <button onClick={() => setShowShareModal(false)} className="text-gray-500">
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-          
-          {/* Application Link */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Application Link
-            </label>
-            <div className="flex items-center gap-2 bg-gray-50 p-2 md:p-3 rounded-lg">
-              <input
-                type="text"
-                readOnly
-                value={shorteningUrl ? "Generating short link..." : (shortUrl || longUrl)}
-                className="flex-1 bg-transparent border-none text-sm focus:ring-0 text-gray-600"
-              />
-              <button
-                onClick={() => handleCopy(shortUrl || longUrl, setCopied)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm ${
-                  copied ? 'bg-green-600' : 'bg-primary'
-                } hover:bg-primary-light text-white`}
-                disabled={shorteningUrl}
-              >
-                {shorteningUrl ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : copied ? (
-                  <>
-                    <CheckCircle className="h-4 w-4" />
-                    <span className="hidden md:inline">Copied!</span>
-                  </>
-                ) : (
-                  'Copy'
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Social Share Text */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Social Media Post
-            </label>
-            <div className="bg-gray-50 p-2 md:p-3 rounded-lg mb-2">
-              <textarea
-                readOnly
-                value={getSocialShareText()}
-                className="w-full bg-transparent border-none text-sm focus:ring-0 text-gray-600 min-h-[120px] resize-none"
-              />
-              <button
-                onClick={() => handleCopy(getSocialShareText(), setCopiedSocial)}
-                className={`w-full flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg text-sm ${
-                  copiedSocial ? 'bg-green-600' : 'bg-primary'
-                } hover:bg-primary-light text-white mt-2`}
-                disabled={shorteningUrl}
-              >
-                {shorteningUrl ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : copiedSocial ? (
-                  <>
-                    <CheckCircle className="h-4 w-4" />
-                    <span>Copied!</span>
-                  </>
-                ) : (
-                  'Copy Social Post'
-                )}
-              </button>
-            </div>
-          </div>
-
-          <p className="mt-3 text-xs md:text-sm text-gray-500">
-            Share this link with candidates or post on social media to promote this position.
-          </p>
-        </div>
-      </div>
-    )}
+      <ShareModal 
+  isOpen={showShareModal}
+  onClose={() => setShowShareModal(false)}
+  job={job}
+  shortUrl={shortUrl}
+  longUrl={longUrl}
+  shorteningUrl={shorteningUrl}
+/>
     </div>
   );
 };
