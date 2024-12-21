@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/authService';
-import { UserCircle2, Building } from 'lucide-react';
+import { UserCircle2, Building,ShareIcon,FileCheck } from 'lucide-react';
 import { useGoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
@@ -37,43 +37,60 @@ const Login = () => {
   return (
     <div className="min-h-screen flex bg-gray-50">
       {/* Left Panel - Decorative */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary to-primary-light p-12 text-white">
-        <div className="max-w-md">
-          <h1 className="text-4xl font-bold mb-6">Welcome!</h1>
-          <p className="text-secondary-light text-lg mb-8">
-            Sign in to access your dashboard and manage your job postings.
-          </p>
-          <div className="space-y-6">
-            <div className="bg-white/10 rounded-xl p-6">
-              <div className="flex items-center gap-4">
-                <div className="bg-white/10 p-3 rounded-lg">
-                  <Building className="h-6 w-6" />
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">For Companies</h3>
-                  <p className="text-secondary-light text-sm">
-                    Post jobs, manage applications, and find the perfect candidates
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white/10 rounded-xl p-6">
-              <div className="flex items-center gap-4">
-                <div className="bg-white/10 p-3 rounded-lg">
-                  <UserCircle2 className="h-6 w-6" />
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">Easy to Use</h3>
-                  <p className="text-secondary-light text-sm">
-                    Intuitive interface designed for efficient recruitment
-                  </p>
-                </div>
-              </div>
-            </div>
+     {/* Left Panel - Decorative */}
+<div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary to-primary-light p-12 text-white">
+  <div className="max-w-md">
+    <h1 className="text-4xl font-bold mb-6">Your Perfect Hire in 2 Minutes!</h1>
+    <p className="text-secondary-light text-lg mb-8">
+    Sign in to craft professional job requirements, create a branded landing page, and start receiving qualified applicants today.
+    </p>
+    <div className="space-y-6">
+      <div className="bg-white/10 rounded-xl p-6">
+        <div className="flex items-center gap-4">
+          <div className="bg-white/10 p-3 rounded-lg">
+            <Building className="h-6 w-6" />
+          </div>
+          <div>
+            <h3 className="font-semibold mb-1">One-Click Job Posts</h3>
+            <p className="text-secondary-light text-sm">
+              Just tell us a few words about the role, and we'll craft professional job requirements instantly
+            </p>
           </div>
         </div>
       </div>
+      
+      <div className="bg-white/10 rounded-xl p-6">
+        <div className="flex items-center gap-4">
+          <div className="bg-white/10 p-3 rounded-lg">
+            <UserCircle2 className="h-6 w-6" />
+          </div>
+          <div>
+            <h3 className="font-semibold mb-1">Streamlined Hiring</h3>
+            <p className="text-secondary-light text-sm">
+              From job description to candidate management, find your best hire faster
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white/10 rounded-xl p-6">
+        <div className="flex items-center gap-4">
+          <div className="bg-white/10 p-3 rounded-lg">
+            <ShareIcon className="h-6 w-6" />
+          </div>
+          <div>
+            <h3 className="font-semibold mb-1">Branded Landing Pages</h3>
+            <p className="text-secondary-light text-sm">
+              Get attractive, ready-to-share job posts that help you reach candidates across networks
+            </p>
+          </div>
+        </div>
+      </div>
+
+    
+    </div>
+  </div>
+</div>
 
       {/* Right Panel - Auth Form */}
       <div className="flex-1 flex items-center justify-center p-8">
