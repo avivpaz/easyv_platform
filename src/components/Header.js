@@ -103,9 +103,7 @@ const Header = () => {
                     <div className="px-4 py-3 border-b border-gray-100">
                       <p className="text-sm font-medium text-gray-900">{userInfo.name}</p>
                       <p className="text-sm text-gray-500">{userInfo.email}</p>
-                      <p className="text-sm text-primary mt-1">
-                        {userInfo.credits} CV Credits Available
-                      </p>
+                     
                     </div>
 
                     {/* Menu Items */}

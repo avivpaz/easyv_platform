@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
   const { user, organization,addCredits } = useAuth();
 
+ 
   const plans = [
     {
       title: 'Tier 1',
@@ -16,11 +17,9 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
       savings: '5.00',
       discount: 10,
       features: [
-        '10 CV processing credits',
-        '10% discount applied',
-        'Basic candidate screening',
-        'Email notifications',
-        '30-day credit validity'
+   
+        '10 CVs for the price of 9',
+        '10% volume discount applied'
       ],
       priceId: process.env.REACT_APP_PADDLE_TIER1_PRICE_ID
     },
@@ -31,11 +30,8 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
       savings: '20.00',
       discount: 15,
       features: [
-        '25 CV processing credits',
-        '15% discount applied',
-        'Advanced candidate screening',
-        'Priority support',
-        '60-day credit validity'
+        '25 CVs for the price of 21',
+        '15% volume discount applied',
       ],
       priceId: process.env.REACT_APP_PADDLE_TIER2_PRICE_ID,
       isPopular: true
@@ -47,17 +43,37 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
       savings: '50.00',
       discount: 20,
       features: [
-        '50 CV processing credits',
-        '20% discount applied',
-        'Premium candidate screening',
-        'Dedicated account manager',
-        '90-day credit validity'
+        '50 CVs for the price of 40',
+        '20% volume discount applied',
       ],
       priceId: process.env.REACT_APP_PADDLE_TIER3_PRICE_ID
     }
   ];
  
 
+  useEffect(() => {
+    if (isOpen) {
+      // Save current scroll position and add scroll lock
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+    } else {
+      // Restore scroll position and remove scroll lock
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    }
+
+    return () => {
+      // Cleanup - ensure scroll is restored when component unmounts
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+    };
+  }, [isOpen]);
   const handlePurchase = async (planDetails) => {
     try {
       const paddle =await initializePaddle(addCredits,onPurchaseComplete);
@@ -86,10 +102,8 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
   if (!isOpen) return null;
 
   return (
-    <div 
-      className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50"
-      onClick={onClose}
-    >
+    <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+
       <div className="min-h-screen px-4 text-center">
         <span 
           className="inline-block h-screen align-middle" 

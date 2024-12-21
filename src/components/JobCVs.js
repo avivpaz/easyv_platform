@@ -11,7 +11,7 @@ import UploadModal from './UploadModal';
 import {cvVisibilityService} from '../services/cvVisibilityService'
 import CVCard from './CVCard';  // Import the unified CVCard component
 import { useAuth } from '../context/AuthContext';
-
+import PricingModal from './PricingModal'
 
 
 
@@ -21,6 +21,7 @@ const JobCVs = ({ jobId }) => {
   const [error, setError] = useState(null);
   const [unlockError, setUnlockError] = useState(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showPricingModal, setShowPricingModal] = useState(false);
   const [expandedCvId, setExpandedCvId] = useState(null);
   const [isReviewMode, setIsReviewMode] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -90,10 +91,18 @@ const JobCVs = ({ jobId }) => {
         });
         setCredits(result.remainingCredits);
       } else {
-        setUnlockError(result.error);
-      }
+        if (result.error?.includes('insufficient_credits')) {
+          setShowPricingModal(true);
+        } else {
+          setUnlockError(error.message);
+        }      }
     } catch (error) {
-      setUnlockError(error.message);
+      // Also check the caught error for insufficient credits
+      if (error.message?.includes('insufficient_credits')) {
+        setShowPricingModal(true);
+      } else {
+        setUnlockError(error.message);
+      }
     }
   };
   
@@ -252,6 +261,15 @@ const JobCVs = ({ jobId }) => {
           onSuccess={handleUploadSuccess}
         />
       )}
+
+<PricingModal 
+        isOpen={showPricingModal}
+        onClose={() => setShowPricingModal(false)}
+        onPurchaseComplete={() => {
+          setShowPricingModal(false);
+          // The credits will be updated via the AuthContext
+        }}
+      />
     </div>
   );
 };
