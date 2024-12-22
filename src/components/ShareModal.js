@@ -32,7 +32,6 @@ const ShareModal = ({
       const data = await jobService.getSocialShareText(job._id, platform);
       const shareUrl = shortUrl || longUrl;
       const finalText = data.text.replace(/\{URL\}/g, shareUrl);
-      const fullText = `${finalText}\n\n${data.hashtags.join(' ')}`;
       setSocialShareText(fullText);
       return fullText;
     } catch (error) {
