@@ -32,8 +32,8 @@ const ShareModal = ({
       const data = await jobService.getSocialShareText(job._id, platform);
       const shareUrl = shortUrl || longUrl;
       const finalText = data.text.replace(/\{URL\}/g, shareUrl);
-      setSocialShareText(fullText);
-      return fullText;
+      setSocialShareText(finalText);
+      return finalText;
     } catch (error) {
       console.error('Error getting social share text:', error);
       const fallbackText = `🚀 Exciting opportunity! We're hiring a ${job.title}!\n\n` +
