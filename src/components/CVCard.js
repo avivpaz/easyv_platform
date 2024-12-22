@@ -82,6 +82,7 @@ const CVCard = ({
   const [isPdfOpen, setIsPdfOpen] = useState(false);
   const [isTextOpen, setIsTextOpen] = useState(false);
   const [unlocking, setUnlocking] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleKeep = async () => {
     try {
@@ -114,32 +115,35 @@ const CVCard = ({
   };
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 shadow-sm flex flex-col transition-all duration-200 
-    ${isExpanded || isReviewMode ? 'max-h-[85vh]' : 'h-auto'} relative group`}>
-          {/* Buttons on Hover */}
-          {cv.visibility != 'locked' && (
-
-          <div className="absolute top-3 right-3 hidden group-hover:flex gap-2">
-     {cv.status !== 'rejected' && (
-      <button
-        onClick={handleRemove}
-        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 border border-gray-300 rounded-lg shadow-sm transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-      >
-        <ThumbsDown className="h-4 w-4 text-red-500" />
-        Reject
-      </button>
+    <div 
+    className={`bg-white rounded-lg border border-gray-200 shadow-sm flex flex-col transition-all duration-200 
+    ${isExpanded || isReviewMode ? 'max-h-[85vh]' : 'h-auto'} relative`}
+    onMouseEnter={() => setIsHovered(true)}
+    onMouseLeave={() => setIsHovered(false)}
+  >
+    {/* Buttons on Hover */}
+    {cv.visibility != 'locked' && isHovered && (
+      <div className="absolute top-3 right-3 flex gap-2">
+        {cv.status !== 'rejected' && (
+          <button
+            onClick={handleRemove}
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 border border-gray-300 rounded-lg shadow-sm transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          >
+            <ThumbsDown className="h-4 w-4 text-red-500" />
+            Reject
+          </button>
+        )}
+        {cv.status !== 'approved' && (
+          <button
+            onClick={handleKeep}
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 rounded-lg shadow-sm transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+          >
+            <ThumbsUp className="h-4 w-4" />
+            Approve
+          </button>
+        )}
+      </div>
     )}
-    {cv.status !== 'approved' && (
-      <button
-        onClick={handleKeep}
-        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 rounded-lg shadow-sm transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-      >
-        <ThumbsUp className="h-4 w-4" />
-        Approve
-      </button>
-    )}
-  </div>
-          )}
       {/* Header */}
       <div 
         className={`p-4 bg-gray-50 ${!isReviewMode ? 'cursor-pointer hover:bg-gray-100' : ''} transition-colors`}
@@ -155,9 +159,9 @@ const CVCard = ({
                 { cv.candidate.fullName}
               </h3>
               <div className="flex items-center gap-3 flex-shrink-0">
-              {cv.visibility != 'locked' && (
+              {cv.visibility != 'locked' && !isHovered && (
 
-              <div className="group-hover:hidden">
+              <div>
                   <Status status={cv.status || 'pending'} />
                 </div>
               )}
