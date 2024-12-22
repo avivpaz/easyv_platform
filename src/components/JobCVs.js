@@ -184,9 +184,9 @@ const JobCVs = ({ jobId }) => {
   return (
     <div>
       {/* Tabs Container */}
-      <div className="mb-6">
-        <div className="border-b border-gray-200">
-          <nav className="flex space-x-8" aria-label="Tabs">
+      <div className="mb-6 overflow-x-auto">
+        <div className="border-b border-gray-200 min-w-full">
+          <nav className="flex" aria-label="Tabs">
             {['pending', 'approved', 'rejected'].map((status) => {
               const count = [...cvData.unlocked, ...cvData.locked].filter(cv => cv.status === status).length;
               return (
@@ -194,7 +194,7 @@ const JobCVs = ({ jobId }) => {
                   key={status}
                   onClick={() => setActiveTab(status)}
                   className={`
-                    whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2
+                    whitespace-nowrap py-4 px-3 flex-1 border-b-2 font-medium text-sm flex items-center justify-center gap-2
                     ${activeTab === status
                       ? 'border-primary text-primary'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -203,7 +203,7 @@ const JobCVs = ({ jobId }) => {
                 >
                   {status.charAt(0).toUpperCase() + status.slice(1)}
                   <span className={`
-                    rounded-full px-2.5 py-0.5 text-xs font-medium
+                    rounded-full px-2 py-0.5 text-xs font-medium min-w-[1.5rem] text-center
                     ${activeTab === status
                       ? 'bg-primary/10 text-primary'
                       : 'bg-gray-100 text-gray-600'
