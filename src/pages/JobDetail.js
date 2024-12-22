@@ -1,16 +1,18 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Upload, X, FileText, CheckCircle, 
   MapPin, Clock, Code, ExternalLink,
   Briefcase, Star, ArrowLeft, Users,
-  Building, Link, Share2, Loader2
+  Building, Link, Share2, Loader2,
+  Edit2, Save
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
 import JobCVs from '../components/JobCVs';
 import { useAuth } from '../context/AuthContext';
 import { urlShortenerService } from '../services/urlShortenerService';
 import ShareModal from '../components/ShareModal';
+import EditJobModal from '../components/EditJobModal';
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -19,6 +21,7 @@ const JobDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [copied, setCopied] = useState(false);
   const [copiedSocial, setCopiedSocial] = useState(false);
   const [shortUrl, setShortUrl] = useState('');
@@ -30,11 +33,6 @@ const JobDetail = () => {
     fetchJob();
   }, [id]);
 
-  useEffect(() => {
-    if (showShareModal && !shortUrl) {  // Only if we don't already have a short URL
-      shortenUrl();
-    }
-  }, [showShareModal]);
   const fetchJob = async () => {
     try {
       setLoading(true);
@@ -48,33 +46,11 @@ const JobDetail = () => {
       setLoading(false);
     }
   };
-  const shortenUrl = async () => {
-    if (shortUrl) return; // Don't shorten if we already have a short URL
-    
-    setShorteningUrl(true);
-    try {
-      const shortened = await urlShortenerService.shortenUrl(longUrl);
-      if (shortened && shortened !== longUrl) {  // Check if we got a valid shortened URL
-        setShortUrl(shortened);  // This is where we set the short URL
-      }
-    } catch (error) {
-      console.error('Error shortening URL:', error);
-      // Optionally show an error message to the user
-    } finally {
-      setShorteningUrl(false);
-    }
-  };
 
-
-  useEffect(() => {
+  const handleEditSuccess = () => {
     fetchJob();
-  }, [id]);
-
- 
-  const handleViewInNewTab = () => {
-    window.open(longUrl, '_blank');
+    setShowEditModal(false);
   };
-
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -121,7 +97,7 @@ const JobDetail = () => {
       <div className="bg-gradient-to-r from-primary to-primary-light text-white">
         <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
           <div className="flex flex-col space-y-6">
-            {/* Header */}
+            {/* Header with Edit Button */}
             <div className="flex justify-between items-center">
               <button
                 onClick={() => navigate('/dashboard')}
@@ -132,11 +108,11 @@ const JobDetail = () => {
               </button>
               <div className="flex gap-2">
                 <button
-                  onClick={handleViewInNewTab}
+                  onClick={() => setShowEditModal(true)}
                   className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
                 >
-                  <ExternalLink className="h-4 w-4" />
-                  <span className="hidden md:inline">View</span>
+                  <Edit2 className="h-4 w-4" />
+                  <span className="hidden md:inline">Edit</span>
                 </button>
                 <button
                   onClick={() => setShowShareModal(true)}
@@ -148,7 +124,7 @@ const JobDetail = () => {
               </div>
             </div>
 
-
+            {/* Rest of the job details... */}
             {/* Job Info */}
             <div className="flex flex-col md:flex-row md:items-start md:gap-4">
               <div className="bg-white/10 p-2 md:p-3 rounded-lg mb-3 md:mb-0">
@@ -177,38 +153,38 @@ const JobDetail = () => {
               </div>
             </div>
 
-       {/* Skills section with switched colors */}
-<div className="grid md:grid-cols-2 gap-6 p-4 md:p-6 bg-white/10 rounded-xl">
-  <div>
-    <h3 className="text-sm font-medium text-secondary-light mb-2">Required Skills</h3>
-    <div className="flex flex-wrap gap-2">
-      {job.requiredSkills.map((skill, index) => (
-        <span
-          key={index}
-          className="px-2 py-1 rounded-lg text-xs md:text-sm font-medium bg-white/10 text-secondary-light"
-        >
-          {skill}
-        </span>
-      ))}
-    </div>
-  </div>
-  
-  {job.niceToHaveSkills?.length > 0 && (
-    <div>
-      <h3 className="text-sm font-medium text-secondary-light mb-2">Nice to Have</h3>
-      <div className="flex flex-wrap gap-2">
-        {job.niceToHaveSkills.map((skill, index) => (
-          <span
-            key={index}
-            className="px-2 py-1 rounded-lg text-xs md:text-sm font-medium bg-primary/20 text-secondary-light border border-white/10"
-          >
-            {skill}
-          </span>
-        ))}
-      </div>
-    </div>
-  )}
-</div>
+            {/* Skills */}
+            <div className="grid md:grid-cols-2 gap-6 p-4 md:p-6 bg-white/10 rounded-xl">
+              <div>
+                <h3 className="text-sm font-medium text-secondary-light mb-2">Required Skills</h3>
+                <div className="flex flex-wrap gap-2">
+                  {job.requiredSkills.map((skill, index) => (
+                    <span
+                      key={index}
+                      className="px-2 py-1 rounded-lg text-xs md:text-sm font-medium bg-white/10 text-secondary-light"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              
+              {job.niceToHaveSkills?.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium text-secondary-light mb-2">Nice to Have</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {job.niceToHaveSkills.map((skill, index) => (
+                      <span
+                        key={index}
+                        className="px-2 py-1 rounded-lg text-xs md:text-sm font-medium bg-primary/20 text-secondary-light border border-white/10"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -222,14 +198,24 @@ const JobDetail = () => {
         </div>
       </div>
 
+      {/* Modals */}
       <ShareModal 
-  isOpen={showShareModal}
-  onClose={() => setShowShareModal(false)}
-  job={job}
-  shortUrl={shortUrl}
-  longUrl={longUrl}
-  shorteningUrl={shorteningUrl}
-/>
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        job={job}
+        shortUrl={shortUrl}
+        longUrl={longUrl}
+        shorteningUrl={shorteningUrl}
+      />
+
+      {showEditModal && (
+     <EditJobModal
+     isOpen={showEditModal}
+     onClose={() => setShowEditModal(false)}
+     onSuccess={handleEditSuccess}
+     job={job}
+   />
+      )}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, CheckCircle, Loader2 } from 'lucide-react';
+import { X, CheckCircle, Loader2, ExternalLink } from 'lucide-react';
 import { jobService } from '../services/jobService';
 
 const ShareModal = ({ 
@@ -19,7 +19,6 @@ const ShareModal = ({
   const handlePlatformChange = async (e) => {
     const newPlatform = e.target.value;
     setSelectedPlatform(newPlatform);
-    // Clear current text and generate new one
     setSocialShareText('');
     getSocialShareText(newPlatform);
   };
@@ -70,6 +69,10 @@ const ShareModal = ({
     }
   };
 
+  const handleView = () => {
+    window.open(shortUrl || longUrl, '_blank');
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -83,21 +86,6 @@ const ShareModal = ({
         </div>
         
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Platform</label>
-          <select
-            value={selectedPlatform}
-            onChange={handlePlatformChange}
-            className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-          >
-            {platformOptions.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">Application Link</label>
           <div className="flex items-center gap-2 bg-gray-50 p-2 md:p-3 rounded-lg">
             <input
@@ -106,6 +94,13 @@ const ShareModal = ({
               value={shorteningUrl ? "Generating short link..." : (shortUrl || longUrl)}
               className="flex-1 bg-transparent border-none text-sm focus:ring-0 text-gray-600"
             />
+            <button
+              onClick={handleView}
+              className="px-3 py-1.5 rounded-lg text-sm bg-gray-200 hover:bg-gray-300 text-gray-700"
+              disabled={shorteningUrl}
+            >
+              <ExternalLink className="h-4 w-4" />
+            </button>
             <button
               onClick={() => handleCopy(shortUrl || longUrl, setCopied)}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm ${
@@ -125,6 +120,21 @@ const ShareModal = ({
               )}
             </button>
           </div>
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Platform</label>
+          <select
+            value={selectedPlatform}
+            onChange={handlePlatformChange}
+            className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+          >
+            {platformOptions.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>

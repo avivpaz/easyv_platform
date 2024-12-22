@@ -24,6 +24,15 @@ export const jobService = {
       throw new Error(error.response?.data?.error || 'Failed to create job');
     }
   },
+  async updateJob(id, jobData) {
+    try {
+      const response = await api.put(`/jobs/${id}`, jobData);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating job:', error);
+      throw new Error(error.response?.data?.error || 'Failed to update job');
+    }
+  },
   async deleteJob(id) {
     try {
       const response = await api.delete(`/jobs/${id}`);
