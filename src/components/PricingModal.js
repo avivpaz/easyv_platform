@@ -51,29 +51,29 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
   ];
  
 
-  useEffect(() => {
-    if (isOpen) {
-      // Save current scroll position and add scroll lock
-      const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-    } else {
-      // Restore scroll position and remove scroll lock
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
-    }
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     // Save current scroll position and add scroll lock
+  //     const scrollY = window.scrollY;
+  //     document.body.style.position = 'fixed';
+  //     document.body.style.top = `-${scrollY}px`;
+  //     document.body.style.width = '100%';
+  //   } else {
+  //     // Restore scroll position and remove scroll lock
+  //     const scrollY = document.body.style.top;
+  //     document.body.style.position = '';
+  //     document.body.style.top = '';
+  //     document.body.style.width = '';
+  //     window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+  //   }
 
-    return () => {
-      // Cleanup - ensure scroll is restored when component unmounts
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-    };
-  }, [isOpen]);
+  //   return () => {
+  //     // Cleanup - ensure scroll is restored when component unmounts
+  //     document.body.style.position = '';
+  //     document.body.style.top = '';
+  //     document.body.style.width = '';
+  //   };
+  // }, [isOpen]);
   const handlePurchase = async (planDetails) => {
     try {
       const paddle =await initializePaddle(addCredits,onPurchaseComplete);

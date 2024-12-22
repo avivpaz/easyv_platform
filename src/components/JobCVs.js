@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { 
-    FileText, AlertCircle, Clock, Upload, GraduationCap, 
-    Briefcase, ChevronRight, ChevronLeft, Code, Filter,
-    Link, X, Lock, Users, Grid, List, ChevronDown,
-    ChevronUp, ThumbsUp, ThumbsDown, Unlock
+    FileText, AlertCircle, Upload, Grid, List,
+    ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
 import { cvService } from '../services/cvService';
 import UploadModal from './UploadModal';
 import {cvVisibilityService} from '../services/cvVisibilityService'
-import CVCard from './CVCard';  // Import the unified CVCard component
+import CVCard from './CVCard';
 import { useAuth } from '../context/AuthContext';
 import PricingModal from './PricingModal'
-
-
 
 const JobCVs = ({ jobId }) => {
   const [cvData, setCvData] = useState({ locked: [], unlocked: [], stats: { total: 0, unlocked: 0, locked: 0 } });
@@ -25,7 +21,7 @@ const JobCVs = ({ jobId }) => {
   const [expandedCvId, setExpandedCvId] = useState(null);
   const [isReviewMode, setIsReviewMode] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [filters, setFilters] = useState(['pending']); // Add filters state
+  const [activeTab, setActiveTab] = useState('pending');
   const { setCredits } = useAuth();
 
   const fetchCVs = async () => {
@@ -74,7 +70,6 @@ const JobCVs = ({ jobId }) => {
       const result = await cvVisibilityService.unlockCVs([cvId]);
       if (result.success) {
         setCvData(prevData => {
-          // Use the returned CV data from the API
           const unlockedCV = result.data[0];
           if (!unlockedCV) return prevData;
 
@@ -94,10 +89,10 @@ const JobCVs = ({ jobId }) => {
         if (result.error?.includes('insufficient_credits')) {
           setShowPricingModal(true);
         } else {
-          setUnlockError(error.message);
-        }      }
+          setUnlockError(result.error);
+        }
+      }
     } catch (error) {
-      // Also check the caught error for insufficient credits
       if (error.message?.includes('insufficient_credits')) {
         setShowPricingModal(true);
       } else {
@@ -107,8 +102,8 @@ const JobCVs = ({ jobId }) => {
   };
   
   const handleNext = () => {
-    const totalCVs = cvData.unlocked.length + cvData.locked.length;
-    if (currentIndex < totalCVs - 1) {
+    const filteredCVs = getAllCVs();
+    if (currentIndex < filteredCVs.length - 1) {
       setCurrentIndex(currentIndex + 1);
     }
   };
@@ -121,10 +116,7 @@ const JobCVs = ({ jobId }) => {
 
   const getAllCVs = () => {
     const allCVs = [...cvData.unlocked, ...cvData.locked];
-    // Filter CVs based on selected status filters
-    return filters.includes('all') 
-      ? allCVs 
-      : allCVs.filter(cv => filters.includes(cv.status));
+    return allCVs.filter(cv => cv.status === activeTab);
   };
 
   const renderContent = () => {
@@ -181,6 +173,8 @@ const JobCVs = ({ jobId }) => {
             onToggle={() => setExpandedCvId(expandedCvId === cv._id ? null : cv._id)}
             updateCVStatus={updateCVStatus}
             onUnlock={handleUnlock}
+            showStatusButtons={true}
+            currentStatus={cv.status}
           />
         ))}
       </>
@@ -189,49 +183,51 @@ const JobCVs = ({ jobId }) => {
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          {/* Status Filters */}
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-gray-400" />
-            <div className="flex flex-wrap gap-2">
-              {['pending', 'approved', 'rejected'].map((status) => (
+      {/* Tabs Container */}
+      <div className="mb-6">
+        <div className="border-b border-gray-200">
+          <nav className="flex space-x-8" aria-label="Tabs">
+            {['pending', 'approved', 'rejected'].map((status) => {
+              const count = [...cvData.unlocked, ...cvData.locked].filter(cv => cv.status === status).length;
+              return (
                 <button
                   key={status}
-                  onClick={() => {
-                    if (status === 'all') {
-                      setFilters(['all']);
-                    } else {
-                      setFilters(prev => {
-                        if (prev.includes(status)) {
-                          const newFilters = prev.filter(f => f !== status);
-                          return newFilters.length ? newFilters : ['pending'];
-                        }
-                        return prev.includes('all') ? [status] : [...prev, status];
-                      });
+                  onClick={() => setActiveTab(status)}
+                  className={`
+                    whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2
+                    ${activeTab === status
+                      ? 'border-primary text-primary'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }
-                  }}
-                  className={`px-2 md:px-3 py-1 rounded-lg text-xs md:text-sm font-medium border transition-colors ${
-                    filters.includes(status)
-                      ? 'bg-primary/5 border-primary/20 text-primary'
-                      : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
-                  }`}
+                  `}
                 >
                   {status.charAt(0).toUpperCase() + status.slice(1)}
+                  <span className={`
+                    rounded-full px-2.5 py-0.5 text-xs font-medium
+                    ${activeTab === status
+                      ? 'bg-primary/10 text-primary'
+                      : 'bg-gray-100 text-gray-600'
+                    }
+                  `}>
+                    {count}
+                  </span>
                 </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Review Mode Toggle */}
-          <button
-            onClick={() => setIsReviewMode(!isReviewMode)}
-            className="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
-          >
-            {isReviewMode ? <Grid className="h-4 w-4" /> : <List className="h-4 w-4" />}
-            <span>{isReviewMode ? 'Grid View' : 'Review Mode'}</span>
-          </button>
+              );
+            })}
+          </nav>
         </div>
+      </div>
+
+      {/* Actions Container */}
+      <div className="mb-4 flex items-center justify-between">
+        {/* Review Mode Toggle */}
+        <button
+          onClick={() => setIsReviewMode(!isReviewMode)}
+          className="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
+        >
+          {isReviewMode ? <Grid className="h-4 w-4" /> : <List className="h-4 w-4" />}
+          <span>{isReviewMode ? 'Grid View' : 'Review Mode'}</span>
+        </button>
 
         <button
           onClick={() => setShowUploadModal(true)}
@@ -249,7 +245,38 @@ const JobCVs = ({ jobId }) => {
         </div>
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-4 relative group">
+        {/* Floating Navigation Controls */}
+        <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-between pointer-events-none z-10">
+          <button
+            onClick={handlePrevious}
+            disabled={currentIndex === 0}
+            className={`pointer-events-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200
+              p-2 rounded-full bg-white shadow-lg border border-gray-200 
+              ${currentIndex === 0 
+                ? 'text-gray-300 cursor-not-allowed' 
+                : 'text-gray-600 hover:bg-gray-50'
+              } transform -translate-x-1/2`}
+            style={{ zIndex: 20 }}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          
+          <button
+            onClick={handleNext}
+            disabled={currentIndex >= getAllCVs().length - 1}
+            className={`pointer-events-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200
+              p-2 rounded-full bg-white shadow-lg border border-gray-200
+              ${currentIndex >= getAllCVs().length - 1
+                ? 'text-gray-300 cursor-not-allowed'
+                : 'text-gray-600 hover:bg-gray-50'
+              } transform translate-x-1/2`}
+            style={{ zIndex: 20 }}
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+        </div>
+
         {renderContent()}
       </div>
 
@@ -262,12 +289,11 @@ const JobCVs = ({ jobId }) => {
         />
       )}
 
-<PricingModal 
+      <PricingModal 
         isOpen={showPricingModal}
         onClose={() => setShowPricingModal(false)}
         onPurchaseComplete={() => {
           setShowPricingModal(false);
-          // The credits will be updated via the AuthContext
         }}
       />
     </div>
