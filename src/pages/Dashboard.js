@@ -64,6 +64,7 @@ const Dashboard = () => {
 
   const handlePageChange = (newPage) => {
     setSearchParams({ page: newPage.toString() });
+    fetchJobs(newPage)
   };
 
   const fetchJobs = async (page = 1) => {
