@@ -110,15 +110,13 @@ const JobDetail = () => {
               <div className="flex gap-2">
                 <button
                   onClick={() => setShowEditModal(true)}
-                  className="flex items-center justify-center gap-2 p-2 md:px-3 md:py-2 bg-white text-primary font-medium rounded-lg hover:bg-gray-50 transition-colors"
-                >
+                  className="flex items-center justify-center gap-2 p-2 md:px-3 md:py-2 bg-white text-primary text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"                >
                   <Edit2 className="h-5 w-5 md:h-4 md:w-4" />
                   <span className="hidden md:inline">Edit</span>
                 </button>
                 <button
                   onClick={() => setShowShareModal(true)}
-                  className="flex items-center justify-center gap-2 p-2 md:px-3 md:py-2 bg-white text-primary font-medium rounded-lg hover:bg-gray-50 transition-colors"
-                >
+                  className="flex items-center justify-center gap-2 p-2 md:px-3 md:py-2 bg-white text-primary text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"                >
                   <Share2 className="h-5 w-5 md:h-4 md:w-4" />
                   <span className="hidden md:inline">Share</span>
                 </button>

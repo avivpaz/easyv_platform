@@ -10,6 +10,7 @@ import Header from './components/Header';
 import SettingsPage from './pages/SettingsPage';
 import BillingPage from './pages/BillingPage';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import TawkToChat from './components/TawkToChat';
 
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
@@ -93,6 +94,8 @@ function App() {
       <Router>
         <AuthProvider>
           <AppRoutes />
+          {/* <TawkToChat /> */}
+
         </AuthProvider>
       </Router>
     </GoogleOAuthProvider>
