@@ -52,11 +52,14 @@ function AppRoutes() {
               </PrivateRoute>
             } 
           />
-          <Route 
-            path="/settings" 
+       <Route 
+            path="/settings/*" 
             element={
               <PrivateRoute>
-                <SettingsPage />
+                <Routes>
+                  <Route path="/" element={<SettingsPage />} />
+                  <Route path="organization" element={<SettingsPage />} />
+                </Routes>
               </PrivateRoute>
             } 
           />

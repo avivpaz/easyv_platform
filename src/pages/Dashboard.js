@@ -3,7 +3,8 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { 
   Briefcase, Users, Calendar, Search, Plus,
   ChevronRight, MapPin, Clock, DollarSign,
-  TrendingUp, Filter, ArrowUp, BarChart, Loader, Trash2
+  TrendingUp, Filter, ArrowUp, BarChart, Loader, Trash2, 
+  AlertCircle
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
 import CreateJobModal from '../components/CreateJobModal';
@@ -30,7 +31,7 @@ const Dashboard = () => {
   
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, organization } = useAuth();
 
   useEffect(() => {
     const createJob = searchParams.get('createJob');
@@ -51,9 +52,6 @@ const Dashboard = () => {
   }, [isAuthenticated]);
 
   const handleJobClick = (jobId, event) => {
-    if (event.target.closest('.delete-button')) {
-      return;
-    }
     navigate(`/jobs/${jobId}`);
   };
 
@@ -117,6 +115,25 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+    {organization?.needsSetup && (
+        <div className="bg-primary/5 border-b border-primary/10">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="flex items-center gap-2 py-4 text-sm">
+              <AlertCircle className="h-4 w-4 text-primary flex-shrink-0" />
+              <span className="text-gray-600">
+                Complete your organization profile to customize your jobs landing page.
+              </span>
+              <Link 
+                to="/settings/organization" 
+                className="text-primary hover:text-primary-dark font-medium inline-flex items-center"
+              >
+                Complete Setup
+                <ChevronRight className="h-3 w-3 ml-0.5" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Header Section */}
       <div className="bg-gradient-to-r from-primary to-primary-light">
         <div className="max-w-7xl mx-auto px-4 py-8">
