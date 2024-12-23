@@ -98,38 +98,38 @@ const JobDetail = () => {
       <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
         <div className="flex flex-col space-y-6">
           {/* Move buttons to main header and improve visibility */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="flex items-center text-secondary-light hover:text-white"
-            >
-              <ArrowLeft className="h-5 w-5 md:h-4 md:w-4 mr-2" />
-              <span>Back to Dashboard</span>
-            </button>
-            
-            <div className="flex gap-3 w-full md:w-auto">
+          <div className="flex items-center justify-between w-full">
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="flex items-center text-secondary-light hover:text-white"
+              >
+                <ArrowLeft className="h-5 w-5 md:h-4 md:w-4 mr-2" />
+                <span>Back to Dashboard</span>
+              </button>
+              
+              <div className="flex gap-2">
                 <button
                   onClick={() => setShowEditModal(true)}
-                  className="flex items-center justify-center gap-2 px-3 py-2 bg-white text-primary font-medium rounded-lg hover:bg-gray-50 transition-colors flex-1 md:flex-none text-sm"
+                  className="flex items-center justify-center gap-2 p-2 md:px-3 md:py-2 bg-white text-primary font-medium rounded-lg hover:bg-gray-50 transition-colors"
                 >
-                  <Edit2 className="h-4 w-4" />
-                  Edit 
+                  <Edit2 className="h-5 w-5 md:h-4 md:w-4" />
+                  <span className="hidden md:inline">Edit</span>
                 </button>
                 <button
                   onClick={() => setShowShareModal(true)}
-                  className="flex items-center justify-center gap-2 px-3 py-2 bg-white text-primary font-medium rounded-lg hover:bg-gray-50 transition-colors flex-1 md:flex-none text-sm"
+                  className="flex items-center justify-center gap-2 p-2 md:px-3 md:py-2 bg-white text-primary font-medium rounded-lg hover:bg-gray-50 transition-colors"
                 >
-                  <Share2 className="h-4 w-4" />
-                  Share 
+                  <Share2 className="h-5 w-5 md:h-4 md:w-4" />
+                  <span className="hidden md:inline">Share</span>
                 </button>
               </div>
-          </div>
+            </div>
 
           {/* Job Info */}
           <div className="flex flex-col md:flex-row md:items-start md:gap-4">
-            <div className="bg-white/10 p-2 md:p-3 rounded-lg mb-3 md:mb-0">
-              <Briefcase className="h-5 w-5 md:h-6 md:w-6" />
-            </div>
+          <div className="hidden md:block bg-white/10 p-2 md:p-3 rounded-lg mb-3 md:mb-0">
+                <Briefcase className="h-5 w-5 md:h-6 md:w-6" />
+              </div>
             <div className="flex-1">
               <h1 className="text-xl md:text-3xl font-bold mb-3 md:mb-4">{job.title}</h1>
               <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-6 text-sm md:text-base text-secondary-light">
