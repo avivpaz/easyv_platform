@@ -113,14 +113,14 @@ const JobDetail = () => {
                   className="flex items-center justify-center gap-2 px-3 py-2 bg-white text-primary font-medium rounded-lg hover:bg-gray-50 transition-colors flex-1 md:flex-none text-sm"
                 >
                   <Edit2 className="h-4 w-4" />
-                  Edit Position
+                  Edit 
                 </button>
                 <button
                   onClick={() => setShowShareModal(true)}
                   className="flex items-center justify-center gap-2 px-3 py-2 bg-white text-primary font-medium rounded-lg hover:bg-gray-50 transition-colors flex-1 md:flex-none text-sm"
                 >
                   <Share2 className="h-4 w-4" />
-                  Share Position
+                  Share 
                 </button>
               </div>
           </div>
