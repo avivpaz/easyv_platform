@@ -94,64 +94,64 @@ const JobDetail = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-gradient-to-r from-primary to-primary-light text-white">
-        <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
-          <div className="flex flex-col space-y-6">
-            {/* Header with Edit Button */}
-            <div className="flex justify-between items-center">
-              <button
-                onClick={() => navigate('/dashboard')}
-                className="flex items-center text-secondary-light hover:text-white"
-              >
-                <ArrowLeft className="h-5 w-5 md:h-4 md:w-4 md:mr-2" />
-                <span className="hidden md:inline">Back to Dashboard</span>
-              </button>
-              <div className="flex gap-2">
+    <div className="bg-gradient-to-r from-primary to-primary-light text-white">
+      <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
+        <div className="flex flex-col space-y-6">
+          {/* Move buttons to main header and improve visibility */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="flex items-center text-secondary-light hover:text-white"
+            >
+              <ArrowLeft className="h-5 w-5 md:h-4 md:w-4 mr-2" />
+              <span>Back to Dashboard</span>
+            </button>
+            
+            <div className="flex gap-3 w-full md:w-auto">
                 <button
                   onClick={() => setShowEditModal(true)}
-                  className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+                  className="flex items-center justify-center gap-2 px-3 py-2 bg-white text-primary font-medium rounded-lg hover:bg-gray-50 transition-colors flex-1 md:flex-none text-sm"
                 >
                   <Edit2 className="h-4 w-4" />
-                  <span className="hidden md:inline">Edit</span>
+                  Edit Position
                 </button>
                 <button
                   onClick={() => setShowShareModal(true)}
-                  className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+                  className="flex items-center justify-center gap-2 px-3 py-2 bg-white text-primary font-medium rounded-lg hover:bg-gray-50 transition-colors flex-1 md:flex-none text-sm"
                 >
                   <Share2 className="h-4 w-4" />
-                  <span className="hidden md:inline">Share Position</span>
+                  Share Position
                 </button>
               </div>
-            </div>
+          </div>
 
-            {/* Rest of the job details... */}
-            {/* Job Info */}
-            <div className="flex flex-col md:flex-row md:items-start md:gap-4">
-              <div className="bg-white/10 p-2 md:p-3 rounded-lg mb-3 md:mb-0">
-                <Briefcase className="h-5 w-5 md:h-6 md:w-6" />
-              </div>
-              <div className="flex-1">
-                <h1 className="text-xl md:text-3xl font-bold mb-3 md:mb-4">{job.title}</h1>
-                <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-6 text-sm md:text-base text-secondary-light">
-                  <span className="flex items-center gap-1">
-                    <MapPin className="h-4 w-4 flex-shrink-0" />
-                    <span className="truncate">{job.location}</span>
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Building className="h-4 w-4 flex-shrink-0" />
-                    <span className="truncate">{job.workType}</span>
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Briefcase className="h-4 w-4 flex-shrink-0" />
-                    <span className="truncate">{job.employmentType}</span>
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-4 w-4 flex-shrink-0" />
-                    <span className="truncate">Posted {formatDate(job.createdAt)}</span>
-                  </span>
-                </div>
+          {/* Job Info */}
+          <div className="flex flex-col md:flex-row md:items-start md:gap-4">
+            <div className="bg-white/10 p-2 md:p-3 rounded-lg mb-3 md:mb-0">
+              <Briefcase className="h-5 w-5 md:h-6 md:w-6" />
+            </div>
+            <div className="flex-1">
+              <h1 className="text-xl md:text-3xl font-bold mb-3 md:mb-4">{job.title}</h1>
+              <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-6 text-sm md:text-base text-secondary-light">
+                <span className="flex items-center gap-1">
+                  <MapPin className="h-4 w-4 flex-shrink-0" />
+                  <span className="truncate">{job.location}</span>
+                </span>
+                <span className="flex items-center gap-1">
+                  <Building className="h-4 w-4 flex-shrink-0" />
+                  <span className="truncate">{job.workType}</span>
+                </span>
+                <span className="flex items-center gap-1">
+                  <Briefcase className="h-4 w-4 flex-shrink-0" />
+                  <span className="truncate">{job.employmentType}</span>
+                </span>
+                <span className="flex items-center gap-1">
+                  <Clock className="h-4 w-4 flex-shrink-0" />
+                  <span className="truncate">Posted {formatDate(job.createdAt)}</span>
+                </span>
               </div>
             </div>
+          </div>
 
             {/* Skills */}
             <div className="grid md:grid-cols-2 gap-6 p-4 md:p-6 bg-white/10 rounded-xl">
