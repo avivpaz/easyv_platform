@@ -247,6 +247,7 @@ const JobCVs = ({ jobId }) => {
 
       <div className="space-y-4 relative group">
         {/* Floating Navigation Controls */}
+        {isReviewMode && (
         <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-between pointer-events-none z-10">
           <button
             onClick={handlePrevious}
@@ -276,7 +277,7 @@ const JobCVs = ({ jobId }) => {
             <ChevronRight className="h-6 w-6" />
           </button>
         </div>
-
+        )}
         {renderContent()}
       </div>
 
