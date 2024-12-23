@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   FileText, Clock, GraduationCap, Briefcase, 
-  ChevronDown, ChevronUp, Code, Lock, Users,
+  ChevronDown, ArrowRight, Code, Lock, Users,
   ThumbsUp, ThumbsDown, Unlock
 } from 'lucide-react';
 import CopyButton from './CopyButton';
@@ -37,35 +37,68 @@ const UnlockButton = ({ onUnlock, creditsRequired = 1, loading = false }) => (
   </button>
 );
 
-const ExperienceCard = ({ experience, isExpanded, onToggle }) => (
-<div  className="bg-gray-50 rounded-lg border-l-4 border-primary/40">
-    <button
-      className="w-full p-3 text-left hover:bg-gray-50 transition-colors"
-      onClick={onToggle}
-    >
-      <div className="flex items-center justify-between">
-        <div>
-          <h4 className="font-medium text-gray-900">{experience.position}</h4>
-          <p className="text-sm text-gray-600">{experience.company}</p>
-          <p className="text-sm text-gray-500">{experience.dates}</p>
+const EducationCard = ({ education }) => (
+    <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+      <div className="p-4">
+        <div className="flex items-start gap-3">
+          <div className="p-2 bg-primary/10 rounded-lg mt-1">
+            <GraduationCap className="h-5 w-5 text-primary" />
+          </div>
+          <div className="space-y-1">
+            <h4 className="font-medium text-gray-900">{education.degree}</h4>
+            <p className="text-sm text-gray-600">{education.institution}</p>
+            <div className="inline-flex items-center px-2.5 py-1 mt-1 bg-primary/5 rounded-full">
+              <span className="text-xs font-medium text-primary">{education.year}</span>
+            </div>
+          </div>
         </div>
-        {experience.responsibilities?.length > 0 && (
-          <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
-        )}
       </div>
-    </button>
-    {isExpanded && experience.responsibilities && (
-      <div className="px-3 pb-3 space-y-1.5 border-t border-gray-100">
-        {experience.responsibilities.map((resp, idx) => (
-          <p key={idx} className="text-sm text-gray-600 pl-4 relative before:absolute before:left-1.5 before:top-2 before:w-1 before:h-1 before:bg-gray-400 before:rounded-full">
-            {resp}
-          </p>
-        ))}
-      </div>
-    )}
-  </div>
-);
-
+    </div>
+  );
+const ExperienceCard = ({ experience, isExpanded, onToggle }) => (
+    <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+      <button
+        className="w-full p-4 text-left hover:bg-gray-50 transition-colors duration-200"
+        onClick={onToggle}
+      >
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="mt-1 p-2 bg-primary/10 rounded-lg">
+              <Briefcase className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h4 className="font-medium text-gray-900">{experience.position}</h4>
+              <p className="text-sm text-gray-600 mt-0.5">{experience.company}</p>
+              <div className="inline-flex items-center px-2.5 py-1 mt-1 bg-primary/5 rounded-full">
+              <span className="text-xs font-medium text-primary">{experience.dates}</span>
+            </div>
+            </div>
+          </div>
+          {experience.responsibilities?.length > 0 && (
+            <ChevronDown 
+              className={`h-5 w-5 text-gray-400 transition-transform duration-300 ease-in-out flex-shrink-0
+              ${isExpanded ? 'rotate-180' : ''}`} 
+            />
+          )}
+        </div>
+      </button>
+      
+      {isExpanded && experience.responsibilities && (
+        <div className="bg-gray-50 border-t border-gray-200">
+          <div className="p-4 space-y-3">
+            {experience.responsibilities.map((resp, idx) => (
+              <div key={idx} className="flex items-start gap-2 group">
+              <ArrowRight className="h-4 w-4 text-primary/60 mt-1 flex-shrink-0 group-hover:text-primary transition-colors duration-200" />
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {resp}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 const CVCard = ({ 
   cv, 
   isExpanded, 
@@ -229,12 +262,8 @@ const CVCard = ({
                     Education
                   </h4>
                   <div className="space-y-3">
-                    {cv.candidate.education?.map((edu, index) => (
-                      <div key={index} className="bg-gray-50 p-3 rounded-lg border-l-4 border-primary">
-                        <p className="font-medium text-gray-900">{edu.degree}</p>
-                        <p className="text-sm text-gray-600">{edu.institution}</p>
-                        <p className="text-sm text-gray-500">{edu.year}</p>
-                      </div>
+                  {cv.candidate.education?.map((edu, index) => (
+                        <EducationCard key={index} education={edu} />
                     ))}
                   </div>
                 </div>
