@@ -136,18 +136,19 @@ const JobCVs = ({ jobId }) => {
       );
     }
 
-    if (cvData.stats.total === 0) {
+
+    const filteredCVs = getAllCVs();
+
+    if (filteredCVs.length === 0) {
+  
       return (
         <div className="text-center py-12">
           <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900">No CVs found</h3>
-          <p className="text-sm text-gray-500">Upload some CVs to get started!</p>
+      
         </div>
       );
     }
-
-    const filteredCVs = getAllCVs();
-
     if (isReviewMode) {
       return (
         <CVCard 

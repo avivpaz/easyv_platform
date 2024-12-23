@@ -67,8 +67,15 @@ const ExperienceCard = ({ experience, isExpanded, onToggle }) => (
               <Briefcase className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h4 className="font-medium text-gray-900">{experience.position}</h4>
-              <p className="text-sm text-gray-600 mt-0.5">{experience.company}</p>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <h4 className="font-medium text-gray-900 truncate">{experience.position}</h4>
+                {experience.isRelevant && (
+                  <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium bg-emerald-50 text-emerald-700 rounded-full border border-emerald-200 flex-shrink-0 w-fit">
+                    Relevant
+                  </span>
+                )}
+              </div>
+                <p className="text-sm text-gray-600 mt-0.5">{experience.company}</p>
               <div className="inline-flex items-center px-2.5 py-1 mt-1 bg-primary/5 rounded-full">
               <span className="text-xs font-medium text-primary">{experience.dates}</span>
             </div>
