@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { 
   FileText, Clock, GraduationCap, Briefcase, 
   ChevronDown, ArrowRight, Code, Lock, Users,
@@ -7,7 +7,7 @@ import {
 import CopyButton from './CopyButton';
 import PDFViewerModal from './PDFViewerModal';
 import TextViewerModal from './TextViewerModal';
-
+import CustomTooltip from './CustomTooltip';
 const Status = ({ status }) => {
   const variants = {
     pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
@@ -123,12 +123,26 @@ const CVCard = ({
   const [isTextOpen, setIsTextOpen] = useState(false);
   const [unlocking, setUnlocking] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.status-dropdown')) {
+        setIsDropdownOpen(false);
+      }
+    };
+  
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   const handleKeep = async () => {
     try {
       await updateCVStatus(cv._id, 'approved');
       if (isReviewMode && onNext) onNext();
     } catch (error) {
+        
       console.error('Error approving CV:', error);
     }
   };
@@ -158,32 +172,9 @@ const CVCard = ({
     <div 
     className={`bg-white rounded-lg border border-gray-200 shadow-sm flex flex-col transition-all duration-200 
     ${isExpanded || isReviewMode ? 'max-h-[85vh]' : 'h-auto'} relative`}
-    onMouseEnter={() => setIsHovered(true)}
-    onMouseLeave={() => setIsHovered(false)}
   >
     {/* Buttons on Hover */}
-    {cv.visibility != 'locked' && isHovered && (
-      <div className="absolute top-3 right-3 flex gap-2">
-        {cv.status !== 'rejected' && (
-          <button
-            onClick={handleRemove}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 border border-gray-300 rounded-lg shadow-sm transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-          >
-            <ThumbsDown className="h-4 w-4 text-red-500" />
-            Reject
-          </button>
-        )}
-        {cv.status !== 'approved' && (
-          <button
-            onClick={handleKeep}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 rounded-lg shadow-sm transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-          >
-            <ThumbsUp className="h-4 w-4" />
-            Approve
-          </button>
-        )}
-      </div>
-    )}
+  
       {/* Header */}
       <div 
         className={`p-4 bg-gray-50 ${!isReviewMode ? 'cursor-pointer hover:bg-gray-100' : ''} transition-colors`}
@@ -199,16 +190,11 @@ const CVCard = ({
                 { cv.candidate.fullName}
               </h3>
               <div className="flex items-center gap-3 flex-shrink-0">
-              {cv.visibility != 'locked' && !isHovered && (
-
-              <div>
-                  <Status status={cv.status || 'pending'} />
-                </div>
-              )}
+             
                 {cv.visibility === 'locked' && (
                   <UnlockButton onUnlock={handleUnlock} loading={unlocking} />
                 )}
-                {!isReviewMode && (
+                {!isReviewMode && cv.visibility != 'locked'  && (
                   <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
                 )}
               </div>
@@ -316,43 +302,97 @@ const CVCard = ({
         </div>
       )}
 
-      {/* Footer */}
-      <div className="bg-gray-50 border-t p-4 flex flex-col md:flex-row gap-3 justify-between">
-        <div className="flex items-center gap-4 text-sm text-gray-600">
-          <div className="flex items-center gap-1.5">
-            <Clock className="h-4 w-4" />
-            Applied {new Date(cv.createdAt).toLocaleDateString()}
-          </div>
-          {cv.submissionType && (
-            <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-primary/5 text-primary-dark rounded-full text-xs font-medium">
-              <FileText className="h-3.5 w-3.5" />
-              {cv.submissionType === "text" ? "Website Application" : "File Upload"}
-            </span>
-          )}
-        </div>
-        <div className="flex items-center gap-3">
-          {cv.fileUrl && (
-            <button
-              onClick={() => setIsPdfOpen(true)}
-              className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-gray-900 bg-white border border-gray-200 rounded-lg transition-colors"
-            >
-              <FileText className="h-4 w-4" />
-              View CV
-            </button>
-          )}
-          {cv.rawText && (
-            <button
-              onClick={() => setIsTextOpen(true)}
-              className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-gray-900 bg-white border border-gray-200 rounded-lg transition-colors"
-            >
-              <FileText className="h-4 w-4" />
-              View Application
-            </button>
-          )}
-       
-        </div>
-      </div>
+{/* Footer */}
+<div className="bg-gray-50 border-t p-4 flex flex-col md:flex-row gap-3 justify-between">
+  <div className="flex items-center gap-4 text-sm text-gray-600">
+    <div className="flex items-center gap-1.5">
+      <Clock className="h-4 w-4" />
+      Applied {new Date(cv.createdAt).toLocaleDateString()}
+    </div>
+    {(cv.submissionType || cv.fileUrl || cv.rawText) && (
+           <div className="flex items-center gap-1.5">
+           <CustomTooltip 
+             content={cv.submissionType === "text" ? 
+               "View the original website application submission" : 
+               "View the original uploaded CV document"}
+           >
+             <button
+               onClick={() => cv.submissionType === "text" ? setIsTextOpen(true) : setIsPdfOpen(true)}
+               className="inline-flex items-center gap-1.5 px-2.5 py-1 text-sm text-primary-dark bg-primary/5 hover:bg-primary/10 rounded-full transition-colors"
+             >
+               <FileText className="h-4 w-4" />
+               {cv.submissionType === "text" ? "Website Application" : "CV Upload"}
+             </button>
+           </CustomTooltip>
+         </div>
+    )}
+  </div>
+  
+  {cv.visibility !== 'locked' && (
+    <div className="relative status-dropdown">
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsDropdownOpen(!isDropdownOpen);
+        }}
+        className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+      >
+        <span className="flex items-center gap-2">
+          {cv.status === 'approved' && <ThumbsUp className="h-4 w-4 text-emerald-500" />}
+          {cv.status === 'rejected' && <ThumbsDown className="h-4 w-4 text-red-500" />}
+          {cv.status === 'pending' && <Clock className="h-4 w-4 text-yellow-500" />}
+          {!cv.status && <Users className="h-4 w-4 text-gray-400" />}
+          {cv.status ? cv.status.charAt(0).toUpperCase() + cv.status.slice(1) : 'Set Status'}
+        </span>
+        <ChevronDown className="h-4 w-4" />
+      </button>
 
+      {isDropdownOpen && (
+        <div className="absolute right-0 bottom-full mb-2 w-48 bg-white rounded-lg border border-gray-200 shadow-lg overflow-hidden">
+          {cv.status !== 'pending' && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                updateCVStatus(cv._id, 'pending');
+                setIsDropdownOpen(false);
+              }}
+              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            >
+              <Clock className="h-4 w-4 text-yellow-500" />
+              Mark as Pending
+            </button>
+          )}
+          {cv.status !== 'approved' && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleKeep();
+                setIsDropdownOpen(false);
+              }}
+              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            >
+              <ThumbsUp className="h-4 w-4 text-emerald-500" />
+              Approve
+            </button>
+          )}
+          {cv.status !== 'rejected' && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRemove();
+                setIsDropdownOpen(false);
+              }}
+              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            >
+              <ThumbsDown className="h-4 w-4 text-red-500" />
+              Reject
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  )}
+</div>
       {/* Modals */}
       <TextViewerModal
         isOpen={isTextOpen}
