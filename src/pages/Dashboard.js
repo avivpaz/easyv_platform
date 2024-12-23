@@ -56,7 +56,7 @@ const Dashboard = () => {
         logout();
       }
     }
-  }, [isAuthenticated, searchParams]);
+  }, [isAuthenticated]);
 
   const handleJobClick = (jobId, event) => {
     navigate(`/jobs/${jobId}`);
