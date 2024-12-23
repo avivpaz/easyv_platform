@@ -2,16 +2,46 @@
 import api from './api';
 
 export const jobService = {
-  async getJobs() {
+  async getJobs(params = {}) {
     try {
-      const response = await api.get('/jobs');
-      console.log('API Response:', response); // Debug log
-      // Handle different response structures
-      const jobsData = response.data.jobs || [];
-      return Array.isArray(jobsData) ? jobsData : [];
+      const { page = 1, limit = 10 } = params;
+      const response = await api.get('/jobs', { 
+        params: { 
+          page,
+          limit 
+        }
+      });
+      
+      // If the response has the expected pagination structure
+      if (response.data && response.data.jobs && response.data.pagination) {
+        return {
+          jobs: response.data.jobs,
+          pagination: response.data.pagination
+        };
+      }
+      
+      // Fallback for backward compatibility or unexpected response structure
+      const jobsData = response.data.jobs || response.data || [];
+      return {
+        jobs: Array.isArray(jobsData) ? jobsData : [],
+        pagination: {
+          total: jobsData.length,
+          pages: 1,
+          page: 1,
+          limit: jobsData.length
+        }
+      };
     } catch (error) {
       console.error('Error in jobService:', error);
-      return [];
+      return {
+        jobs: [],
+        pagination: {
+          total: 0,
+          pages: 0,
+          page: 1,
+          limit: 10
+        }
+      };
     }
   },
   async createJob(jobData) {

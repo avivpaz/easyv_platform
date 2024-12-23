@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { 
   Briefcase, Users, Calendar, Search, Plus,
   ChevronRight, MapPin, Clock, DollarSign,
-  TrendingUp, Filter, ArrowUp, BarChart, Loader, Trash2, 
+  ChevronFirst, ChevronLeft, ChevronLast, BarChart, Loader, Trash2, 
   AlertCircle
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
@@ -28,7 +28,12 @@ const Dashboard = () => {
   const [jobToDelete, setJobToDelete] = useState(null);
   const [initialJobDescription, setInitialJobDescription] = useState('');
   const [autoSubmit, setAutoSubmit] = useState(false);
-  
+  const [pagination, setPagination] = useState({
+    total: 0,
+    pages: 0,
+    page: 1,
+    limit: 10
+  });
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isAuthenticated, logout, organization } = useAuth();
@@ -36,6 +41,8 @@ const Dashboard = () => {
   useEffect(() => {
     const createJob = searchParams.get('createJob');
     const prompt = searchParams.get('prompt');
+    const page = parseInt(searchParams.get('page')) || 1;
+    
     if (createJob === 'true' && prompt) {
       const decodedPrompt = decodeURIComponent(prompt);
       setInitialJobDescription(decodedPrompt);
@@ -44,22 +51,27 @@ const Dashboard = () => {
       setSearchParams({}, { replace: true });
     } else {
       if (isAuthenticated) {
-        fetchJobs();
+        fetchJobs(page);
       } else {
         logout();
       }
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, searchParams]);
 
   const handleJobClick = (jobId, event) => {
     navigate(`/jobs/${jobId}`);
   };
 
-  const fetchJobs = async () => {
+  const handlePageChange = (newPage) => {
+    setSearchParams({ page: newPage.toString() });
+  };
+
+  const fetchJobs = async (page = 1) => {
     try {
       setLoading(true);
-      const data = await jobService.getJobs();
-      setJobs(Array.isArray(data) ? data : []);
+      const response = await jobService.getJobs({ page, limit: 10 });
+      setJobs(response.jobs);
+      setPagination(response.pagination);
       setError(null);
     } catch (err) {
       console.error('Error fetching jobs:', err);
@@ -68,6 +80,98 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const PaginationControls = () => {
+    const { page, pages, total } = pagination;
+    
+    if (total === 0) return null;
+
+    return (
+      <div className="mt-6 flex items-center justify-between bg-white rounded-lg border border-gray-200 px-4 py-3 sm:px-6">
+        <div className="flex flex-1 justify-between sm:hidden">
+          <button
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 1}
+            className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:hover:bg-white"
+          >
+            Previous
+          </button>
+          <button
+            onClick={() => handlePageChange(page + 1)}
+            disabled={page === pages}
+            className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:hover:bg-white"
+          >
+            Next
+          </button>
+        </div>
+        <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm text-gray-700">
+              Showing{' '}
+              <span className="font-medium">
+                {Math.min((page - 1) * 10 + 1, total)}
+              </span>{' '}
+              to{' '}
+              <span className="font-medium">
+                {Math.min(page * 10, total)}
+              </span>{' '}
+              of{' '}
+              <span className="font-medium">{total}</span>{' '}
+              results
+            </p>
+          </div>
+          <div className="inline-flex rounded-md shadow-sm">
+            <button
+              onClick={() => handlePageChange(1)}
+              disabled={page === 1}
+              className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white p-2 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:hover:bg-white"
+            >
+              <ChevronFirst className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => handlePageChange(page - 1)}
+              disabled={page === 1}
+              className="relative inline-flex items-center border-t border-b border-gray-300 bg-white p-2 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:hover:bg-white"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            {Array.from({ length: Math.min(5, pages) }, (_, i) => {
+              const pageNum = i + 1;
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => handlePageChange(pageNum)}
+                  className={`relative inline-flex items-center border-t border-b border-gray-300 px-4 py-2 text-sm font-medium 
+                    ${page === pageNum
+                      ? 'z-10 border-primary bg-primary text-white hover:bg-primary-dark'
+                      : 'bg-white text-gray-500 hover:bg-gray-50'
+                    }
+                    ${i === 0 ? 'border-l' : ''}
+                  `}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+            <button
+              onClick={() => handlePageChange(page + 1)}
+              disabled={page === pages}
+              className="relative inline-flex items-center border-t border-b border-gray-300 bg-white p-2 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:hover:bg-white"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => handlePageChange(pages)}
+              disabled={page === pages}
+              className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white p-2 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:hover:bg-white"
+            >
+              <ChevronLast className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const handleDeleteJob = async (jobId) => {
@@ -143,7 +247,7 @@ const Dashboard = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-6">
-        {jobs.length === 0 ? (
+      {jobs.length === 0 && pagination.total === 0 ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
             <Briefcase className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-medium text-gray-900 mb-2">No Jobs Found</h3>
@@ -272,6 +376,8 @@ const Dashboard = () => {
                 </div>
               ))}
             </div>
+            <PaginationControls />
+
           </>
         )}
       </div>
