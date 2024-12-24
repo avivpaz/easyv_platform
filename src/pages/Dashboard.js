@@ -242,7 +242,7 @@ const Dashboard = () => {
       {/* Header Section */}
       <div className="bg-gradient-to-r from-primary to-primary-light">
         <div className="max-w-7xl mx-auto px-4 py-8">
-          <h1 className="text-2xl font-semibold text-white">Job Dashboard</h1>
+          <h1 className="text-2xl font-semibold text-white">Jobs Dashboard</h1>
           <p className="text-secondary-light mt-1">Your Job Listings Dashboard: View, Manage, and Track All Your Created Listings</p>
         </div>
       </div>

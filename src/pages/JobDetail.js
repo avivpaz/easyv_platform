@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  Upload, X, FileText, CheckCircle, 
-  MapPin, Clock, Code, ExternalLink,
-  Briefcase, Star, ArrowLeft, Users,
-  Building, Link, Share2, Loader2,
-  Edit2, Save
+  MapPin, Clock, Briefcase, Star, ArrowLeft,
+  Building, Share2, Edit2, Loader2
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
 import JobCVs from '../components/JobCVs';
 import { useAuth } from '../context/AuthContext';
-import { urlShortenerService } from '../services/urlShortenerService';
 import ShareModal from '../components/ShareModal';
 import EditJobModal from '../components/EditJobModal';
 
@@ -22,8 +18,6 @@ const JobDetail = () => {
   const [error, setError] = useState(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [copiedSocial, setCopiedSocial] = useState(false);
   const [shortUrl, setShortUrl] = useState('');
   const [shorteningUrl, setShorteningUrl] = useState(false);
   const { organization } = useAuth();
@@ -38,7 +32,6 @@ const JobDetail = () => {
       setLoading(true);
       const data = await jobService.getJob(id);
       setJob(data);
-      setError(null);
     } catch (err) {
       console.error('Error fetching job:', err);
       setError('Failed to load job details');
@@ -64,7 +57,7 @@ const JobDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" />
+          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
           <p className="mt-4 text-gray-600">Loading job details...</p>
         </div>
       </div>
@@ -94,65 +87,48 @@ const JobDetail = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-    <div className="bg-gradient-to-r from-primary to-primary-light text-white">
-      <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
-        <div className="flex flex-col space-y-6">
-          {/* Move buttons to main header and improve visibility */}
-          <div className="flex items-center justify-between w-full">
-              <button
-                onClick={() => navigate('/dashboard')}
-                className="flex items-center text-secondary-light hover:text-white"
-              >
-                <ArrowLeft className="h-5 w-5 md:h-4 md:w-4 mr-2" />
-                <span>Back to Dashboard</span>
-              </button>
-              
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setShowEditModal(true)}
-                  className="flex items-center justify-center gap-2 p-2 md:px-3 md:py-2 bg-white text-primary text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"                >
-                  <Edit2 className="h-5 w-5 md:h-4 md:w-4" />
-                  <span className="hidden md:inline">Edit</span>
-                </button>
-                <button
-                  onClick={() => setShowShareModal(true)}
-                  className="flex items-center justify-center gap-2 p-2 md:px-3 md:py-2 bg-white text-primary text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"                >
-                  <Share2 className="h-5 w-5 md:h-4 md:w-4" />
-                  <span className="hidden md:inline">Share</span>
-                </button>
-              </div>
-            </div>
+      <div className="bg-gradient-to-r from-primary to-primary-light text-white">
+        <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
+          <div className="flex flex-col space-y-6">
+            {/* Header with Back Button */}
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="flex items-center text-secondary-light hover:text-white w-fit"
+            >
+              <ArrowLeft className="h-5 w-5 mr-2" />
+              <span>Back to Dashboard</span>
+            </button>
 
-          {/* Job Info */}
-          <div className="flex flex-col md:flex-row md:items-start md:gap-4">
-          <div className="hidden md:block bg-white/10 p-2 md:p-3 rounded-lg mb-3 md:mb-0">
-                <Briefcase className="h-5 w-5 md:h-6 md:w-6" />
+            {/* Job Info */}
+            <div className="flex flex-col md:flex-row md:items-start md:gap-4">
+              <div className="hidden md:block bg-white/10 p-3 rounded-lg">
+                <Briefcase className="h-6 w-6" />
               </div>
-            <div className="flex-1">
-              <h1 className="text-xl md:text-3xl font-bold mb-3 md:mb-4">{job.title}</h1>
-              <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-6 text-sm md:text-base text-secondary-light">
-                <span className="flex items-center gap-1">
-                  <MapPin className="h-4 w-4 flex-shrink-0" />
-                  <span className="truncate">{job.location}</span>
-                </span>
-                <span className="flex items-center gap-1">
-                  <Building className="h-4 w-4 flex-shrink-0" />
-                  <span className="truncate">{job.workType}</span>
-                </span>
-                <span className="flex items-center gap-1">
-                  <Briefcase className="h-4 w-4 flex-shrink-0" />
-                  <span className="truncate">{job.employmentType}</span>
-                </span>
-                <span className="flex items-center gap-1">
-                  <Clock className="h-4 w-4 flex-shrink-0" />
-                  <span className="truncate">Posted {formatDate(job.createdAt)}</span>
-                </span>
+              <div className="flex-1">
+                <h1 className="text-xl md:text-3xl font-bold mb-4">{job.title}</h1>
+                <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-6 text-sm md:text-base text-secondary-light">
+                  <span className="flex items-center gap-1">
+                    <MapPin className="h-4 w-4" />
+                    <span className="truncate">{job.location}</span>
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Building className="h-4 w-4" />
+                    <span className="truncate">{job.workType}</span>
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Briefcase className="h-4 w-4" />
+                    <span className="truncate">{job.employmentType}</span>
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    <span className="truncate">Posted {formatDate(job.createdAt)}</span>
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
 
             {/* Skills */}
-            <div className="grid md:grid-cols-2 gap-6 p-4 md:p-6 bg-white/10 rounded-xl">
+            <div className="grid md:grid-cols-2 gap-6 p-6 bg-white/10 rounded-xl">
               <div>
                 <h3 className="text-sm font-medium text-secondary-light mb-2">Required Skills</h3>
                 <div className="flex flex-wrap gap-2">
@@ -183,6 +159,24 @@ const JobDetail = () => {
                 </div>
               )}
             </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setShowEditModal(true)}
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-white text-primary text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+              >
+                <Edit2 className="h-4 w-4" />
+                <span>Edit Job</span>
+              </button>
+              <button
+                onClick={() => setShowShareModal(true)}
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-white text-primary text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+              >
+                <Share2 className="h-4 w-4" />
+                <span>Share</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -207,12 +201,12 @@ const JobDetail = () => {
       />
 
       {showEditModal && (
-     <EditJobModal
-     isOpen={showEditModal}
-     onClose={() => setShowEditModal(false)}
-     onSuccess={handleEditSuccess}
-     job={job}
-   />
+        <EditJobModal
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          onSuccess={handleEditSuccess}
+          job={job}
+        />
       )}
     </div>
   );
