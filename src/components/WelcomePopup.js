@@ -6,7 +6,7 @@ import { organizationService } from '../services/organizationService';
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
 
 const WelcomePopup = ({ isOpen, onClose }) => {
-  const { organization, user } = useAuth();
+  const { organization, user, updateOrganization } = useAuth();
   const [formData, setFormData] = useState({
     name: organization?.name || '',
     description: organization?.description || '',
@@ -86,7 +86,11 @@ const WelcomePopup = ({ isOpen, onClose }) => {
         formDataObj.append('linkedinUrl', formData.linkedinUrl);
       }
   
-      await organizationService.updateOrganization(organization.id, formDataObj);
+      const updatedOrganization = await organizationService.updateOrganization(organization.id, formDataObj);
+      
+      // Update the auth context with the new organization data
+      updateOrganization(updatedOrganization);
+      
       onClose();
     } catch (err) {
       setError('Failed to update organization information. Please try again.');
