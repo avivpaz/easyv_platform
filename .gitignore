@@ -26,3 +26,5 @@ yarn-error.log*
 .amplify
 amplify_outputs*
 amplifyconfiguration*
+.aider*
+.env
