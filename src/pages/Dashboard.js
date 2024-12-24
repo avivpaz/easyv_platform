@@ -315,13 +315,13 @@ const Dashboard = () => {
                           <h2 className="text-lg font-medium text-gray-900 truncate group-hover:text-primary transition-colors">
                             {job.title}
                           </h2>
-                          <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          {/* <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             job.status === 'active' ? 'bg-green-50 text-green-700' :
                             job.status === 'draft' ? 'bg-gray-50 text-gray-600' :
                             'bg-red-50 text-red-700'
                           }`}>
                             {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
-                          </span>
+                          </span> */}
                           <span className="text-xs text-gray-500">
                             {formatDate(job.createdAt)}
                           </span>
