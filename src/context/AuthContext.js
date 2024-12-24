@@ -99,7 +99,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const setCredits = (amount) => {
-    if (!amount || typeof amount !== 'number' || amount <= 0) {
+    if (!amount || typeof amount !== 'number' || amount < 0) {
       throw new Error('Invalid deduction amount');
     }
     const updatedOrg = {
