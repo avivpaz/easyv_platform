@@ -121,7 +121,7 @@ const JobDetail = () => {
                   </span>
                   <span className="flex items-center gap-1">
                     <Clock className="h-4 w-4" />
-                    <span className="truncate">Posted {formatDate(job.createdAt)}</span>
+                    <span className="truncate">Created {formatDate(job.createdAt)}</span>
                   </span>
                 </div>
               </div>
