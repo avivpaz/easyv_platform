@@ -3,6 +3,7 @@ import { X, Building2, MapPin, Sparkles, Plus, Loader2, ArrowRight, ArrowLeft } 
 import { jobService } from '../services/jobService';
 import { useAuth } from '../context/AuthContext';
 import LoginModal from './LoginModal';
+import SkillsSection from './createModalComponents/SkillsSection';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBAKK100KsCI3XMAdDWK_I7jp1RHJN185s';
 const GOOGLE_MAPS_URL = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&loading=async`;
@@ -325,80 +326,25 @@ const CreateJobModal = ({
           />
       </div>
 
-      {/* Required Skills */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">What are the must-have skills for this role?</label>
-        <div className="flex gap-2 mb-2">
-              <input
-        type="text"
-        value={skillInputs.required}
-        onChange={(e) => setSkillInputs(prev => ({ ...prev, required: e.target.value }))}
-        onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill('required'))}
-        className="flex-1 px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
-        placeholder="Add required skills"
+      <SkillsSection
+        type="required"
+        skills={formData.requiredSkills}
+        onAddSkill={() => addSkill('required')}
+        onRemoveSkill={(skill) => removeSkill('required', skill)}
+        onReorderSkills={(newSkills) => setFormData(prev => ({...prev, requiredSkills: newSkills}))}
+        inputValue={skillInputs.required}
+        onInputChange={(value) => setSkillInputs(prev => ({ ...prev, required: value }))}
       />
-          <button
-            type="button"
-            onClick={() => addSkill('required')}
-            className="p-2.5 bg-primary/5 text-primary rounded-xl hover:bg-primary/10"
-          >
-            <Plus className="h-5 w-5" />
-          </button>
-        </div>
-        <div className="flex flex-wrap gap-2 min-h-[40px] p-3 bg-gray-50 rounded-xl border border-gray-100">
-          {formData.requiredSkills.map((skill, index) => (
-            <span key={index} className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full text-sm">
-              {skill}
-              <button
-                type="button"
-                onClick={() => removeSkill('required', skill)}
-                className="hover:text-primary-dark"
-              >
-                <X className="h-3.5 w-3.5" />
-              </button>
-            </span>
-          ))}
-        </div>
-      </div>
 
-      {/* Nice-to-have Skills */}
-      <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">Are there any bonus skills you'd like to highlight?</label>
-  <div className="flex gap-2 mb-2">
-    <input
-      type="text"
-      value={skillInputs.niceToHave}
-      onChange={(e) => setSkillInputs(prev => ({ ...prev, niceToHave: e.target.value }))}
-      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill('niceToHave'))}
-      className="flex-1 px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
-      placeholder="Add nice-to-have skills"
-    />
-    <button
-      type="button"
-      onClick={() => addSkill('niceToHave')}
-      className="p-2.5 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200"
-    >
-      <Plus className="h-5 w-5" />
-    </button>
-  </div>
-  <div className="flex flex-wrap gap-2 min-h-[40px] p-3 bg-gray-50 rounded-xl border border-gray-100">
-    {formData.niceToHaveSkills.map((skill, index) => (
-      <span
-        key={index}
-        className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
-      >
-        {skill}
-        <button
-          type="button"
-          onClick={() => removeSkill('niceToHave', skill)}
-          className="hover:text-gray-900"
-        >
-          <X className="h-3.5 w-3.5" />
-        </button>
-      </span>
-    ))}
-  </div>
-</div>
+      <SkillsSection
+        type="niceToHave"
+        skills={formData.niceToHaveSkills}
+        onAddSkill={() => addSkill('niceToHave')}
+        onRemoveSkill={(skill) => removeSkill('niceToHave', skill)}
+        onReorderSkills={(newSkills) => setFormData(prev => ({...prev, niceToHaveSkills: newSkills}))}
+        inputValue={skillInputs.niceToHave}
+        onInputChange={(value) => setSkillInputs(prev => ({ ...prev, niceToHave: value }))}
+      />
     </div>
   );
 
