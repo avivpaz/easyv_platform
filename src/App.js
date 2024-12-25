@@ -94,7 +94,7 @@ function App() {
       <Router>
         <AuthProvider>
           <AppRoutes />
-          {/* <TawkToChat /> */}
+          <TawkToChat />
 
         </AuthProvider>
       </Router>
