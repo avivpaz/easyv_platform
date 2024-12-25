@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  MapPin, Clock, Briefcase, Star, ArrowLeft,
+  MapPin, Clock, Briefcase, UserPlus, ArrowLeft,
   Building, Share2, Edit2, Loader2
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
@@ -90,14 +90,25 @@ const JobDetail = () => {
       <div className="bg-gradient-to-r from-primary to-primary-light text-white">
         <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
           <div className="flex flex-col space-y-6">
-            {/* Header with Back Button */}
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="flex items-center text-secondary-light hover:text-white w-fit"
-            >
-              <ArrowLeft className="h-5 w-5 mr-2" />
-              <span>Back to Dashboard</span>
-            </button>
+            {/* Header with Back Button and Actions */}
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="flex items-center text-secondary-light hover:text-white"
+              >
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                <span>Back to Dashboard</span>
+              </button>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowEditModal(true)}
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-white/10 text-white text-sm font-medium rounded-lg hover:bg-white/20 transition-colors border border-white/20"
+                >
+                  <Edit2 className="h-4 w-4" />
+                  <span>Edit Job</span>
+                </button>
+              </div>
+            </div>
 
             {/* Job Info */}
             <div className="flex flex-col md:flex-row md:items-start md:gap-4">
@@ -113,11 +124,11 @@ const JobDetail = () => {
                   </span>
                   <span className="flex items-center gap-1">
                     <Building className="h-4 w-4" />
-                    <span className="truncate">{job.workType}</span>
+                    <span className="truncate capitalize ">{job.workType}</span>
                   </span>
                   <span className="flex items-center gap-1">
                     <Briefcase className="h-4 w-4" />
-                    <span className="truncate">{job.employmentType}</span>
+                    <span className="truncate capitalize">{job.employmentType}</span>
                   </span>
                   <span className="flex items-center gap-1">
                     <Clock className="h-4 w-4" />
@@ -163,19 +174,21 @@ const JobDetail = () => {
             {/* Action Buttons */}
             <div className="flex justify-end gap-3 mt-6">
               <button
-                onClick={() => setShowEditModal(true)}
-                className="flex items-center justify-center gap-2 px-4 py-2 bg-white text-primary text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
-              >
-                <Edit2 className="h-4 w-4" />
-                <span>Edit Job</span>
-              </button>
-              <button
                 onClick={() => setShowShareModal(true)}
                 className="flex items-center justify-center gap-2 px-4 py-2 bg-white text-primary text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
               >
                 <Share2 className="h-4 w-4" />
                 <span>Share</span>
               </button>
+              <a
+                href={longUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-white text-primary text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+              >
+                <UserPlus className="h-4 w-4" />
+                <span>View as Candidate</span>
+              </a>
             </div>
           </div>
         </div>
