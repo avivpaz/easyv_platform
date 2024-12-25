@@ -90,45 +90,34 @@ const JobDetail = () => {
       <div className="bg-gradient-to-r from-primary to-primary-light text-white">
         <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
           <div className="flex flex-col space-y-6">
-            {/* Header with Back Button and Actions */}
-            <div className="flex items-center justify-between">
-              <button
-                onClick={() => navigate('/dashboard')}
-                className="flex items-center text-secondary-light hover:text-white"
-              >
-                <ArrowLeft className="h-5 w-5 mr-2" />
-                <span>Back to Dashboard</span>
-              </button>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowEditModal(true)}
-                  className="flex items-center justify-center gap-2 px-4 py-2 bg-white/10 text-white text-sm font-medium rounded-lg hover:bg-white/20 transition-colors border border-white/20"
-                >
-                  <Edit2 className="h-4 w-4" />
-                  <span>Edit Job</span>
-                </button>
-              </div>
-            </div>
-
             {/* Job Info */}
             <div className="flex flex-col md:flex-row md:items-start md:gap-4">
               <div className="hidden md:block bg-white/10 p-3 rounded-lg">
                 <Briefcase className="h-6 w-6" />
               </div>
               <div className="flex-1">
-                <h1 className="text-xl md:text-3xl font-bold mb-4">{job.title}</h1>
+                <div className="flex items-center justify-between mb-4">
+                  <h1 className="text-xl md:text-3xl font-bold">{job.title}</h1>
+                  <button
+                    onClick={() => setShowEditModal(true)}
+                    className="flex items-center justify-center gap-2 px-4 py-2 bg-white/10 text-white text-sm font-medium rounded-lg hover:bg-white/20 transition-colors border border-white/20"
+                  >
+                    <Edit2 className="h-4 w-4" />
+                    <span>Edit Job</span>
+                  </button>
+                </div>
                 <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-6 text-sm md:text-base text-secondary-light">
                   <span className="flex items-center gap-1">
-                    <MapPin className="h-4 w-4" />
+                    <UserPlus className="h-4 w-4" />
                     <span className="truncate">{job.location}</span>
                   </span>
                   <span className="flex items-center gap-1">
                     <Building className="h-4 w-4" />
-                    <span className="truncate capitalize ">{job.workType}</span>
+                    <span className="truncate">{job.workType}</span>
                   </span>
                   <span className="flex items-center gap-1">
                     <Briefcase className="h-4 w-4" />
-                    <span className="truncate capitalize">{job.employmentType}</span>
+                    <span className="truncate">{job.employmentType}</span>
                   </span>
                   <span className="flex items-center gap-1">
                     <Clock className="h-4 w-4" />
@@ -186,7 +175,7 @@ const JobDetail = () => {
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 px-4 py-2 bg-white text-primary text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
               >
-                <UserPlus className="h-4 w-4" />
+                <MapPin className="h-4 w-4" />
                 <span>View as Candidate</span>
               </a>
             </div>
