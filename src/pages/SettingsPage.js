@@ -214,9 +214,9 @@ const SettingsPage = () => {
                                           onChange={handleLogoChange}
                                       />
                                   </label>
-                                  {/* <p className="text-sm text-gray-500 mt-1">
+                                  <p className="text-sm text-gray-500 mt-1">
                                       Use a square logo (1:1 ratio) for best results
-                                  </p> */}
+                                  </p>
                               </div>
 
                               {/* Brand Color */}
