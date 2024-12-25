@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  MapPin, Clock, Briefcase, UserPlus, ArrowLeft,
+  MapPin, Clock, Briefcase, User2, ArrowLeft,
   Building, Share2, Edit2, Loader2
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
@@ -108,7 +108,7 @@ const JobDetail = () => {
                 </div>
                 <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-6 text-sm md:text-base text-secondary-light">
                   <span className="flex items-center gap-1">
-                    <UserPlus className="h-4 w-4" />
+                    <MapPin className="h-4 w-4" />
                     <span className="truncate">{job.location}</span>
                   </span>
                   <span className="flex items-center gap-1">
@@ -175,7 +175,7 @@ const JobDetail = () => {
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 px-4 py-2 bg-white text-primary text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
               >
-                <MapPin className="h-4 w-4" />
+                <User2 className="h-4 w-4" />
                 <span>View as Candidate</span>
               </a>
             </div>
