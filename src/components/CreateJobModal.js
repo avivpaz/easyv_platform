@@ -582,7 +582,7 @@ const CreateJobModal = ({
              <Sparkles className="h-5 w-5 animate-pulse text-yellow-400" />
            </div>
            <span className="text-base font-medium text-gray-700 animate-fade-in">
-             {loading ? 'Publishing your masterpiece...' : loadingMessages[loadingMessageIndex]}
+             {loading ? 'Creating your job post...' : loadingMessages[loadingMessageIndex]}
            </span>
          </div>
        </div>
