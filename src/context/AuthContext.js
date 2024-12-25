@@ -10,18 +10,19 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [organization, setOrganization] = useState(null);
   const [showWelcomePopup, setShowWelcomePopup] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); // Start with loading true
+  const [isLoading, setIsLoading] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Initialize auth state
   useEffect(() => {
     const initializeAuth = () => {
       try {
-        const token = storageService.getToken();
+        const accessToken = storageService.getAccessToken();
+        const refreshToken = storageService.getRefreshToken();
         const storedUser = storageService.getUser();
         const storedOrg = storageService.getOrganization();
 
-        if (token && storedUser) {
+        if (accessToken && refreshToken && storedUser) {
           setUser(storedUser);
           setOrganization(storedOrg);
         }
@@ -39,9 +40,13 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (authData) => {
     try {
-      storageService.setToken(authData.token);
-      storageService.setUser(authData.user);
-      storageService.setOrganization(authData.organization);
+      // Store tokens separately
+      storageService.setAuthData({
+        accessToken: authData.accessToken,
+        refreshToken: authData.refreshToken,
+        user: authData.user,
+        organization: authData.organization
+      });
       
       setUser(authData.user);
       setOrganization(authData.organization);
@@ -56,6 +61,7 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
+
 
   const logout = async () => {
     try {
@@ -118,14 +124,13 @@ export const AuthProvider = ({ children }) => {
       newCredits: amount
       };
   };
-
   const value = {
     user,
     organization,
     login,
     logout,
     updateOrganization,
-    isAuthenticated: !!storageService.getToken() && isInitialized,
+    isAuthenticated: !!(storageService.getAccessToken() && storageService.getRefreshToken()) && isInitialized,
     isLoading,
     addCredits,
     setCredits,
@@ -133,7 +138,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   if (!isInitialized) {
-    return null; // or a loading spinner
+    return null;
   }
 
   return (

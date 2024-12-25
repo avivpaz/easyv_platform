@@ -1,42 +1,56 @@
-// services/storageService.js
-const STORAGE_KEYS = {
-  TOKEN: 'cvAnalyzer_token',
-  USER: 'cvAnalyzer_user',
-  ORGANIZATION: 'cvAnalyzer_organization'
-};
-
 const storageService = {
-  setToken(token) {
-    localStorage.setItem(STORAGE_KEYS.TOKEN, token);
+  // Access Token
+  getAccessToken() {
+    return localStorage.getItem('accessToken');
   },
 
-  getToken() {
-    return localStorage.getItem(STORAGE_KEYS.TOKEN);
+  setAccessToken(token) {
+    localStorage.setItem('accessToken', token);
   },
 
-  setUser(user) {
-    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
+  // Refresh Token
+  getRefreshToken() {
+    return localStorage.getItem('refreshToken');
   },
 
+  setRefreshToken(token) {
+    localStorage.setItem('refreshToken', token);
+  },
+
+  // User Data
   getUser() {
-    const user = localStorage.getItem(STORAGE_KEYS.USER);
+    const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   },
 
-  setOrganization(org) {
-    localStorage.setItem(STORAGE_KEYS.ORGANIZATION, JSON.stringify(org));
+  setUser(user) {
+    localStorage.setItem('user', JSON.stringify(user));
   },
 
+  // Organization Data
   getOrganization() {
-    const org = localStorage.getItem(STORAGE_KEYS.ORGANIZATION);
+    const org = localStorage.getItem('organization');
     return org ? JSON.parse(org) : null;
   },
 
+  setOrganization(organization) {
+    localStorage.setItem('organization', JSON.stringify(organization));
+  },
+
+  // Store all auth data at once
+  setAuthData(data) {
+    if (data.accessToken) this.setAccessToken(data.accessToken);
+    if (data.refreshToken) this.setRefreshToken(data.refreshToken);
+    if (data.user) this.setUser(data.user);
+    if (data.organization) this.setOrganization(data.organization);
+  },
+
+  // Clear all stored data
   clearAll() {
-    localStorage.removeItem(STORAGE_KEYS.TOKEN);
-    localStorage.removeItem(STORAGE_KEYS.USER);
-    localStorage.removeItem(STORAGE_KEYS.ORGANIZATION);
-    // Or use localStorage.clear() to clear everything
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+    localStorage.removeItem('organization');
   }
 };
 
