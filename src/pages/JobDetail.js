@@ -96,14 +96,14 @@ const JobDetail = () => {
                 <Briefcase className="h-6 w-6" />
               </div>
               <div className="flex-1">
-                <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4">
                   <h1 className="text-xl md:text-3xl font-bold">{job.title}</h1>
                   <button
                     onClick={() => setShowEditModal(true)}
-                    className="flex items-center justify-center gap-2 px-4 py-2 bg-white/10 text-white text-sm font-medium rounded-lg hover:bg-white/20 transition-colors border border-white/20"
+                    className="p-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors border border-white/20 md:px-4 md:flex md:items-center md:gap-2 text-sm"
                   >
                     <Edit2 className="h-4 w-4" />
-                    <span>Edit Job</span>
+                    <span className="hidden md:inline">Edit Job</span>
                   </button>
                 </div>
                 <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-6 text-sm md:text-base text-secondary-light">
