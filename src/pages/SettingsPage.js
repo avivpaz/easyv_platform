@@ -171,132 +171,138 @@ const SettingsPage = () => {
                                 </div>
                             </div>
                         ) : (
-                            <form onSubmit={handleOrgSubmit} className="space-y-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Organization Logo
-                                    </label>
-                                    <p className="text-sm text-gray-500 mb-2">
-                                        For best results, use a 1:1 ratio logo (500x500 recommended)
-                                    </p>
-                                    <div className="flex items-center justify-center w-full">
-                                        <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                                            {orgData.logoPreview ? (
-                                                <img
-                                                    src={orgData.logoPreview}
-                                                    alt="Organization logo"
-                                                    className="w-full h-full object-contain p-4"
-                                                />
-                                            ) : (
-                                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                    <Upload className="h-12 w-12 text-primary/60 mb-3" />
-                                                    <p className="text-sm text-gray-500">Click to upload logo</p>
-                                                    <p className="text-xs text-gray-400 mt-1">PNG up to 2MB</p>
-                                                </div>
-                                            )}
-                                            <input
-                                                type="file"
-                                                className="hidden"
-                                                accept=".png"
-                                                onChange={handleLogoChange}
-                                            />
-                                        </label>
-                                    </div>
-                                </div>
+                          <form onSubmit={handleOrgSubmit} className="space-y-6">
+                          {/* Organization Name */}
+                          <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Organization Name
+                              </label>
+                              <input
+                                  type="text"
+                                  value={orgData.name}
+                                  onChange={(e) => setOrgData(prev => ({ ...prev, name: e.target.value }))}
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
+                                  required
+                              />
+                          </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Organization Name
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={orgData.name}
-                                        onChange={(e) => setOrgData(prev => ({ ...prev, name: e.target.value }))}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
-                                        required
-                                    />
-                                </div>
+                          {/* Logo and Brand Color Grid */}
+                          <div className="grid grid-cols-2 gap-6">
+                              {/* Logo Upload */}
+                              <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                                      Logo
+                                  </label>
+                                  <label className="flex flex-col items-center justify-center w-full h-20 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                                      {orgData.logoPreview ? (
+                                          <img
+                                              src={orgData.logoPreview}
+                                              alt="Organization logo"
+                                              className="h-full w-full object-contain p-2"
+                                          />
+                                      ) : (
+                                          <div className="flex flex-col items-center justify-center">
+                                              <Upload className="h-6 w-6 text-primary/60 mb-1" />
+                                              <p className="text-sm text-gray-600">Click to upload logo</p>
+                                              <p className="text-xs text-gray-400">PNG up to 2MB</p>
+                                          </div>
+                                      )}
+                                      <input
+                                          type="file"
+                                          className="hidden"
+                                          accept=".png"
+                                          onChange={handleLogoChange}
+                                      />
+                                  </label>
+                                  {/* <p className="text-sm text-gray-500 mt-1">
+                                      Use a square logo (1:1 ratio) for best results
+                                  </p> */}
+                              </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Brand Color
-                                    </label>
-                                    <div className="relative">
-                                        <div className="flex gap-4">
-                                            <input
-                                                type="color"
-                                                value={orgData.brandColor}
-                                                onChange={(e) => setOrgData(prev => ({ ...prev, brandColor: e.target.value }))}
-                                                className="h-10 w-20 cursor-pointer border border-gray-300 rounded"
-                                            />
-                                            <input
-                                                type="text"
-                                                value={orgData.brandColor}
-                                                onChange={(e) => setOrgData(prev => ({ ...prev, brandColor: e.target.value }))}
-                                                className="pl-10 flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
-                                                placeholder="#000000"
-                                                pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-                                            />
-                                        </div>
-                                        <p className="mt-1 text-sm text-gray-500">
-                                            Choose your brand color. This will be used across your organization's profile.
-                                        </p>
-                                    </div>
-                                </div>
+                              {/* Brand Color */}
+                              <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                                      Brand Color
+                                  </label>
+                                  <div className="flex gap-4">
+                                      <input
+                                          type="color"
+                                          value={orgData.brandColor}
+                                          onChange={(e) => setOrgData(prev => ({ ...prev, brandColor: e.target.value }))}
+                                          className="h-10 w-20 cursor-pointer border border-gray-300 rounded"
+                                      />
+                                      <input
+                                          type="text"
+                                          value={orgData.brandColor}
+                                          onChange={(e) => setOrgData(prev => ({ ...prev, brandColor: e.target.value }))}
+                                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
+                                          placeholder="#000000"
+                                          pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+                                      />
+                                  </div>
+                                  <p className="text-sm text-gray-500 mt-1">
+                                      Choose your brand color. This will be used across your organization's profile.
+                                  </p>
+                              </div>
+                          </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Description
-                                    </label>
-                                    <textarea
-                                        value={orgData.description}
-                                        onChange={(e) => setOrgData(prev => ({ ...prev, description: e.target.value }))}
-                                        rows="4"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
-                                        required
-                                    />
-                                </div>
-                                
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Website
-                                    </label>
-                                    <div className="relative">
-                                        <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                        <input
-                                            type="url"
-                                            value={orgData.website}
-                                            placeholder="https://yourcompany.com"
-                                            onChange={(e) => setOrgData(prev => ({ ...prev, website: e.target.value }))}
-                                            className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
-                                        />
-                                    </div>
-                                </div>
+                          {/* Description */}
+                          <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Description
+                              </label>
+                              <textarea
+                                  value={orgData.description}
+                                  onChange={(e) => setOrgData(prev => ({ ...prev, description: e.target.value }))}
+                                  rows="4"
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
+                                  placeholder="Tell us about your organization, its mission, and what makes it unique..."
+                                  required
+                              />
+                          </div>
+                          
+                          {/* Website */}
+                          <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Website
+                              </label>
+                              <div className="relative">
+                                  <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                  <input
+                                      type="url"
+                                      value={orgData.website}
+                                      onChange={(e) => setOrgData(prev => ({ ...prev, website: e.target.value }))}
+                                      className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
+                                      placeholder="Enter your organization's website URL"
+                                  />
+                              </div>
+                          </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        LinkedIn URL
-                                    </label>
-                                    <div className="relative">
-                                        <Linkedin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                        <input
-                                            type="url"
-                                            value={orgData.linkedinUrl}
-                                            placeholder="https://linkedin.com/company/yourcompany"
-                                            onChange={(e) => setOrgData(prev => ({ ...prev, linkedinUrl: e.target.value }))}
-                                            className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
-                                        />
-                                    </div>
-                                </div>
+                          {/* LinkedIn URL */}
+                          <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  LinkedIn URL
+                              </label>
+                              <div className="relative">
+                                  <Linkedin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                  <input
+                                      type="url"
+                                      value={orgData.linkedinUrl}
+                                      onChange={(e) => setOrgData(prev => ({ ...prev, linkedinUrl: e.target.value }))}
+                                      className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary"
+                                      placeholder="Enter your organization's LinkedIn page URL"
+                                  />
+                              </div>
+                          </div>
 
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark disabled:opacity-50"
-                                >
-                                    {loading ? 'Saving...' : 'Save Organization Settings'}
-                                </button>
-                            </form>
+                          <button
+                              type="submit"
+                              disabled={loading}
+                              className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark disabled:opacity-50"
+                          >
+                              {loading ? 'Saving...' : 'Save Organization Settings'}
+                          </button>
+                      </form>
                         )}
                         
                         {(success || error) && (
