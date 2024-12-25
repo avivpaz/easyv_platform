@@ -10,7 +10,7 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
 
   const plans = [
     {
-      title: 'Tier 1',
+      title: 'Starter',
       credits: 10,
       exactPrice: '45.00',
       savings: '5.00',
@@ -22,7 +22,7 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
       priceId: process.env.REACT_APP_PADDLE_TIER1_PRICE_ID
     },
     {
-      title: 'Tier 2',
+      title: 'Growth',
       credits: 25,
       exactPrice: '105.00',
       savings: '20.00',
@@ -35,7 +35,7 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
       isPopular: true
     },
     {
-      title: 'Tier 3',
+      title: 'Scale',
       credits: 50,
       exactPrice: '200.00',
       savings: '50.00',
