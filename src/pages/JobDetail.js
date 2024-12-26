@@ -113,11 +113,11 @@ const JobDetail = () => {
                   </span>
                   <span className="flex items-center gap-1">
                     <Building className="h-4 w-4" />
-                    <span className="truncate">{job.workType}</span>
+                    <span className="truncate capitalize">{job.workType}</span>
                   </span>
                   <span className="flex items-center gap-1">
                     <Briefcase className="h-4 w-4" />
-                    <span className="truncate">{job.employmentType}</span>
+                    <span className="truncate capitalize">{job.employmentType}</span>
                   </span>
                   <span className="flex items-center gap-1">
                     <Clock className="h-4 w-4" />
