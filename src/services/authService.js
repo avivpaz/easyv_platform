@@ -24,6 +24,13 @@ export const authService = {
     return response.data;
   },
 
+  async googleLogin(googleToken) {
+    const response = await api.post('/auth/google', { token: googleToken });
+    const { accessToken, refreshToken } = response.data;
+    storageService.setAccessToken(accessToken, refreshToken);
+    return response.data;
+  },
+
   // Updated to handle authorization code instead of token
   async googleCallback(code) {
     const response = await api.post('/auth/google/callback', { code });
