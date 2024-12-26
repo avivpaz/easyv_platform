@@ -10,48 +10,76 @@ const ShareModal = ({
   longUrl, 
   shorteningUrl 
 }) => {
-  const [socialShareText, setSocialShareText] = useState('');
+  // Store social posts with jobId to track if we already generated for this job
+  const [socialPostsCache, setSocialPostsCache] = useState({
+    jobId: null,
+    posts: {
+      facebook: '',
+      linkedin: '',
+      twitter: ''
+    }
+  });
   const [loadingSocialText, setLoadingSocialText] = useState(false);
   const [copied, setCopied] = useState(false);
   const [copiedSocial, setCopiedSocial] = useState(false);
   const [selectedPlatform, setSelectedPlatform] = useState('facebook');
 
-  const handlePlatformChange = async (e) => {
-    const newPlatform = e.target.value;
-    setSelectedPlatform(newPlatform);
-    setSocialShareText('');
-    getSocialShareText(newPlatform);
+  const handlePlatformChange = (e) => {
+    setSelectedPlatform(e.target.value);
+    setCopiedSocial(false);
   };
 
-  const getSocialShareText = async (platform = selectedPlatform) => {
-    if (!job) return '';
+  const getSocialShareText = async () => {
+    if (!job) return;
+    
+    // Check if we already have generated posts for this job
+    if (socialPostsCache.jobId === job._id) {
+      return;
+    }
     
     setLoadingSocialText(true);
     try {
-      const data = await jobService.getSocialShareText(job._id, platform);
+      const data = await jobService.getSocialShareText(job._id);
       const shareUrl = shortUrl || longUrl;
-      const finalText = data.text.replace(/\{URL\}/g, shareUrl);
-      setSocialShareText(finalText);
-      return finalText;
+      
+      // Process each platform's text
+      const processedPosts = data.posts.reduce((acc, post) => {
+        acc[post.platform] = post.text.replace(/\{URL\}/g, shareUrl);
+        return acc;
+      }, {});
+      
+      // Store in cache with jobId
+      setSocialPostsCache({
+        jobId: job._id,
+        posts: processedPosts
+      });
     } catch (error) {
       console.error('Error getting social share text:', error);
-      const fallbackText = `🚀 Exciting opportunity! We're hiring a ${job.title}!\n\n` +
+      // Fallback texts for each platform
+      const fallbackText = `${job.organization?.name || 'We\'re'} hiring a ${job.title}! 🚀\n\n` +
             `📍 ${job.location}\n` +
             `💼 ${job.employmentType} | ${job.workType}\n\n` +
             `Key skills: ${job.requiredSkills.slice(0, 3).join(', ')}\n\n` +
             `Apply now: ${shortUrl || longUrl}`;
-      setSocialShareText(fallbackText);
-      return fallbackText;
+      
+      setSocialPostsCache({
+        jobId: job._id,
+        posts: {
+          facebook: fallbackText,
+          linkedin: fallbackText,
+          twitter: fallbackText
+        }
+      });
     } finally {
       setLoadingSocialText(false);
     }
   };
 
   useEffect(() => {
-    if (isOpen && job) {
+    if (isOpen && job && socialPostsCache.jobId !== job._id) {
       getSocialShareText();
     }
-  }, [isOpen, job?.id]);
+  }, [isOpen, job?._id]); // Only depend on isOpen and job._id
 
   const platformOptions = [
     { value: 'facebook', label: 'Facebook' },
@@ -142,11 +170,11 @@ const ShareModal = ({
           <div className="bg-gray-50 p-2 md:p-3 rounded-lg mb-2">
             <textarea
               readOnly
-              value={loadingSocialText ? 'Generating social share text...' : socialShareText}
+              value={loadingSocialText ? 'Generating social share text...' : socialPostsCache.posts[selectedPlatform]}
               className="w-full bg-transparent border-none text-sm focus:ring-0 text-gray-600 min-h-[120px] resize-none"
             />
             <button
-              onClick={() => handleCopy(socialShareText, setCopiedSocial)}
+              onClick={() => handleCopy(socialPostsCache.posts[selectedPlatform], setCopiedSocial)}
               className={`w-full flex items-center justify-center gap-2 px-3 py-1.5 rounded-lg text-sm ${
                 copiedSocial ? 'bg-green-600' : 'bg-primary'
               } hover:bg-primary-light text-white mt-2`}
