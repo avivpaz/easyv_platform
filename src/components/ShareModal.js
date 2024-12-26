@@ -122,13 +122,7 @@ const ShareModal = ({
               value={shorteningUrl ? "Generating short link..." : (shortUrl || longUrl)}
               className="flex-1 bg-transparent border-none text-sm focus:ring-0 text-gray-600"
             />
-            <button
-              onClick={handleView}
-              className="px-3 py-1.5 rounded-lg text-sm bg-gray-200 hover:bg-gray-300 text-gray-700"
-              disabled={shorteningUrl}
-            >
-              <ExternalLink className="h-4 w-4" />
-            </button>
+         
             <button
               onClick={() => handleCopy(shortUrl || longUrl, setCopied)}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm ${
