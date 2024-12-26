@@ -4,11 +4,12 @@ import api from './api';
 export const jobService = {
   async getJobs(params = {}) {
     try {
-      const { page = 1, limit = 10 } = params;
+      const { page = 1, limit = 10,search='' } = params;
       const response = await api.get('/jobs', { 
         params: { 
           page,
-          limit 
+          limit,
+          search
         }
       });
       

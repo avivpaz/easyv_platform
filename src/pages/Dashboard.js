@@ -20,7 +20,7 @@ const formatDate = (date) => {
 
 const Dashboard = () => {
   const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -62,6 +62,7 @@ const Dashboard = () => {
     navigate(`/jobs/${jobId}`);
   };
 
+  
   const handlePageChange = (newPage) => {
     setSearchParams({ page: newPage.toString() });
     fetchJobs(newPage)
@@ -70,7 +71,11 @@ const Dashboard = () => {
   const fetchJobs = async (page = 1) => {
     try {
       setLoading(true);
-      const response = await jobService.getJobs({ page, limit: 10 });
+      const response = await jobService.getJobs({ 
+        page, 
+        limit: 10,
+        search: searchTerm 
+      });
       setJobs(response.jobs);
       setPagination(response.pagination);
       setError(null);
@@ -82,6 +87,7 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+
 
   const PaginationControls = () => {
     const { page, pages, total } = pagination;
@@ -185,19 +191,9 @@ const Dashboard = () => {
       setError('Failed to delete job. Please try again later.');
     }
   };
+  
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <Loader className="h-8 w-8 animate-spin text-primary mx-auto" />
-          <p className="mt-2 text-gray-600">Loading jobs...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
+  if (error  && !loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 max-w-md w-full">
@@ -220,7 +216,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-    {organization?.needsSetup && (
+      {organization?.needsSetup && (
         <div className="bg-primary/5 border-b border-primary/10">
           <div className="max-w-7xl mx-auto px-4">
             <div className="flex items-center gap-2 py-4 text-sm">
@@ -239,70 +235,70 @@ const Dashboard = () => {
           </div>
         </div>
       )}
+      
       {/* Header Section */}
       <div className="bg-gradient-to-r from-primary to-primary-light">
         <div className="max-w-7xl mx-auto px-4 py-8">
-          <h1 className="text-2xl font-semibold text-white">Jobs Dashboard</h1>
+          <h1 className="text-2xl font-semibold text-white">Job Dashboard</h1>
           <p className="text-secondary-light mt-1">Your Job Listings Dashboard: View, Manage, and Track All Your Created Listings</p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-6">
-      {jobs.length === 0 && pagination.total === 0 ? (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
-            <Briefcase className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-medium text-gray-900 mb-2">No Jobs Found</h3>
-            <p className="text-gray-500 mb-4">Get started by creating your first job posting.</p>
-            <button
-              onClick={() => setIsCreateModalOpen(true)}
-              className="flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors mx-auto"
-            >
-              <Plus className="h-5 w-5" />
-              <span>Create Job</span>
-            </button>
+        {/* Search and Create Section */}
+        <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
+          <div className="flex items-center gap-4 flex-1">
+            <h2 className="text-lg font-medium text-gray-900 whitespace-nowrap">Jobs ({jobs.length})</h2>
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search existing listings..."
+                className="w-full pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
           </div>
-        ) : (
-          <>
-            <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-              <div className="flex items-center gap-4 flex-1">
-                <h2 className="text-lg font-medium text-gray-900 whitespace-nowrap">Jobs ({jobs.length})</h2>
-                <div className="relative flex-1 max-w-md">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Search existing listings..."
-                    className="w-full pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors whitespace-nowrap"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Create Job Listing</span>
+          </button>
+        </div>
+
+        {/* Jobs List Section */}
+        <div className="space-y-4">
+          {loading ? (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+              <div className="flex items-center justify-center">
+                <Loader className="h-8 w-8 animate-spin text-primary" />
+                <span className="ml-3 text-gray-600">Loading jobs...</span>
               </div>
+            </div>
+          ) : jobs.length === 0 && pagination.total === 0 ? (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
+              <Briefcase className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-xl font-medium text-gray-900 mb-2">No Jobs Found</h3>
+              <p className="text-gray-500 mb-4">Get started by creating your first job posting.</p>
               <button
                 onClick={() => setIsCreateModalOpen(true)}
-                className="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors whitespace-nowrap"
+                className="flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors mx-auto"
               >
-                <Plus className="h-4 w-4" />
-                <span>Create Job Listing</span>
+                <Plus className="h-5 w-5" />
+                <span>Create Job</span>
               </button>
             </div>
-
-            <div className="space-y-4">
+          ) : (
+            <>
               {jobs.map((job) => (
                 <div
                   key={job._id}
                   onClick={(e) => handleJobClick(job._id, e)}
                   className="group bg-white border border-gray-200 rounded-lg hover:border-primary/20 hover:shadow-sm transition-all cursor-pointer relative w-full"
                 >
-                  {/* <div className="absolute top-3 right-3 z-10">
-                    <button
-                      onClick={() => setJobToDelete(job)}
-                      className="delete-button p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors opacity-0 group-hover:opacity-100"
-                      title="Delete job"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div> */}
-
                   <div className="p-4 sm:p-5">
                     <div className="flex items-start gap-3">
                       <div className="shrink-0">
@@ -315,13 +311,13 @@ const Dashboard = () => {
                           <h2 className="text-lg font-medium text-gray-900 truncate group-hover:text-primary transition-colors">
                             {job.title}
                           </h2>
-                          {/* <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             job.status === 'active' ? 'bg-green-50 text-green-700' :
                             job.status === 'draft' ? 'bg-gray-50 text-gray-600' :
                             'bg-red-50 text-red-700'
                           }`}>
                             {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
-                          </span> */}
+                          </span>
                           <span className="text-xs text-gray-500">
                             {formatDate(job.createdAt)}
                           </span>
@@ -376,11 +372,10 @@ const Dashboard = () => {
                   </div>
                 </div>
               ))}
-            </div>
-            <PaginationControls />
-
-          </>
-        )}
+              <PaginationControls />
+            </>
+          )}
+        </div>
       </div>
 
       <DeleteDialog 
