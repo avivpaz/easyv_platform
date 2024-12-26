@@ -1,96 +1,92 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { authService } from '../services/authService';
-import { UserCircle2, Building,ShareIcon,FileCheck } from 'lucide-react';
+import { UserCircle2, Building, ShareIcon } from 'lucide-react';
 import { useGoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const googleLogin = useGoogleLogin({
-    onSuccess: response => handleGoogleLogin(response.access_token),
+    flow: 'auth-code',  // This is required for redirect flow
+    ux_mode: 'redirect',
+    select_account: true,
+    redirect_uri: process.env.REACT_APP_GOOGLE_REDIRECT_URL,
+    scope: 'email profile', // Add required scopes
     onError: error => {
       console.error('Google login error:', error);
       setError('Failed to authenticate with Google');
+      setLoading(false);
+    },
+    onNonOAuthError: error => {
+      console.error('Non-OAuth error:', error);
+      setError('An error occurred during authentication');
+      setLoading(false);
     }
   });
 
-  const handleGoogleLogin = async (token) => {
-    setError('');
+  const handleLoginClick = () => {
     setLoading(true);
-    try {
-      const response = await authService.googleLogin(token);
-      await login(response);
-      navigate('/dashboard');
-    } catch (err) {
-      console.error('Google login error:', err);
-      setError(err.response?.data?.error || 'Failed to authenticate with Google');
-    } finally {
-      setLoading(false);
-    }
+    setError('');
+    googleLogin();
   };
 
   return (
     <div className="min-h-screen flex bg-gray-50">
       {/* Left Panel - Decorative */}
-     {/* Left Panel - Decorative */}
-<div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary to-primary-light p-12 text-white">
-  <div className="max-w-md">
-    <h1 className="text-4xl font-bold mb-6">Your Perfect Hire in 2 Minutes!</h1>
-    <p className="text-secondary-light text-lg mb-8">
-    Sign in to craft professional job requirements, create a branded landing page, and start receiving qualified applicants today.
-    </p>
-    <div className="space-y-6">
-      <div className="bg-white/10 rounded-xl p-6">
-        <div className="flex items-center gap-4">
-          <div className="bg-white/10 p-3 rounded-lg">
-            <Building className="h-6 w-6" />
-          </div>
-          <div>
-            <h3 className="font-semibold mb-1">One-Click Job Posts</h3>
-            <p className="text-secondary-light text-sm">
-              Just tell us a few words about the role, and we'll craft professional job requirements instantly
-            </p>
-          </div>
-        </div>
-      </div>
-      
-      <div className="bg-white/10 rounded-xl p-6">
-        <div className="flex items-center gap-4">
-          <div className="bg-white/10 p-3 rounded-lg">
-            <UserCircle2 className="h-6 w-6" />
-          </div>
-          <div>
-            <h3 className="font-semibold mb-1">Streamlined Hiring</h3>
-            <p className="text-secondary-light text-sm">
-              From job description to candidate management, find your best hire faster
-            </p>
-          </div>
-        </div>
-      </div>
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary to-primary-light p-12 text-white">
+        <div className="max-w-md">
+          <h1 className="text-4xl font-bold mb-6">Your Perfect Hire in 2 Minutes!</h1>
+          <p className="text-secondary-light text-lg mb-8">
+            Sign in to craft professional job requirements, create a branded landing page, and start receiving qualified applicants today.
+          </p>
+          <div className="space-y-6">
+            <div className="bg-white/10 rounded-xl p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/10 p-3 rounded-lg">
+                  <Building className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">One-Click Job Posts</h3>
+                  <p className="text-secondary-light text-sm">
+                    Just tell us a few words about the role, and we'll craft professional job requirements instantly
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white/10 rounded-xl p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/10 p-3 rounded-lg">
+                  <UserCircle2 className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Streamlined Hiring</h3>
+                  <p className="text-secondary-light text-sm">
+                    From job description to candidate management, find your best hire faster
+                  </p>
+                </div>
+              </div>
+            </div>
 
-      <div className="bg-white/10 rounded-xl p-6">
-        <div className="flex items-center gap-4">
-          <div className="bg-white/10 p-3 rounded-lg">
-            <ShareIcon className="h-6 w-6" />
-          </div>
-          <div>
-            <h3 className="font-semibold mb-1">Branded Landing Pages</h3>
-            <p className="text-secondary-light text-sm">
-              Get attractive, ready-to-share job posts that help you reach candidates across networks
-            </p>
+            <div className="bg-white/10 rounded-xl p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/10 p-3 rounded-lg">
+                  <ShareIcon className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Branded Landing Pages</h3>
+                  <p className="text-secondary-light text-sm">
+                    Get attractive, ready-to-share job posts that help you reach candidates across networks
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-    
-    </div>
-  </div>
-</div>
 
       {/* Right Panel - Auth Form */}
       <div className="flex-1 flex items-center justify-center p-8">
@@ -121,7 +117,7 @@ const Login = () => {
           )}
 
           <button
-            onClick={() => googleLogin()}
+            onClick={handleLoginClick}
             disabled={loading}
             className="w-full flex items-center justify-center gap-3 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -145,6 +141,7 @@ const Login = () => {
               </>
             )}
           </button>
+          
           <div className="text-center text-sm text-gray-500">
             <p>
               By continuing, you agree to our{' '}

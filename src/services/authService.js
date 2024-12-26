@@ -1,4 +1,3 @@
-
 import api from './api';
 import storageService from './storageService';
 
@@ -25,8 +24,9 @@ export const authService = {
     return response.data;
   },
 
-  async googleLogin(googleToken) {
-    const response = await api.post('/auth/google', { token: googleToken });
+  // Updated to handle authorization code instead of token
+  async googleCallback(code) {
+    const response = await api.post('/auth/google/callback', { code });
     const { accessToken, refreshToken } = response.data;
     storageService.setAccessToken(accessToken, refreshToken);
     return response.data;
@@ -34,8 +34,6 @@ export const authService = {
 
   async logout() {
     try {
-      // Optionally notify backend to invalidate refresh token
-      // await api.post('/auth/logout');
       storageService.clearAll();
       return { success: true };
     } catch (error) {
@@ -44,3 +42,4 @@ export const authService = {
     }
   }
 };
+

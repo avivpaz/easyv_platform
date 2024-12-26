@@ -11,6 +11,7 @@ import SettingsPage from './pages/SettingsPage';
 import BillingPage from './pages/BillingPage';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import TawkToChat from './components/TawkToChat';
+import GoogleCallback from './components/GoogleCallback'; // New component for handling redirect
 
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
@@ -31,6 +32,13 @@ function AppRoutes() {
               )
             } 
           />
+          
+          {/* Add Google OAuth callback route */}
+          <Route 
+            path="/auth/google/callback" 
+            element={<GoogleCallback />} 
+          />
+          
           <Route 
             path="/signup" 
             element={
@@ -41,10 +49,8 @@ function AppRoutes() {
               )
             } 
           />
-          {/* Allow Dashboard access without PrivateRoute wrapper */}
           <Route path="/dashboard" element={<Dashboard />} />
           
-          {/* Keep other routes protected */}
           <Route 
             path="/jobs/:id" 
             element={
@@ -53,7 +59,7 @@ function AppRoutes() {
               </PrivateRoute>
             } 
           />
-       <Route 
+          <Route 
             path="/settings/*" 
             element={
               <PrivateRoute>
@@ -90,12 +96,12 @@ function AppRoutes() {
 
 function App() {
   return (
-    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+    <GoogleOAuthProvider 
+      clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+    >
       <Router>
         <AuthProvider>
           <AppRoutes />
-          {/* <TawkToChat /> */}
-
         </AuthProvider>
       </Router>
     </GoogleOAuthProvider>
