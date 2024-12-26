@@ -53,7 +53,7 @@ const Header = () => {
             {/* Logo and Navigation */}
             <div className="flex items-center space-x-6">
               <Link to="/dashboard" className="flex items-center space-x-2">
-                <div className="w-6 h-6 bg-primary flex items-center justify-center rounded-lg">
+                <div className="w-8 h-8  flex items-center justify-center rounded-lg">
                   <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />
                 </div>
                 <span className="text-xl font-bold text-gray-900">RightCruiter</span>
