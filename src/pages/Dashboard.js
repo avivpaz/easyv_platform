@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import _ from 'lodash';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { 
   Briefcase, Users, Calendar, Search, Plus,
@@ -68,13 +69,13 @@ const Dashboard = () => {
     fetchJobs(newPage)
   };
 
-  const fetchJobs = async (page = 1) => {
+  const fetchJobs = async (page = 1, search = searchTerm) => {
     try {
       setLoading(true);
       const response = await jobService.getJobs({ 
         page, 
         limit: 10,
-        search: searchTerm 
+        search: search 
       });
       setJobs(response.jobs);
       setPagination(response.pagination);
@@ -88,7 +89,12 @@ const Dashboard = () => {
     }
   };
 
-
+  const debouncedSearch = useCallback(
+    _.debounce((term) => {
+      fetchJobs(1, term);
+    }, 500),
+    []
+  );
   const PaginationControls = () => {
     const { page, pages, total } = pagination;
     
@@ -252,12 +258,16 @@ const Dashboard = () => {
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
-                type="text"
-                placeholder="Search existing listings..."
-                className="w-full pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+  type="text"
+  placeholder="Search existing listings..."
+  className="w-full pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+  value={searchTerm}
+  onChange={(e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    debouncedSearch(value);
+  }}
+/>
             </div>
           </div>
           <button
