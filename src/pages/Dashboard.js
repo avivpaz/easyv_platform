@@ -334,10 +334,12 @@ const Dashboard = () => {
                         </div>
                         
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-500">
+                        {job.location && (
                           <div className="flex items-center gap-1">
                             <MapPin className="h-4 w-4" />
                             <span>{job.location}</span>
                           </div>
+                        )}
                           <div className="flex items-center gap-1">
                             <Clock className="h-4 w-4" />
                             <span>{job.workType}</span>

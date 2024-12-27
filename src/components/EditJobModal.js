@@ -133,7 +133,6 @@ const EditJobModal = ({
 
   // Load Google Maps script
   useEffect(() => {
-    if (activeSection === 'work') {
       let scriptElement = document.querySelector(`script[src="${GOOGLE_MAPS_URL}"]`);
       
       const handleScriptLoad = () => {
@@ -161,7 +160,6 @@ const EditJobModal = ({
           window.google?.maps?.event?.clearInstanceListeners(autocompleteRef.current);
         }
       };
-    }
   }, [activeSection]);
 
   // Initialize Places when on work section
@@ -271,12 +269,19 @@ const EditJobModal = ({
           <label className="block text-sm font-medium text-gray-700 mb-1">Work Type</label>
           <select
             value={formData.workType}
-            onChange={(e) => setFormData(prev => ({ ...prev, workType: e.target.value }))}
+            onChange={(e) => {
+              const newWorkType = e.target.value;
+              setFormData(prev => ({ 
+                ...prev, 
+                workType: newWorkType,
+                location: newWorkType === 'remote' ? '' : prev.location 
+              }));
+            }}
             className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
           >
             <option value="hybrid">Hybrid</option>
             <option value="remote">Remote</option>
-            <option value="onsite">In-Office</option>
+            <option value="office">Office</option>
           </select>
         </div>
 
@@ -293,7 +298,7 @@ const EditJobModal = ({
             <option value="internship">Internship</option>
           </select>
         </div>
-
+        {formData.workType !== 'remote' && (
         <div className="col-span-2">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             <MapPin className="h-4 w-4 inline mr-1 text-gray-400" />
@@ -308,6 +313,7 @@ const EditJobModal = ({
             placeholder={isGoogleLoaded ? "Start typing a city name..." : "Loading location search..."}
           />
         </div>
+        )}
       </div>
     </div>
   );
@@ -399,7 +405,6 @@ const EditJobModal = ({
                 </>
               ) : (
                 <>
-                  <Check className="h-4 w-4" />
                   Save Changes
                 </>
               )}

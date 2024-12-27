@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import LoginModal from './LoginModal';
 import SkillsSection from './createModalComponents/SkillsSection';
 
-const GOOGLE_MAPS_API_KEY = 'AIzaSyBAKK100KsCI3XMAdDWK_I7jp1RHJN185s';
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 const GOOGLE_MAPS_URL = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&loading=async`;
 
 const CreateJobModal = ({ 
@@ -355,12 +355,19 @@ const CreateJobModal = ({
           <label className="block text-sm font-medium text-gray-700 mb-1">Where will the work happen?</label>
           <select
             value={formData.workType}
-            onChange={(e) => setFormData(prev => ({ ...prev, workType: e.target.value }))}
+            onChange={(e) => {
+              const newWorkType = e.target.value;
+              setFormData(prev => ({ 
+                ...prev, 
+                workType: newWorkType,
+                location: newWorkType === 'remote' ? '' : prev.location 
+              }));
+            }}
             className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
-            >
+          >
             <option value="hybrid">Hybrid</option>
             <option value="remote">Remote</option>
-            <option value="onsite">In-Office</option>
+            <option value="office">Office</option>
           </select>
         </div>
 
@@ -378,20 +385,22 @@ const CreateJobModal = ({
           </select>
         </div>
 
-        <div className="col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            <MapPin className="h-4 w-4 inline mr-1 text-gray-400" />
-            Where is the job located? 
-          </label>
-          <input
-  ref={locationInputRef}
-  type="text"
-  value={formData.location}
-  onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
-  placeholder={isGoogleLoaded ? "Start typing a city name..." : "Loading location search..."}
-/>
-        </div>
+        {formData.workType !== 'remote' && (
+          <div className="col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              <MapPin className="h-4 w-4 inline mr-1 text-gray-400" />
+              Where is the job located? 
+            </label>
+            <input
+              ref={locationInputRef}
+              type="text"
+              value={formData.location}
+              onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
+              placeholder={isGoogleLoaded ? "Start typing a city name..." : "Loading location search..."}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -488,7 +497,7 @@ const CreateJobModal = ({
             {currentStep === 3 && (
               <button
                 onClick={handleSubmit}
-                disabled={loading || !formData.location}
+                disabled={loading || (formData.workType !== 'remote' && !formData.location)}
                 className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-light disabled:opacity-50 flex items-center gap-2"
               >
                 {loading ? (

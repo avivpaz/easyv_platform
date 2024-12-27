@@ -107,10 +107,12 @@ const JobDetail = () => {
                   </button>
                 </div>
                 <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-6 text-sm md:text-base text-secondary-light">
+                {job.location && (
                   <span className="flex items-center gap-1">
                     <MapPin className="h-4 w-4" />
                     <span className="truncate">{job.location}</span>
                   </span>
+                )}
                   <span className="flex items-center gap-1">
                     <Building className="h-4 w-4" />
                     <span className="truncate capitalize">{job.workType}</span>
