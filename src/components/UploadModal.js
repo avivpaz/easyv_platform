@@ -6,6 +6,8 @@ const UploadModal = ({ isOpen, onClose, jobId, onSuccess }) => {
   const [files, setFiles] = useState([]);
   const [uploadStatus, setUploadStatus] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -39,9 +41,11 @@ const UploadModal = ({ isOpen, onClose, jobId, onSuccess }) => {
 
   const handleUpload = async () => {
     try {
-      setUploadStatus({ status: 'uploading', message: 'Uploading CVs...' });
+      setIsUploading(true)
       const response = await jobService.uploadCVs(jobId, files);
       
+      setIsUploading(false)
+
       if (response.failed?.length > 0) {
         const duplicateFiles = response.failed.filter(f => f.error === 'cv_duplication');
         const invalidFiles = response.failed.filter(f => f.error === 'invalid_file');
@@ -72,6 +76,7 @@ const UploadModal = ({ isOpen, onClose, jobId, onSuccess }) => {
         }, 1500);
       }
     } catch (error) {
+      setIsUploading(false)
       setUploadStatus({ 
         status: 'error', 
         message: error.message || 'Failed to upload CVs' 
@@ -156,18 +161,19 @@ const UploadModal = ({ isOpen, onClose, jobId, onSuccess }) => {
 
         {/* Actions */}
         <div className="mt-6 flex justify-end gap-3">
-          <button
+        <button
             onClick={onClose}
             className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+            disabled={isUploading}
           >
             Cancel
           </button>
           <button
             onClick={handleUpload}
-            disabled={files.length === 0}
-            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-light disabled:opacity-50 transition-colors"
+            disabled={files.length === 0 || isUploading}
+            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-light disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            Upload
+            {isUploading ? 'Uploading...' : 'Upload'}
           </button>
         </div>
       </div>

@@ -8,6 +8,7 @@ import CopyButton from './CopyButton';
 import PDFViewerModal from './PDFViewerModal';
 import TextViewerModal from './TextViewerModal';
 import CustomTooltip from './CustomTooltip';
+import RankingBadge from './RankingBadge'
 const Status = ({ status }) => {
   const variants = {
     pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
@@ -180,51 +181,63 @@ const CVCard = ({
     {/* Buttons on Hover */}
   
       {/* Header */}
+     
       <div 
-        className={`p-4 bg-gray-50 ${!isReviewMode ? 'cursor-pointer hover:bg-gray-100' : ''} transition-colors`}
-        onClick={!isReviewMode ? onToggle : undefined}
-      >
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-            <Users className="h-6 w-6 text-primary" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between gap-4">
-              <h3 className="font-semibold text-gray-900 truncate">
-                { cv.candidate.fullName}
-              </h3>
-              <div className="flex items-center gap-3 flex-shrink-0">
-             
-                {cv.visibility === 'locked' && (
-                  <UnlockButton onUnlock={handleUnlock} loading={unlocking} />
-                )}
-                {!isReviewMode && cv.visibility != 'locked'  && (
-                  <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
-                )}
-              </div>
-            </div>
-            {cv.visibility === 'locked' ? (
-              <div className="mt-1 space-y-1">
-                <p className="text-sm text-gray-600">{cv.candidate.experience} years experience</p>
-                <p className="text-sm text-gray-500">{cv.candidate.skills} skills listed</p>
-              </div>
-            ) : (
-              <div className="mt-1 space-y-1">
-                <div className="flex items-center gap-2">
-                  <p className="text-sm text-gray-600">{cv.candidate.email}</p>
-                  <CopyButton text={cv.candidate.email} label="email" />
-                </div>
-                {cv.candidate.phone && (
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm text-gray-600">{cv.candidate.phone}</p>
-                    <CopyButton text={cv.candidate.phone} label="phone" />
-                  </div>
-                )}
-              </div>
+  className={`p-4 bg-gray-50 ${!isReviewMode ? 'cursor-pointer hover:bg-gray-100' : ''} transition-colors`}
+  onClick={!isReviewMode ? onToggle : undefined}
+>
+  <div className="flex items-center gap-4">
+    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+      <Users className="h-6 w-6 text-primary" />
+    </div>
+    <div className="flex-1 min-w-0">
+      <div className="flex flex-col sm:flex-row sm:items-start gap-2">
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h3 className="font-semibold text-gray-900 truncate">
+              {cv.candidate.fullName}
+            </h3>
+            {cv.ranking &&cv.ranking.justification && (
+              <RankingBadge 
+                category={cv.ranking.category} 
+                justification={cv.ranking.justification}
+              />
             )}
           </div>
         </div>
+        <div className="flex items-center gap-3 flex-shrink-0">
+          {cv.visibility === 'locked' && (
+            <UnlockButton onUnlock={handleUnlock} loading={unlocking} />
+          )}
+          {!isReviewMode && cv.visibility !== 'locked' && (
+            <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+          )}
+        </div>
       </div>
+
+      {/* Contact Information */}
+      {cv.visibility === 'locked' ? (
+        <div className="mt-2 space-y-1">
+          <p className="text-sm text-gray-600">{cv.candidate.experience} years experience</p>
+          <p className="text-sm text-gray-500">{cv.candidate.skills} skills listed</p>
+        </div>
+      ) : (
+        <div className="mt-2 space-y-1">
+          <div className="flex items-center gap-2">
+            <p className="text-sm text-gray-600">{cv.candidate.email}</p>
+            <CopyButton text={cv.candidate.email} label="email" />
+          </div>
+          {cv.candidate.phone && (
+            <div className="flex items-center gap-2">
+              <p className="text-sm text-gray-600">{cv.candidate.phone}</p>
+              <CopyButton text={cv.candidate.phone} label="phone" />
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  </div>
+</div>
 
       {/* Content */}
       {(isExpanded || isReviewMode) && (
