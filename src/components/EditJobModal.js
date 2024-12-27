@@ -133,6 +133,7 @@ const EditJobModal = ({
 
   // Load Google Maps script
   useEffect(() => {
+    if (activeSection === 'work') {
       let scriptElement = document.querySelector(`script[src="${GOOGLE_MAPS_URL}"]`);
       
       const handleScriptLoad = () => {
@@ -160,6 +161,7 @@ const EditJobModal = ({
           window.google?.maps?.event?.clearInstanceListeners(autocompleteRef.current);
         }
       };
+    }
   }, [activeSection]);
 
   // Initialize Places when on work section
