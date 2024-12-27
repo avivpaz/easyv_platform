@@ -47,15 +47,17 @@ const EducationCard = ({ education }) => (
           <div className="space-y-1">
             <h4 className="font-medium text-gray-900">{education.degree}</h4>
             <p className="text-sm text-gray-600">{education.institution}</p>
+            {education.year && (
             <div className="inline-flex items-center px-2.5 py-1 mt-1 bg-primary/5 rounded-full">
               <span className="text-xs font-medium text-primary">{education.year}</span>
             </div>
+          )}
           </div>
         </div>
       </div>
     </div>
   );
-const ExperienceCard = ({ experience, isExpanded, onToggle }) => (
+  const ExperienceCard = ({ experience, isExpanded, onToggle }) => (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
       <button
         className="w-full p-4 text-left hover:bg-gray-50 transition-colors duration-200"
@@ -67,7 +69,7 @@ const ExperienceCard = ({ experience, isExpanded, onToggle }) => (
               <Briefcase className="h-5 w-5 text-primary" />
             </div>
             <div>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                 <h4 className="font-medium text-gray-900 truncate">{experience.position}</h4>
                 {experience.isRelevant && (
                   <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium bg-emerald-50 text-emerald-700 rounded-full border border-emerald-200 flex-shrink-0 w-fit">
@@ -75,10 +77,12 @@ const ExperienceCard = ({ experience, isExpanded, onToggle }) => (
                   </span>
                 )}
               </div>
-                <p className="text-sm text-gray-600 mt-0.5">{experience.company}</p>
-              <div className="inline-flex items-center px-2.5 py-1 mt-1 bg-primary/5 rounded-full">
-              <span className="text-xs font-medium text-primary">{experience.dates}</span>
-            </div>
+              <p className="text-sm text-gray-600 mt-0.5">{experience.company}</p>
+              {experience.dates && (
+                <div className="inline-flex items-center px-2.5 py-1 mt-1 bg-primary/5 rounded-full">
+                  <span className="text-xs font-medium text-primary">{experience.dates}</span>
+                </div>
+              )}
             </div>
           </div>
           {experience.responsibilities?.length > 0 && (
@@ -95,7 +99,7 @@ const ExperienceCard = ({ experience, isExpanded, onToggle }) => (
           <div className="p-4 space-y-3">
             {experience.responsibilities.map((resp, idx) => (
               <div key={idx} className="flex items-start gap-2 group">
-              <ArrowRight className="h-4 w-4 text-primary/60 mt-1 flex-shrink-0 group-hover:text-primary transition-colors duration-200" />
+                <ArrowRight className="h-4 w-4 text-primary/60 mt-1 flex-shrink-0 group-hover:text-primary transition-colors duration-200" />
                 <p className="text-sm text-gray-600 leading-relaxed">
                   {resp}
                 </p>
