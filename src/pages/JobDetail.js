@@ -9,6 +9,7 @@ import JobCVs from '../components/JobCVs';
 import { useAuth } from '../context/AuthContext';
 import ShareModal from '../components/ShareModal';
 import EditJobModal from '../components/EditJobModal';
+import {urlShortenerService} from '../services/urlShortenerService'
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -24,7 +25,18 @@ const JobDetail = () => {
   const longUrl = `${process.env.REACT_APP_FRONTEND_URL}/${organization?.id}/jobs/${id}`;
 
   useEffect(() => {
-    fetchJob();
+    const shortenAndFetch = async () => {
+      try {
+        const shortened = await urlShortenerService.shortenUrl(longUrl);
+        setShortUrl(shortened);
+        await fetchJob();
+      } catch (error) {
+        // Handle any errors that might occur
+        console.error('Error in shortenAndFetch:', error);
+      }
+    };
+  
+    shortenAndFetch();
   }, [id]);
 
   const fetchJob = async () => {
@@ -188,7 +200,7 @@ const JobDetail = () => {
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-          <div className="p-4 md:p-8">
+          <div className="p-4 md:px-8 md:pt-0 md:pb-8">
             <JobCVs jobId={job._id} />
           </div>
         </div>
