@@ -232,7 +232,7 @@ const JobCVs = ({ jobId }) => {
 
         <button
           onClick={() => setShowUploadModal(true)}
-          className="flex items-center gap-2 px-3 py-1.5 bg-primary text-white rounded-lg text-sm hover:bg-primary-dark"
+          className="flex items-center gap-2 px-3 py-1.5 bg-gray-600 text-white rounded-lg text-sm hover:bg-gray-700"
         >
           <Upload className="h-4 w-4" />
           <span>Upload CVs</span>
