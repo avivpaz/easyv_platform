@@ -367,7 +367,7 @@ const CreateJobModal = ({
           >
             <option value="hybrid">Hybrid</option>
             <option value="remote">Remote</option>
-            <option value="office">Office</option>
+            <option value="onsite">In Office</option>
           </select>
         </div>
 

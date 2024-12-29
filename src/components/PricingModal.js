@@ -1,12 +1,16 @@
 // components/PricingModal.js
 import React from 'react';
 import { X } from 'lucide-react';
-import { initializePaddle } from '../utils/paddle';
-import PricingCard from './PricingCard'
+import { initializeLemonSqueezy, createCheckout } from '../utils/lemonsqueezy';
+import PricingCard from './PricingCard';
 import { useAuth } from '../context/AuthContext';
 
 const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
   const { user, organization, addCredits } = useAuth();
+
+  React.useEffect(() => {
+    initializeLemonSqueezy();
+  }, []);
 
   const plans = [
     {
@@ -19,7 +23,7 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
         '10 CVs for the price of 9',
         '10% volume discount applied'
       ],
-      priceId: process.env.REACT_APP_PADDLE_TIER1_PRICE_ID
+      variantId: process.env.REACT_APP_LEMONSQUEEZY_TIER1_VARIANT_ID
     },
     {
       title: 'Growth',
@@ -31,7 +35,7 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
         '25 CVs for the price of 21',
         '15% volume discount applied',
       ],
-      priceId: process.env.REACT_APP_PADDLE_TIER2_PRICE_ID,
+      variantId: process.env.REACT_APP_LEMONSQUEEZY_TIER2_VARIANT_ID,
       isPopular: true
     },
     {
@@ -44,30 +48,36 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
         '50 CVs for the price of 40',
         '20% volume discount applied',
       ],
-      priceId: process.env.REACT_APP_PADDLE_TIER3_PRICE_ID
+      variantId: process.env.REACT_APP_LEMONSQUEEZY_TIER3_VARIANT_ID
     }
   ];
 
   const handlePurchase = async (planDetails) => {
     try {
-      const paddle = await initializePaddle(addCredits, onPurchaseComplete);
-      const checkoutData = {
-        items: [{
-          priceId: plans.find(p => p.title === planDetails.tier).priceId,
-          quantity: 1
-        }],
-        customData: {
-          credits: planDetails.credits,
-          price: planDetails.price,
-          discount: planDetails.discount,
-          savings: planDetails.savings,
-          organizationId: organization.id,
-        },
-        customer: { email: user?.email || organization?.email },
+      // Find the selected plan
+      const selectedPlan = plans.find(p => p.title === planDetails.title);
+      
+      if (!selectedPlan || !selectedPlan.variantId) {
+        throw new Error('Invalid plan or missing variant ID');
+      }
+
+      console.log('Selected plan:', selectedPlan);
+      console.log('Variant ID:', selectedPlan.variantId);
+      
+      const customData = {
+        credits: planDetails.credits,
+        price: planDetails.exactPrice,
+        organizationId: organization.id,
       };
 
-      const checkout = await paddle.Checkout.open(checkoutData);
-      console.log('Checkout opened:', checkout);
+      await createCheckout(
+        process.env.REACT_APP_LEMONSQUEEZY_STORE_ID,
+        selectedPlan.variantId,
+        customData,
+        user?.email || organization?.email,
+        addCredits,  // Pass addCredits function
+        onPurchaseComplete  // Pass onPurchaseComplete callback
+      );
     } catch (error) {
       console.error('Checkout failed:', error);
     }
@@ -82,7 +92,6 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
           className="relative w-full max-w-[900px] mx-auto bg-white shadow-xl rounded-2xl"
           onClick={e => e.stopPropagation()}
         >
-          {/* Close Button - Fixed position on mobile */}
           <button
             onClick={onClose}
             className="absolute right-2 top-2 sm:right-4 sm:top-4 text-gray-400 hover:text-gray-500 transition-colors p-2 bg-white rounded-full shadow-sm z-10"
@@ -91,7 +100,6 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
           </button>
           
           <div className="p-4 sm:p-6">
-            {/* Header */}
             <div className="text-center mb-6 sm:mb-8">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
                 Purchase CV Credits
@@ -101,9 +109,8 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
               </p>
             </div>
             
-            {/* Cards Container - Improved scrolling on mobile */}
             <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
-              {plans.map((plan, index) => (
+              {plans.map((plan) => (
                 <div 
                   key={plan.title}
                   className={`${
@@ -113,14 +120,15 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
                   }`}
                 >
                   <PricingCard
+                    key={plan.title}
+                    tier={plan.title}
                     {...plan}
-                    onPurchase={handlePurchase}
+                    onPurchase={() => handlePurchase(plan)}
                   />
                 </div>
               ))}
             </div>
 
-            {/* Bottom Message - Optional */}
             <p className="mt-6 text-center text-sm text-gray-500">
               Need more credits? Contact our sales team
             </p>
