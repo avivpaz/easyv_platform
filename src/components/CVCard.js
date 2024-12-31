@@ -9,19 +9,7 @@ import PDFViewerModal from './PDFViewerModal';
 import TextViewerModal from './TextViewerModal';
 import CustomTooltip from './CustomTooltip';
 import RankingBadge from './RankingBadge'
-const Status = ({ status }) => {
-  const variants = {
-    pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    approved: 'bg-green-100 text-green-800 border-green-200',
-    rejected: 'bg-red-100 text-red-800 border-red-200'
-  };
 
-  return (
-    <span className={`${variants[status]} px-2 py-1 text-xs font-medium rounded-full border`}>
-      {status.charAt(0).toUpperCase() + status.slice(1)}
-    </span>
-  );
-};
 
 const UnlockButton = ({ onUnlock, creditsRequired = 1, loading = false }) => (
   <button

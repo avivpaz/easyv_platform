@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  MapPin, Clock, Briefcase, User2, ArrowLeft,
+  MapPin, Clock, Briefcase, User2, EyeOff,Eye,ChevronDown,
   Building, Share2, Edit2, Loader2
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
@@ -10,6 +10,8 @@ import { useAuth } from '../context/AuthContext';
 import ShareModal from '../components/ShareModal';
 import EditJobModal from '../components/EditJobModal';
 import {urlShortenerService} from '../services/urlShortenerService'
+import JobStatusDropdown from '../components/JobStatusDropdown';
+
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -23,6 +25,7 @@ const JobDetail = () => {
   const [shorteningUrl, setShorteningUrl] = useState(false);
   const { organization } = useAuth();
   const longUrl = `${process.env.REACT_APP_FRONTEND_URL}/${organization?.id}/jobs/${id}`;
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
   useEffect(() => {
     const shortenAndFetch = async () => {
@@ -39,6 +42,20 @@ const JobDetail = () => {
     shortenAndFetch();
   }, [id]);
 
+  const handleStatusUpdate = async (newStatus) => {
+    try {
+      setIsUpdatingStatus(true);
+      await jobService.updateJobStatus(id, newStatus);
+      await fetchJob(); // Refresh job data
+    } catch (err) {
+      console.error('Error updating job status:', err);
+      // You might want to add error handling/notification here
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
+
+ 
   const fetchJob = async () => {
     try {
       setLoading(true);
@@ -63,6 +80,15 @@ const JobDetail = () => {
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  const getStatusStyle = (status) => {
+    const styles = {
+      active: "bg-green-100 text-green-800",
+      draft: "bg-gray-100 text-gray-800",
+      closed: "bg-red-100 text-red-800"
+    };
+    return `${styles[status]} px-2 py-1 rounded-full  text-xs font-medium`;
   };
 
   if (loading) {
@@ -95,8 +121,8 @@ const JobDetail = () => {
     );
   }
 
-  if (!job) return null;
 
+  if (!job) return null;
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-gradient-to-r from-primary to-primary-light text-white">
@@ -108,17 +134,29 @@ const JobDetail = () => {
                 <Briefcase className="h-6 w-6" />
               </div>
               <div className="flex-1">
-              <div className="flex items-center justify-between mb-4">
-                  <h1 className="text-xl md:text-3xl font-bold">{job.title}</h1>
-                  <button
-                    onClick={() => setShowEditModal(true)}
-                    className="p-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors border border-white/20 md:px-4 md:flex md:items-center md:gap-2 text-sm"
-                  >
-                    <Edit2 className="h-4 w-4" />
-                    <span className="hidden md:inline">Edit Job</span>
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-6 text-sm md:text-base text-secondary-light">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-4">
+                    <h1 className="text-xl md:text-3xl font-bold">{job.title}</h1>
+                    <JobStatusDropdown 
+                      currentStatus={job.status}
+                      onStatusChange={handleStatusUpdate}
+                      isUpdating={isUpdatingStatus}
+                    />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {/* Edit Button */}
+                    <button
+                      onClick={() => setShowEditModal(true)}
+                      className="p-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors border border-white/20 md:px-4 md:flex md:items-center md:gap-2 text-sm"
+                    >
+                      <Edit2 className="h-4 w-4" />
+                      <span className="hidden md:inline">Edit</span>
+                    </button>
+
+                 
+                  </div>
+                  </div>
+                         <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-6 text-sm md:text-base text-secondary-light">
                 {job.location && (
                   <span className="flex items-center gap-1">
                     <MapPin className="h-4 w-4" />
@@ -173,8 +211,6 @@ const JobDetail = () => {
                 </div>
               )}
             </div>
-
-            {/* Action Buttons */}
             <div className="flex justify-end gap-3 mt-6">
               <button
                 onClick={() => setShowShareModal(true)}
@@ -193,13 +229,16 @@ const JobDetail = () => {
                 <span>View as Candidate</span>
               </a>
             </div>
+            {/* Action Buttons */}
+        
           </div>
         </div>
       </div>
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+  <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+    {/* Share and View buttons */}
           <div className="p-4 md:px-8 md:pt-0 md:pb-8">
             <JobCVs jobId={job._id} />
           </div>
