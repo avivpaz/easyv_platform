@@ -67,49 +67,7 @@ const JobItem = ({ job, onStatusChange }) => {
                 <span className={status.className}>
                   {status.label}
                 </span>
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsOpen(!isOpen);
-                    }}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-gray-50"
-                  >
-                    <MoreVertical className="h-4 w-4 text-gray-500" />
-                  </button>
-                  {isOpen && (
-                    <div className="absolute right-0 mt-1 w-48 rounded-md bg-white shadow-lg border border-gray-200 z-10">
-                      <div className="py-1">
-                        <button
-                          onClick={(e) => handleSettingClick(e, 'view')}
-                          className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                        >
-                          <ExternalLink className="mr-2 h-4 w-4" />
-                          View as Candidate
-                        </button>
-                        <button
-                          onClick={(e) => handleSettingClick(e, 'view')}
-                          className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                        >
-                            <Edit2 className="mr-2 h-4 w-4" />
-                          Edit
-                        </button>
-                        {job.status === 'active' && (
-                          <>
-                            <div className="h-px bg-gray-200 my-1" />
-                            <button
-                              onClick={(e) => handleSettingClick(e, 'close')}
-                              className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
-                            >
-                              <EyeOff className="mr-2 h-4 w-4" />
-                              Close Position
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
+             
               </div>
             </div>
             

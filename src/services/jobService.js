@@ -130,6 +130,15 @@ export const jobService = {
       throw new Error(error.response?.data?.error || 'Failed to generate job details');
     }
   },
+  async updateJobStatus(id, status) {
+    try {
+      const response = await api.patch(`/jobs/${id}/status`, { status });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating job status:', error);
+      throw new Error(error.response?.data?.error || 'Failed to update job status');
+    }
+  },
   async getSocialShareText(jobId, platform = 'linkedin') {
     try {
       const response = await api.get(`/jobs/${jobId}/social-share`, {

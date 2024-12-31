@@ -5,18 +5,17 @@ const JobStatusDropdown = ({ currentStatus, onStatusChange, isUpdating }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const statuses = [
-    { value: 'active', label: 'Active', textColor: 'text-green-800' },
-    { value: 'draft', label: 'Draft', textColor: 'text-gray-800' },
-    { value: 'closed', label: 'Closed', textColor: 'text-red-800' }
+    { value: 'active', label: 'Active', textColor: 'text-green-600', bgColor: 'bg-green-100' },
+    { value: 'closed', label: 'Closed', textColor: 'text-red-600', bgColor: 'bg-red-100' }
   ];
 
   const getStatusStyle = (status) => {
-    const styles = {
-      active: "bg-green-100 text-green-800",
-      draft: "bg-gray-100 text-gray-800",
-      closed: "bg-red-100 text-red-800"
+    const styleMap = {
+      active: "bg-green-100 text-green-600",
+      paused: "bg-yellow-100 text-yellow-600",
+      closed: "bg-red-100 text-red-600"
     };
-    return styles[status];
+    return styleMap[status] || "bg-gray-100 text-gray-600";
   };
 
   const handleStatusClick = async (status) => {
@@ -28,37 +27,38 @@ const JobStatusDropdown = ({ currentStatus, onStatusChange, isUpdating }) => {
 
   return (
     <div className="relative">
-      {/* Status Button */}
       <button
         onClick={() => !isUpdating && setIsOpen(!isOpen)}
         disabled={isUpdating}
-        className={`relative inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium 
-          ${getStatusStyle(currentStatus)} 
-          ${isUpdating ? 'opacity-75 cursor-not-allowed' : 'cursor-pointer hover:opacity-90'}`}
+        className={`
+          relative inline-flex items-center gap-2 px-2 py-1 rounded-full
+          text-sm font-medium transition-colors
+          ${getStatusStyle(currentStatus)}
+          ${isUpdating ? 'opacity-75 cursor-not-allowed' : 'hover:opacity-90'}
+        `}
       >
         {isUpdating ? (
           <>
-            <Loader2 className="h-3 w-3 animate-spin" />
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
             <span>Updating...</span>
           </>
         ) : (
           <>
-            {currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)}
-            <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            <span className={`h-2 w-2 rounded-full ${getStatusStyle(currentStatus)}`} />
+            <span>{currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)}</span>
+            <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
           </>
         )}
       </button>
 
       {isOpen && (
         <>
-          {/* Backdrop */}
           <div 
-            className="fixed inset-0 z-40"
+            className="fixed inset-0 z-40 bg-transparent"
             onClick={() => setIsOpen(false)} 
           />
           
-          {/* Dropdown menu */}
-          <div className="absolute left-0 z-50 mt-2 w-40 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <div className="absolute left-0 z-50 mt-2 w-44 rounded-lg bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
             <div className="py-1">
               {statuses.map((status) => (
                 <button
@@ -70,14 +70,12 @@ const JobStatusDropdown = ({ currentStatus, onStatusChange, isUpdating }) => {
                     ${status.textColor}
                   `}
                 >
-                  <span className={`inline-flex items-center gap-2
-                    ${currentStatus === status.value ? 'font-medium' : 'font-normal'}
-                  `}>
-                    <span className={`h-2 w-2 rounded-full ${getStatusStyle(status.value)}`} />
+                  <span className="inline-flex items-center gap-2">
+                    <span className={`h-2 w-2 rounded-full ${status.bgColor}`} />
                     {status.label}
                   </span>
                   {currentStatus === status.value && (
-                    <Check className={`h-4 w-4 ${status.textColor}`} />
+                    <Check className="h-4 w-4" />
                   )}
                 </button>
               ))}
