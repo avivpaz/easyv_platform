@@ -6,6 +6,7 @@ const JobStatusDropdown = ({ currentStatus, onStatusChange, isUpdating }) => {
 
   const statuses = [
     { value: 'active', label: 'Active', textColor: 'text-green-600', bgColor: 'bg-green-100' },
+    { value: 'draft', label: 'Draft', textColor: 'text-gray-600', bgColor: 'bg-gray-100' },
     { value: 'closed', label: 'Closed', textColor: 'text-red-600', bgColor: 'bg-red-100' }
   ];
 
