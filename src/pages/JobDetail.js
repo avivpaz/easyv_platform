@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  MapPin, Clock, Briefcase, User2, EyeOff,Eye,XCircle,
+  MapPin, Clock, Briefcase, User2, EyeOff,Eye,ChevronDown,
   Building, Share2, Edit2, Loader2
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext';
 import ShareModal from '../components/ShareModal';
 import EditJobModal from '../components/EditJobModal';
 import {urlShortenerService} from '../services/urlShortenerService'
+import JobStatusDropdown from '../components/JobStatusDropdown';
 
 
 const JobDetail = () => {
@@ -136,9 +137,11 @@ const JobDetail = () => {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <h1 className="text-xl md:text-3xl font-bold">{job.title}</h1>
-                    <span className={getStatusStyle(job.status)}>
-                      {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
-                    </span>
+                    <JobStatusDropdown 
+                      currentStatus={job.status}
+                      onStatusChange={handleStatusUpdate}
+                      isUpdating={isUpdatingStatus}
+                    />
                   </div>
                   <div className="flex items-center gap-3">
                     {/* Edit Button */}
@@ -147,29 +150,10 @@ const JobDetail = () => {
                       className="p-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors border border-white/20 md:px-4 md:flex md:items-center md:gap-2 text-sm"
                     >
                       <Edit2 className="h-4 w-4" />
-                      <span className="hidden md:inline">Edit Job</span>
+                      <span className="hidden md:inline">Edit</span>
                     </button>
 
-                    {/* Status Toggle Button */}
-                    {job.status !== 'draft' && (
-                         <button
-                         onClick={() => handleStatusUpdate(job.status === 'active' ? 'closed' : 'active')}
-                         disabled={isUpdatingStatus}
-                         className="p-2 bg-white text-primary rounded-lg hover:bg-white/90 transition-colors border border-white md:px-4 md:flex md:items-center md:gap-2 text-sm"
-                       >
-                         {isUpdatingStatus ? (
-                           <Loader2 className="h-4 w-4 animate-spin" />
-                         ) : job.status === 'active' ? (
-                           <>
-                             <span className="hidden md:inline">Mark as Closed</span>
-                           </>
-                         ) : (
-                           <>
-                             <span className="hidden md:inline">Mark as Active</span>
-                           </>
-                         )}
-                       </button>
-                    )}
+                 
                   </div>
                   </div>
                          <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-6 text-sm md:text-base text-secondary-light">
@@ -227,7 +211,24 @@ const JobDetail = () => {
                 </div>
               )}
             </div>
-
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setShowShareModal(true)}
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-white text-primary text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+              >
+                <Share2 className="h-4 w-4" />
+                <span>Share</span>
+              </button>
+              <a
+                href={longUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-white text-primary text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+              >
+                <User2 className="h-4 w-4" />
+                <span>View as Candidate</span>
+              </a>
+            </div>
             {/* Action Buttons */}
         
           </div>
@@ -238,25 +239,6 @@ const JobDetail = () => {
       <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
   <div className="bg-white rounded-xl shadow-sm border border-gray-100">
     {/* Share and View buttons */}
-    <div className="flex justify-end gap-3 p-4 md:p-6 border-b border-gray-100">
-      <button
-        onClick={() => setShowShareModal(true)}
-        className="flex items-center justify-center gap-2 px-4 py-2  text-primary text-sm font-medium rounded-lg "
-      >
-        <Share2 className="h-4 w-4" />
-        <span>Share</span>
-      </button>
-      <a
-        href={longUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center justify-center gap-2 px-4 py-2 bg-primary-light text-white text-sm font-medium rounded-lg hover:bg-primary transition-colors shadow-sm"
-      >
-        <User2 className="h-4 w-4" />
-        <span>View as Candidate</span>
-      </a>
-    </div>
-
           <div className="p-4 md:px-8 md:pt-0 md:pb-8">
             <JobCVs jobId={job._id} />
           </div>
