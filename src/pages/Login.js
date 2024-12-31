@@ -147,10 +147,14 @@ const Login = () => {
               By continuing, you agree to our{' '}
               <a href="https://www.rightcruiter.com/terms-of-use" className="text-primary hover:text-primary-dark underline">
                 Terms of Use
-              </a>{' '}
-              and{' '}
+              </a>
+              ,{' '}
               <a href="https://www.rightcruiter.com/privacy-policy" className="text-primary hover:text-primary-dark underline">
                 Privacy Policy
+              </a>
+              , and{' '}
+              <a href="https://www.rightcruiter.com/refund-policy" className="text-primary hover:text-primary-dark underline">
+                Refund Policy
               </a>
             </p>
           </div>
