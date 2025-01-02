@@ -45,7 +45,6 @@ const PricingCard = ({
             </div>
             <div className="text-sm text-gray-600 space-y-1">
               <div>{credits} CV credits</div>
-              <div className="text-primary font-medium">{discount}% discount</div>
               <div className="text-emerald-600 font-medium">Save ${savings}</div>
             </div>
           </div>
