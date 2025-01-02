@@ -8,7 +8,7 @@ export const initializePaddle = async (addCredits,onPurchaseComplete) => {
       eventCallback: async (event) => {
         console.log('Paddle event received:', event.name);
         
-        if (event.name === "checkout.completed") {
+        if (event.name ===   "checkout.completed") {
           console.log('Transaction completed event received', event.data);
           try {
             // Access credits from customData properly

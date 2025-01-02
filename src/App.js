@@ -95,7 +95,7 @@ function AppRoutes() {
 
 function App() {
   const paypalOptions = {
-    clientId: process.env.REACT_APP_PAYPAL_SANDBOX_CLIENT_ID,
+    clientId: process.env.REACT_APP_PAYPAL_CLIENT_ID,
     currency: "USD",
     intent: "capture",
     "enable-funding": "card,credit",
