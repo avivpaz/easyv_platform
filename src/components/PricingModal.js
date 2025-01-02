@@ -89,7 +89,7 @@ const PricingModal = ({ isOpen, onClose }) => {
               <p className="text-sm text-gray-500">
                 Need more than 50 credits? {' '}
                 <a 
-                  href="mailto:sales@example.com" 
+                  href="mailto:sales@rightcruiter.com" 
                   className="text-primary hover:text-primary/90 font-medium"
                 >
                   Contact our sales team
