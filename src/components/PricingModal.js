@@ -12,7 +12,7 @@ const PricingModal = ({ isOpen, onClose }) => {
     {
       title: 'Starter',
       credits: 10,
-      exactPrice: '1.00',
+      exactPrice: '45.00',
       savings: '5.00',
       discount: 10,
       features: [
