@@ -32,8 +32,8 @@ const JobStatusDropdown = ({ currentStatus, onStatusChange, isUpdating }) => {
         onClick={() => !isUpdating && setIsOpen(!isOpen)}
         disabled={isUpdating}
         className={`
-          relative inline-flex items-center gap-2 px-2 py-1 rounded-full
-          text-sm font-medium transition-colors
+          relative inline-flex items-center gap-2 pr-2 py-1.5 rounded-full
+          text-xs font-medium transition-colors
           ${getStatusStyle(currentStatus)}
           ${isUpdating ? 'opacity-75 cursor-not-allowed' : 'hover:opacity-90'}
         `}
