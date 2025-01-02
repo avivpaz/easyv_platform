@@ -86,14 +86,14 @@ export const AuthProvider = ({ children }) => {
     storageService.setOrganization(newOrgData);
   };
 
-  const addCredits = (creditData) => {
-    if (!creditData || typeof creditData.credits === 'undefined') {
-      console.error('Invalid credit data received:', creditData);
+  const addCredits = (credits) => {
+    if (!credits || typeof credits === 'undefined') {
+      console.error('Invalid credit data received:', credits);
       return;
     }
 
     const currentCredits = organization?.credits || 0;
-    const creditsToAdd = parseInt(creditData.credits) || 0;
+    const creditsToAdd = parseInt(credits) || 0;
     
     const updatedOrg = {
       ...organization,

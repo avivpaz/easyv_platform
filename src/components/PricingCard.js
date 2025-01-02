@@ -1,15 +1,26 @@
-import React from 'react';
-  
+import React, { useState } from 'react';
+import CheckoutModal from './CheckoutModal';
+
 const PricingCard = ({ 
   title, 
-  credits, 
+  credits,
   exactPrice,
   savings,
   discount, 
   features, 
-  isPopular, 
-  onPurchase 
+  isPopular,
+  onClose,
+  onPurchaseComplete
 }) => {
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+
+  const handlePurchase = () => {
+    setIsCheckoutOpen(true);
+  };
+
+  const handlePurchaseSuccess = () => {
+    onPurchaseComplete(credits);
+  };
   return (
     <div 
       className={`relative bg-white rounded-2xl h-full ${
@@ -62,19 +73,27 @@ const PricingCard = ({
         </div>
         
         <button
-          onClick={() => onPurchase({
-            tier: title,
-            credits,
-            price: exactPrice,
-            discount,
-            savings
-          })}
+          onClick={handlePurchase}
           className="mt-6 w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-2 px-4 rounded-lg font-medium text-sm hover:opacity-90 transition-colors"
         >
           Purchase Credits
         </button>
       </div>
+
+      <CheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={onClose}
+        onPurchaseComplete={handlePurchaseSuccess}
+        purchaseDetails={{
+          tier: title,
+          credits,
+          price: exactPrice,
+          discount,
+          savings
+        }}
+      />
     </div>
   );
 };
+
 export default PricingCard;

@@ -1,16 +1,12 @@
-// components/PricingModal.js
 import React from 'react';
 import { X } from 'lucide-react';
-import { initializeLemonSqueezy, createCheckout } from '../utils/lemonsqueezy';
-import PricingCard from './PricingCard';
 import { useAuth } from '../context/AuthContext';
+import PricingCard from './PricingCard';
 
-const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
-  const { user, organization, addCredits } = useAuth();
+const PricingModal = ({ isOpen, onClose }) => {
+  const { user, organization,addCredits } = useAuth();
 
-  React.useEffect(() => {
-    initializeLemonSqueezy();
-  }, []);
+  if (!isOpen) return null;
 
   const plans = [
     {
@@ -22,8 +18,7 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
       features: [
         '10 CVs for the price of 9',
         '10% volume discount applied'
-      ],
-      variantId: process.env.REACT_APP_LEMONSQUEEZY_TIER1_VARIANT_ID
+      ]
     },
     {
       title: 'Growth',
@@ -35,7 +30,6 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
         '25 CVs for the price of 21',
         '15% volume discount applied',
       ],
-      variantId: process.env.REACT_APP_LEMONSQUEEZY_TIER2_VARIANT_ID,
       isPopular: true
     },
     {
@@ -47,49 +41,20 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
       features: [
         '50 CVs for the price of 40',
         '20% volume discount applied',
-      ],
-      variantId: process.env.REACT_APP_LEMONSQUEEZY_TIER3_VARIANT_ID
+      ]
     }
   ];
 
-  const handlePurchase = async (planDetails) => {
-    try {
-      // Find the selected plan
-      const selectedPlan = plans.find(p => p.title === planDetails.title);
-      
-      if (!selectedPlan || !selectedPlan.variantId) {
-        throw new Error('Invalid plan or missing variant ID');
-      }
-
-      console.log('Selected plan:', selectedPlan);
-      console.log('Variant ID:', selectedPlan.variantId);
-      
-      const customData = {
-        credits: planDetails.credits,
-        price: planDetails.exactPrice,
-        organizationId: organization.id,
-      };
-
-      await createCheckout(
-        process.env.REACT_APP_LEMONSQUEEZY_STORE_ID,
-        selectedPlan.variantId,
-        customData,
-        user?.email || organization?.email,
-        addCredits,  // Pass addCredits function
-        onPurchaseComplete  // Pass onPurchaseComplete callback
-      );
-    } catch (error) {
-      console.error('Checkout failed:', error);
-    }
+  const handlePurchaseComplete = (credits) => {
+    addCredits(credits);
+    onClose();
   };
-
-  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex items-start justify-center overflow-y-auto overscroll-contain">
       <div className="min-h-screen w-full px-4 py-6 sm:py-8">
         <div 
-          className="relative w-full max-w-[900px] mx-auto bg-white shadow-xl rounded-2xl"
+          className="relative w-full max-w-[900px] mx-auto bg-gray-50 shadow-xl rounded-2xl"
           onClick={e => e.stopPropagation()}
         >
           <button
@@ -99,39 +64,38 @@ const PricingModal = ({ isOpen, onClose, onPurchaseComplete }) => {
             <X className="w-5 h-5" />
           </button>
           
-          <div className="p-4 sm:p-6">
-            <div className="text-center mb-6 sm:mb-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+          <div className="p-6">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-gray-900">
                 Purchase CV Credits
               </h2>
-              <p className="mt-2 text-sm sm:text-base text-gray-600">
-                Starting at $5 per CV credit
+              <p className="mt-2 text-gray-600">
+                {user?.email || organization?.name} • Starting at $5 per CV credit
               </p>
             </div>
             
-            <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
               {plans.map((plan) => (
-                <div 
+                <PricingCard
                   key={plan.title}
-                  className={`${
-                    plan.isPopular 
-                      ? 'order-first sm:order-none sm:transform sm:scale-105 sm:z-10' 
-                      : ''
-                  }`}
-                >
-                  <PricingCard
-                    key={plan.title}
-                    tier={plan.title}
-                    {...plan}
-                    onPurchase={() => handlePurchase(plan)}
-                  />
-                </div>
+                  {...plan}
+                  onClose={onClose}
+                  onPurchaseComplete={handlePurchaseComplete}
+                />
               ))}
             </div>
 
-            <p className="mt-6 text-center text-sm text-gray-500">
-              Need more credits? Contact our sales team
-            </p>
+            <div className="mt-8 text-center">
+              <p className="text-sm text-gray-500">
+                Need more than 50 credits? {' '}
+                <a 
+                  href="mailto:sales@example.com" 
+                  className="text-primary hover:text-primary/90 font-medium"
+                >
+                  Contact our sales team
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>

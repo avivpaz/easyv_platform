@@ -17,6 +17,7 @@ export const creditsService = {
       throw new Error(error.response?.data?.error || 'Failed to purchase credits');
     }
   },
+  
 
   async getTransactions(organizationId) {
     try {
@@ -36,5 +37,33 @@ export const creditsService = {
       console.error('Error fetching credits:', error);
       throw new Error(error.response?.data?.error || 'Failed to fetch credits');
     }
-  }
+  },
+  async createPayPalOrder(orderData) {
+    try {
+      const response = await api.post('/billing/create-paypal-order', {
+        price: orderData.price,
+        customData: {
+          credits: orderData.credits,
+          organizationId: orderData.organizationId,
+          tier: orderData.tier
+        },
+        customerEmail: orderData.customerEmail
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error creating PayPal order:', error);
+      throw new Error(error.response?.data?.error || 'Failed to create PayPal order');
+    }
+  },
+  async approvePayPalOrder(orderId) {
+    try {
+      const response = await api.post(`/billing/approve-paypal-order`, {
+        orderId:orderId
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error approving PayPal order:', error);
+      throw new Error(error.response?.data?.error || 'Failed to approve PayPal order');
+    }
+  },
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Menu,
@@ -21,17 +21,19 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isPricingOpen, setIsPricingOpen] = useState(false);
   const { user, organization, logout } = useAuth();
-  
+  const [credits, setCredits] = useState(0);
+
   const getInitials = (name) => {
     if (!name) return 'U';
     return name.split(' ').map(word => word[0]).join('').toUpperCase();
   };
-
+  useEffect(() => {
+    setCredits(organization?.credits || 0);
+  }, [organization?.credits]);
   const userInfo = {
     name: user?.fullName || user?.email?.split('@')[0] || 'User',
     email: user?.email,
     avatar: getInitials(user?.fullName),
-    credits: organization?.credits || 0
   };
 
   const handleLogout = async () => {
@@ -75,7 +77,7 @@ const Header = () => {
 
 
               <CreditsDisplay 
-                credits={userInfo.credits}
+                credits={credits}
                 onPurchaseClick={() => setIsPricingOpen(true)}
               />
               

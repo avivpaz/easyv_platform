@@ -1,6 +1,7 @@
-// App.js
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
@@ -9,9 +10,8 @@ import PrivateRoute from './components/PrivateRoute';
 import Header from './components/Header';
 import SettingsPage from './pages/SettingsPage';
 import BillingPage from './pages/BillingPage';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import TawkToChat from './components/TawkToChat';
-import GoogleCallback from './components/GoogleCallback'; // New component for handling redirect
+import GoogleCallback from './components/GoogleCallback';
 
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
@@ -33,7 +33,6 @@ function AppRoutes() {
             } 
           />
           
-          {/* Add Google OAuth callback route */}
           <Route 
             path="/auth/google/callback" 
             element={<GoogleCallback />} 
@@ -95,15 +94,25 @@ function AppRoutes() {
 }
 
 function App() {
+  const paypalOptions = {
+    clientId: process.env.REACT_APP_PAYPAL_SANDBOX_CLIENT_ID,
+    currency: "USD",
+    intent: "capture",
+    "enable-funding": "card,credit",
+    "disable-funding": "paylater",
+    "data-page-type": "product-details",
+
+  };
+
   return (
-    <GoogleOAuthProvider 
-      clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-    >
-      <Router>
-        <AuthProvider>
-          <AppRoutes />
-        </AuthProvider>
-      </Router>
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+      <PayPalScriptProvider options={paypalOptions}>
+        <Router>
+          <AuthProvider>
+            <AppRoutes />
+          </AuthProvider>
+        </Router>
+      </PayPalScriptProvider>
     </GoogleOAuthProvider>
   );
 }
