@@ -273,7 +273,8 @@ const Dashboard = () => {
           }}
           onSuccess={(jobId) => {
             navigate(`/jobs/${jobId}`);
-          }}          initialDescription={initialJobDescription}
+          }}
+            initialDescription={initialJobDescription}
           autoSubmit={autoSubmit}
         />
       )}

@@ -12,6 +12,7 @@ import SettingsPage from './pages/SettingsPage';
 import BillingPage from './pages/BillingPage';
 import TawkToChat from './components/TawkToChat';
 import GoogleCallback from './components/GoogleCallback';
+import HelpWidget from './components/HelpWidget';
 
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
@@ -89,6 +90,7 @@ function AppRoutes() {
           <Route path="/" element={<Navigate to="/dashboard" />} />
         </Routes>
       </div>
+      {isAuthenticated && <HelpWidget />}
     </div>
   );
 }
