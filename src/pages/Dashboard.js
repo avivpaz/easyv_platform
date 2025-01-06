@@ -56,12 +56,19 @@ const Dashboard = () => {
     const prompt = searchParams.get('prompt');
     const page = parseInt(searchParams.get('page')) || 1;
     
-    if (createJob === 'true' && prompt) {
-      const decodedPrompt = decodeURIComponent(prompt);
+    if (createJob === 'true') {
+      let decodedPrompt=''
+      if (prompt)
+      {
+         decodedPrompt = decodeURIComponent(prompt);
+         setAutoSubmit(true);
+      }
       setInitialJobDescription(decodedPrompt);
-      setAutoSubmit(true);
       setIsCreateModalOpen(true);
       setSearchParams({}, { replace: true });
+      if (isAuthenticated) {
+        fetchJobs(page);
+      }
     } else {
       if (isAuthenticated) {
         fetchJobs(page);
@@ -264,8 +271,9 @@ const Dashboard = () => {
             setInitialJobDescription('');
             setAutoSubmit(false);
           }}
-          onSuccess={fetchJobs}
-          initialDescription={initialJobDescription}
+          onSuccess={(jobId) => {
+            navigate(`/jobs/${jobId}`);
+          }}          initialDescription={initialJobDescription}
           autoSubmit={autoSubmit}
         />
       )}

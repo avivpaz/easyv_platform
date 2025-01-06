@@ -51,11 +51,12 @@ export const AuthProvider = ({ children }) => {
       setUser(authData.user);
       setOrganization(authData.organization);
 
-      if (authData.organization?.needsSetup) {
-        setShowWelcomePopup(true);
-      }
+      // if (authData.organization?.needsSetup) {
+      //   setShowWelcomePopup(true);
+      // }
+      const queryParam = authData.isNewUser ? '?createJob=true' : '';
+      navigate(`/dashboard${queryParam}`);
 
-      navigate('/dashboard');
     } catch (error) {
       console.error('Login error:', error);
       throw error;

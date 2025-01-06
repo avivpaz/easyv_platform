@@ -22,7 +22,6 @@ const GoogleCallback = () => {
       try {
         const response = await authService.googleCallback(code);
         await login(response);
-        navigate('/dashboard');
       } catch (err) {
         console.error('Google callback error:', err);
         setError(err.response?.data?.error || 'Failed to authenticate with Google');

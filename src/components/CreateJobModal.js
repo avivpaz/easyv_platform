@@ -239,13 +239,22 @@ const CreateJobModal = ({
     }
   };
 
+
   const submitJob = async (jobData) => {
     try {
-      await jobService.createJob({
+      const response = await jobService.createJob({
         ...jobData,
         status: 'active'
       });
+
+      // Handle API response and extract job ID
+      const jobId = response?._id;
       
+      if (!jobId) {
+        throw new Error('Invalid response from server');
+      }
+      
+      // Reset form state
       setFormData({
         title: '',
         shortDescription: '',
@@ -258,12 +267,16 @@ const CreateJobModal = ({
         employmentType: 'full-time'
       });
       
-      if (onSuccess) onSuccess();
+      // Close modal and trigger success callback with job ID
       onClose();
+      if (onSuccess) {
+        onSuccess(jobId);
+      }
     } catch (err) {
       throw err;
     }
   };
+  
   
   const handleLoginSuccess = async () => {
     setShowLoginModal(false);
