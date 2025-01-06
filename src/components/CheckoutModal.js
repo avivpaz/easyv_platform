@@ -86,22 +86,22 @@ const CheckoutModal = ({ isOpen, onClose, purchaseDetails, onPurchaseComplete })
             <h3 className="text-xl font-semibold text-gray-900">Complete Purchase</h3>
             
             <div className="mt-4 space-y-3">
-              <div className="flex justify-between text-sm">
+              {/* <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Plan</span>
                 <span className="font-medium">{purchaseDetails.tier}</span>
-              </div>
+              </div> */}
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Credits</span>
                 <span className="font-medium">{purchaseDetails.credits} CV credits</span>
               </div>
-              <div className="flex justify-between text-sm">
+              {/* <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Discount</span>
                 <span className="font-medium text-primary">{purchaseDetails.discount}%</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">You save</span>
                 <span className="font-medium text-emerald-600">${purchaseDetails.savings}</span>
-              </div>
+              </div> */}
               <div className="pt-3 flex justify-between border-t">
                 <span className="font-medium">Total</span>
                 <span className="font-bold">${purchaseDetails.price}</span>

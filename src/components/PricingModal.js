@@ -16,8 +16,7 @@ const PricingModal = ({ isOpen, onClose }) => {
       savings: '5.00',
       discount: 10,
       features: [
-        '10 CVs for the price of 9',
-        '10% volume discount applied'
+        'Save 10% on credits',
       ]
     },
     {
@@ -27,8 +26,7 @@ const PricingModal = ({ isOpen, onClose }) => {
       savings: '20.00',
       discount: 15,
       features: [
-        '25 CVs for the price of 21',
-        '15% volume discount applied',
+        'Save 15% on credits',
       ],
       isPopular: true
     },
@@ -39,8 +37,7 @@ const PricingModal = ({ isOpen, onClose }) => {
       savings: '50.00',
       discount: 20,
       features: [
-        '50 CVs for the price of 40',
-        '20% volume discount applied',
+        'Save 20% on credits',
       ]
     }
   ];
@@ -70,7 +67,7 @@ const PricingModal = ({ isOpen, onClose }) => {
                 Purchase CV Credits
               </h2>
               <p className="mt-2 text-gray-600">
-             Starting at $5 per CV credit
+              Each credit allows you to process one CV through our AI system
               </p>
             </div>
             
