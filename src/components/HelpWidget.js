@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquarePlus, Bug, Lightbulb, X, Camera, Send } from 'lucide-react';
-import {helpService} from '../services/helpService'
+import { MessageSquarePlus, Bug, Lightbulb, X, Camera, Send, Loader2 } from 'lucide-react';
+import { helpService } from '../services/helpService';
+
 const HelpWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [category, setCategory] = useState('feature');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -57,42 +59,43 @@ const HelpWidget = () => {
     });
   };
 
-// Update the handleSubmit function in your HelpWidget component
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    await helpService.submitHelp({
-      category,
-      title,
-      description,
-      email,
-      priority: category === 'bug' ? priority : undefined,
-      attachments
-    });
-    
-    setSubmitted(true);
-    
-    // Reset form after successful submission
-    setTimeout(() => {
-      setSubmitted(false);
-      setIsOpen(false);
-      setCategory('feature');
-      setTitle('');
-      setDescription('');
-      setEmail('');
-      setPriority('medium');
-      setAttachments(prev => {
-        prev.forEach(att => URL.revokeObjectURL(att.preview));
-        return [];
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      await helpService.submitHelp({
+        category,
+        title,
+        description,
+        email,
+        priority: category === 'bug' ? priority : undefined,
+        attachments
       });
-    }, 2000);
+      
+      setSubmitted(true);
+      
+      // Reset form after successful submission
+      setTimeout(() => {
+        setSubmitted(false);
+        setIsOpen(false);
+        setCategory('feature');
+        setTitle('');
+        setDescription('');
+        setEmail('');
+        setPriority('medium');
+        setAttachments(prev => {
+          prev.forEach(att => URL.revokeObjectURL(att.preview));
+          return [];
+        });
+      }, 2000);
 
-  } catch (error) {
-    // Handle error - you might want to show an error message to the user
-    console.error('Failed to submit help request:', error);
-    alert('Failed to submit help request. Please try again.');
-  }
-};
+    } catch (error) {
+      console.error('Failed to submit help request:', error);
+      alert('Failed to submit help request. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     return () => {
@@ -289,10 +292,22 @@ const handleSubmit = async (e) => {
 
                   <button
                     type="submit"
-                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2"
+                    disabled={isLoading}
+                    className={`w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 ${
+                      isLoading ? 'opacity-75 cursor-not-allowed' : ''
+                    }`}
                   >
-                    <Send className="w-5 h-5" />
-                    <span>Submit</span>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>Submitting...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-5 h-5" />
+                        <span>Submit</span>
+                      </>
+                    )}
                   </button>
                 </form>
               )}
