@@ -157,7 +157,7 @@ const JobDetail = () => {
                 )}
                   <span className="flex items-center gap-1">
                     <Building className="h-4 w-4" />
-                    <span className="truncate capitalize">{job.workType}</span>
+                    <span className="truncate capitalize">{job.workType?.toLowerCase() === 'onsite' ? 'In Office' : job.workType}</span>
                   </span>
                   <span className="flex items-center gap-1">
                     <Briefcase className="h-4 w-4" />
