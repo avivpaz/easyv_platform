@@ -34,7 +34,7 @@ const PricingCard = ({
         </div>
       )}
       
-      <div className="p-8 flex flex-col h-full">
+      <div className="p-7 flex flex-col h-full">
         <div className="flex-grow">
           <h3 className="text-2xl font-semibold text-gray-900">{credits} Credits</h3>
           
@@ -42,7 +42,7 @@ const PricingCard = ({
             <span className="text-4xl font-bold text-gray-900">
               ${(exactPrice/credits).toFixed(2)}
             </span>
-            <span className="text-gray-600 ml-2">/credit</span>
+            <span className="text-gray-600 ml-2">/qualified CV</span>
           </div>
 
           <div className="mt-4">
