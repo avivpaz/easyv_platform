@@ -42,14 +42,14 @@ const PricingCard = ({
             <span className="text-4xl font-bold text-gray-900">
               ${(exactPrice/credits).toFixed(2)}
             </span>
-            <span className="text-gray-600 ml-2">/qualified CV</span>
+            <span className="text-gray-600 ml-2">/cv</span>
           </div>
 
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-50 text-emerald-700">
               Save {discount}% on credits
             </span>
-          </div>
+          </div> */}
         </div>
         
         <button
