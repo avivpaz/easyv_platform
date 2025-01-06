@@ -228,22 +228,22 @@ const JobDetail = () => {
       </div>
 
       {organization?.needsSetup && (
-        <div className="max-w-7xl mx-auto px-4 -mt-4">
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-2 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 -mt-2">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex-shrink-0 w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-                <Building className="h-6 w-6 text-yellow-600" />
+              <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                <Building className="h-5 w-5 text-blue-600" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-yellow-800">Organization setup required</h3>
-                <p className="text-sm text-yellow-700">Complete your organization profile to customize your job landing page.</p>
+              <h3 className="text-sm font-medium text-blue-800">Brand your job listing page</h3>
+                <p className="text-sm text-blue-600">Add your company details to showcase your brand to candidates</p>
               </div>
             </div>
             <button
               onClick={() => navigate('/settings/organization')}
-              className="flex-shrink-0 bg-yellow-100 text-yellow-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-200 transition-colors"
+              className="flex-shrink-0 bg-blue-100 text-blue-700 px-3 py-1.5 rounded-md text-sm font-medium hover:bg-blue-200 transition-colors"
             >
-              Complete Setup
+              Add Branding
             </button>
           </div>
         </div>

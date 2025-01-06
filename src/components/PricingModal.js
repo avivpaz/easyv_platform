@@ -70,7 +70,7 @@ const PricingModal = ({ isOpen, onClose }) => {
                 Purchase CV Credits
               </h2>
               <p className="mt-2 text-gray-600">
-                {user?.email || organization?.name} • Starting at $5 per CV credit
+             Starting at $5 per CV credit
               </p>
             </div>
             
