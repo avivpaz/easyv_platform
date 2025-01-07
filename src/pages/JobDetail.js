@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  MapPin, Clock, Briefcase, User2, EyeOff,Eye,ChevronDown,
-  Building, Share2, Edit2, Loader2
+  MapPin, Clock, Briefcase, User2, EyeOff, Eye, ChevronDown,
+  Building, Share2, Edit2, Loader2, DollarSign
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
 import JobCVs from '../components/JobCVs';
@@ -167,10 +167,21 @@ const JobDetail = () => {
                     <Clock className="h-4 w-4" />
                     <span className="truncate">Created {formatDate(job.createdAt)}</span>
                   </span>
+                  {(job.salaryMin || job.salaryMax) && (
+                    <span className="flex items-center gap-1">
+                      <span className="truncate">
+                        {job.salaryMin && job.salaryMax
+                          ? `${job.salaryMin.toLocaleString()}-${job.salaryMax.toLocaleString()} ${job.salaryCurrency}`
+                          : job.salaryMin
+                          ? `${job.salaryMin.toLocaleString()}+ ${job.salaryCurrency}`
+                          : `Up to ${job.salaryMax.toLocaleString()} ${job.salaryCurrency}`}
+                        {' '}/{' '}{job.salaryPeriod}
+                      </span>
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
-
             {/* Skills */}
             <div className="grid md:grid-cols-2 gap-6 p-6 bg-white/10 rounded-xl">
               <div>

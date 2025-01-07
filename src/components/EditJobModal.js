@@ -21,7 +21,11 @@ const EditJobModal = ({
     niceToHaveSkills: [],
     location: '',
     workType: 'hybrid',
-    employmentType: 'full-time'
+    employmentType: 'full-time',
+    salaryMin: '',
+    salaryMax: '',
+    salaryCurrency: 'USD',
+    salaryPeriod: 'year'
   });
   
   const [skillInput, setSkillInput] = useState('');
@@ -45,7 +49,11 @@ const EditJobModal = ({
         niceToHaveSkills: job.niceToHaveSkills || [],
         location: job.location || '',
         workType: job.workType || 'hybrid',
-        employmentType: job.employmentType || 'full-time'
+        employmentType: job.employmentType || 'full-time',
+        salaryMin: job.salaryMin || '',
+        salaryMax: job.salaryMax || '',
+        salaryCurrency: job.salaryCurrency || 'USD',
+        salaryPeriod: job.salaryPeriod || 'year'
       });
     }
   }, [job]);
@@ -59,6 +67,10 @@ const EditJobModal = ({
         formData.location !== job.location ||
         formData.workType !== job.workType ||
         formData.employmentType !== job.employmentType ||
+        formData.salaryMin !== job.salaryMin ||
+        formData.salaryMax !== job.salaryMax ||
+        formData.salaryCurrency !== job.salaryCurrency ||
+        formData.salaryPeriod !== job.salaryPeriod ||
         JSON.stringify(formData.requiredSkills) !== JSON.stringify(job.requiredSkills) ||
         JSON.stringify(formData.niceToHaveSkills) !== JSON.stringify(job.niceToHaveSkills);
       
@@ -267,8 +279,12 @@ const EditJobModal = ({
   const renderWork = () => (
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-6">
+        {/* Work Type */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Work Type</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            <Building2 className="h-4 w-4 inline mr-1 text-gray-400" />
+            Work Type
+          </label>
           <select
             value={formData.workType}
             onChange={(e) => {
@@ -279,20 +295,24 @@ const EditJobModal = ({
                 location: newWorkType === 'remote' ? '' : prev.location 
               }));
             }}
-            className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
+            className="h-12 w-full px-4 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
           >
             <option value="hybrid">Hybrid</option>
             <option value="remote">Remote</option>
             <option value="onsite">In Office</option>
           </select>
         </div>
-
+  
+        {/* Employment Type */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Employment Type</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            <Briefcase className="h-4 w-4 inline mr-1 text-gray-400" />
+            Employment Type
+          </label>
           <select
             value={formData.employmentType}
             onChange={(e) => setFormData(prev => ({ ...prev, employmentType: e.target.value }))}
-            className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
+            className="h-12 w-full px-4 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
           >
             <option value="full-time">Full-time</option>
             <option value="part-time">Part-time</option>
@@ -300,22 +320,76 @@ const EditJobModal = ({
             <option value="internship">Internship</option>
           </select>
         </div>
+  
+        {/* Location - Only shown if not remote */}
         {formData.workType !== 'remote' && (
+          <div className="col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              <MapPin className="h-4 w-4 inline mr-1 text-gray-400" />
+              Location
+            </label>
+            <input
+              ref={locationInputRef}
+              type="text"
+              value={formData.location}
+              onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+              className="h-12 w-full px-4 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
+              placeholder={isGoogleLoaded ? "Start typing a city name..." : "Loading location search..."}
+            />
+          </div>
+        )}
+  
+        {/* Salary Range Section */}
         <div className="col-span-2">
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            <MapPin className="h-4 w-4 inline mr-1 text-gray-400" />
-            Location
+            Salary Range <span className="text-gray-500 font-normal">(optional)</span>
           </label>
-          <input
-            ref={locationInputRef}
-            type="text"
-            value={formData.location}
-            onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-            className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
-            placeholder={isGoogleLoaded ? "Start typing a city name..." : "Loading location search..."}
-          />
+          <div className="flex gap-3 items-center">
+            {/* Currency Select */}
+            <select
+              value={formData.salaryCurrency}
+              onChange={(e) => setFormData(prev => ({ ...prev, salaryCurrency: e.target.value }))}
+              className="h-12 w-24 px-3 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
+            >
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="CAD">CAD</option>
+              <option value="AUD">AUD</option>
+            </select>
+  
+            {/* Minimum Salary Input */}
+            <input
+              type="number"
+              value={formData.salaryMin}
+              onChange={(e) => setFormData(prev => ({ ...prev, salaryMin: e.target.value }))}
+              className="h-12 flex-1 px-3 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
+              placeholder="Minimum"
+              min="0"
+            />
+  
+            {/* Maximum Salary Input */}
+            <input
+              type="number"
+              value={formData.salaryMax}
+              onChange={(e) => setFormData(prev => ({ ...prev, salaryMax: e.target.value }))}
+              className="h-12 flex-1 px-3 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
+              placeholder="Maximum"
+              min="0"
+            />
+  
+            {/* Salary Period Select */}
+            <select
+              value={formData.salaryPeriod}
+              onChange={(e) => setFormData(prev => ({ ...prev, salaryPeriod: e.target.value }))}
+              className="h-12 w-32 px-3 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
+            >
+              <option value="hour">Per Hour</option>
+              <option value="month">Per Month</option>
+              <option value="year">Per Year</option>
+            </select>
+          </div>
         </div>
-        )}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Briefcase, Users, MapPin, Clock, MoreVertical, ExternalLink, EyeOff,Edit2 } from 'lucide-react';
+import { Briefcase, Users, MapPin, Clock, MoreVertical, ExternalLink, EyeOff, Edit2, DollarSign } from 'lucide-react';
 
 const JobItem = ({ job, onStatusChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,6 +24,17 @@ const JobItem = ({ job, onStatusChange }) => {
     });
   };
 
+  const formatSalary = () => {
+    if (!job.salaryMin && !job.salaryMax) return null;
+    
+    if (job.salaryMin && job.salaryMax) {
+      return `${job.salaryMin.toLocaleString()}-${job.salaryMax.toLocaleString()} ${job.salaryCurrency}`;
+    } else if (job.salaryMin) {
+      return `${job.salaryMin.toLocaleString()}+ ${job.salaryCurrency}`;
+    } else {
+      return `Up to ${job.salaryMax.toLocaleString()} ${job.salaryCurrency}`;
+    }
+  };
   const getStatusStyles = (status) => {
     const isOpen = status === 'active';
     return {
@@ -67,7 +78,6 @@ const JobItem = ({ job, onStatusChange }) => {
                 <span className={status.className}>
                   {status.label}
                 </span>
-             
               </div>
             </div>
             
@@ -86,6 +96,13 @@ const JobItem = ({ job, onStatusChange }) => {
                 <Users className="h-4 w-4" />
                 <span>{job.employmentType}</span>
               </div>
+              {(job.salaryMin || job.salaryMax) && (
+                <div className="inline-flex items-center">
+                  <span className="text-sm text-gray-500">
+                  {formatSalary()} / {job.salaryPeriod}
+                  </span>
+                </div>
+              )}
             </div>
 
             {(job.requiredSkills?.length > 0 || job.niceToHaveSkills?.length > 0) && (
