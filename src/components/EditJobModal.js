@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
 import SkillsSection from './createModalComponents/SkillsSection';
+import SalaryInput from './createModalComponents/SalaryInput';
 const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 const GOOGLE_MAPS_URL = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&loading=async`;
 
@@ -341,55 +342,14 @@ const EditJobModal = ({
   
         {/* Salary Range Section */}
         <div className="col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Salary Range <span className="text-gray-500 font-normal">(optional)</span>
-          </label>
-          <div className="flex gap-3 items-center">
-            {/* Currency Select */}
-            <select
-              value={formData.salaryCurrency}
-              onChange={(e) => setFormData(prev => ({ ...prev, salaryCurrency: e.target.value }))}
-              className="h-12 w-24 px-3 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
-            >
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="GBP">GBP</option>
-              <option value="CAD">CAD</option>
-              <option value="AUD">AUD</option>
-            </select>
-  
-            {/* Minimum Salary Input */}
-            <input
-              type="number"
-              value={formData.salaryMin}
-              onChange={(e) => setFormData(prev => ({ ...prev, salaryMin: e.target.value }))}
-              className="h-12 flex-1 px-3 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
-              placeholder="Minimum"
-              min="0"
-            />
-  
-            {/* Maximum Salary Input */}
-            <input
-              type="number"
-              value={formData.salaryMax}
-              onChange={(e) => setFormData(prev => ({ ...prev, salaryMax: e.target.value }))}
-              className="h-12 flex-1 px-3 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
-              placeholder="Maximum"
-              min="0"
-            />
-  
-            {/* Salary Period Select */}
-            <select
-              value={formData.salaryPeriod}
-              onChange={(e) => setFormData(prev => ({ ...prev, salaryPeriod: e.target.value }))}
-              className="h-12 w-32 px-3 bg-white border border-gray-200 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-colors"
-            >
-              <option value="hour">Per Hour</option>
-              <option value="month">Per Month</option>
-              <option value="year">Per Year</option>
-            </select>
-          </div>
-        </div>
+  <SalaryInput
+    salaryMin={formData.salaryMin}
+    salaryMax={formData.salaryMax}
+    salaryCurrency={formData.salaryCurrency}
+    salaryPeriod={formData.salaryPeriod}
+    onChange={(field, value) => setFormData(prev => ({ ...prev, [field]: value }))}
+  />
+</div>
       </div>
     </div>
   );
