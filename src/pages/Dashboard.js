@@ -13,13 +13,7 @@ import DeleteDialog from '../components/DeleteDialog';
 import { useAuth } from '../context/AuthContext';
 import JobItem from '../components/JobItem';  // Import the JobItem component
 
-const formatDate = (date) => {
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
-};
+
 
 const Dashboard = () => {
   const [jobs, setJobs] = useState([]);
