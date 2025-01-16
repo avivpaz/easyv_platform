@@ -48,6 +48,16 @@ const IntegrationsPage = () => {
     }
   };
 
+  const handleSync = async (integrationId) => {
+    try {
+      setError(null);
+      await integrationsService.syncIntegration(integrationId);
+      await fetchEmailIntegrations(); // Refresh the list after sync
+    } catch (err) {
+      setError('Failed to sync email account. Please try again.');
+      console.error('Sync error:', err);
+    }
+  };
   const handleDisconnect = async (integrationId) => {
     try {
       setError(null);
@@ -98,6 +108,7 @@ const IntegrationsPage = () => {
             connectedEmails={connectedEmails}
             onConnect={handleConnect}
             onDisconnect={handleDisconnect}
+            onSync={handleSync}  // Add this line
             showConnectModal={showConnectModal}
             setShowConnectModal={setShowConnectModal}
           />

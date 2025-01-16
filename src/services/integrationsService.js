@@ -1,8 +1,22 @@
-// services/integrationsService.js
 import api from './api';
 
 export const integrationsService = {
-  // Handle Gmail integration callback
+  // Connect integrations
+  async connectIntegration(type, provider, data) {
+    try {
+      const response = await api.post('/integrations/connect', {
+        type,
+        provider,
+        ...data
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Integration connection error:', error);
+      throw error;
+    }
+  },
+
+  // Legacy Gmail connection support
   async connectGmail(code) {
     try {
       const response = await api.post('/integrations/gmail/connect', { code });
@@ -13,12 +27,15 @@ export const integrationsService = {
     }
   },
 
-  // Get all email integrations for the organization
-  async getEmailIntegrations() {
+  // Get all integrations with optional type filter
+  async getIntegrations(type = null) {
     try {
-      const response = await api.get('/integrations', {
-        params: { type: 'email' }
-      });
+      const params = {};
+      if (type) {
+        params.type = type;
+      }
+      
+      const response = await api.get('/integrations', { params });
       return response.data;
     } catch (error) {
       console.error('Get integrations error:', error);
@@ -26,7 +43,12 @@ export const integrationsService = {
     }
   },
 
-  // Disconnect an email integration
+  // Get email integrations (convenience method)
+  async getEmailIntegrations() {
+    return this.getIntegrations('email');
+  },
+
+  // Disconnect an integration
   async disconnectIntegration(integrationId) {
     try {
       const response = await api.post(`/integrations/${integrationId}/disconnect`);
@@ -37,35 +59,24 @@ export const integrationsService = {
     }
   },
 
-  // Get integration status
-  async getIntegrationStatus(integrationId) {
+  // Sync an integration
+  async syncIntegration(integrationId) {
     try {
-      const response = await api.get(`/integrations/${integrationId}/status`);
+      const response = await api.post(`/integrations/${integrationId}/sync`);
       return response.data;
     } catch (error) {
-      console.error('Get integration status error:', error);
+      console.error('Integration sync error:', error);
       throw error;
     }
   },
 
-  // Get processed emails for an integration
-  async getProcessedEmails(integrationId, params = {}) {
+  // Get integration details
+  async getIntegrationDetails(integrationId) {
     try {
-      const response = await api.get(`/integrations/${integrationId}/emails`, { params });
+      const response = await api.get(`/integrations/${integrationId}`);
       return response.data;
     } catch (error) {
-      console.error('Get processed emails error:', error);
-      throw error;
-    }
-  },
-
-  // Manually trigger email scan
-  async triggerEmailScan(integrationId) {
-    try {
-      const response = await api.post(`/integrations/${integrationId}/scan`);
-      return response.data;
-    } catch (error) {
-      console.error('Trigger scan error:', error);
+      console.error('Get integration details error:', error);
       throw error;
     }
   },
@@ -73,10 +84,28 @@ export const integrationsService = {
   // Update integration settings
   async updateIntegrationSettings(integrationId, settings) {
     try {
-      const response = await api.put(`/integrations/${integrationId}/settings`, settings);
+      const response = await api.patch(`/integrations/${integrationId}`, {
+        settings
+      });
       return response.data;
     } catch (error) {
-      console.error('Update settings error:', error);
+      console.error('Update integration settings error:', error);
+      throw error;
+    }
+  },
+
+  // Helper method to check if an integration is active
+  async checkIntegrationStatus(integrationId) {
+    try {
+      const integration = await this.getIntegrationDetails(integrationId);
+      return {
+        isActive: integration.status === 'active',
+        status: integration.status,
+        lastSyncTime: integration.lastSyncTime,
+        lastError: integration.lastError
+      };
+    } catch (error) {
+      console.error('Check integration status error:', error);
       throw error;
     }
   }

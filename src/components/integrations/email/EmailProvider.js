@@ -1,6 +1,6 @@
-// src/components/integrations/email/providers/EmailProvider.js
-import { Mail, Plus, Trash2 } from 'lucide-react';
+import { Mail, Plus, Trash2, RotateCw, Loader2 } from 'lucide-react';
 import ConnectEmailModal from './ConnectEmailModal';
+import { useState } from 'react';
 
 const GmailIcon = () => (
   <svg className="h-5 w-5" viewBox="0 0 24 24">
@@ -11,7 +11,9 @@ const GmailIcon = () => (
   </svg>
 );
 
-const EmailProvider = ({ connectedEmails, onConnect, onDisconnect, showConnectModal, setShowConnectModal }) => {
+const EmailProvider = ({ connectedEmails, onConnect, onDisconnect, onSync, showConnectModal, setShowConnectModal }) => {
+  const [syncingIds, setSyncingIds] = useState(new Set());
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -31,22 +33,34 @@ const EmailProvider = ({ connectedEmails, onConnect, onDisconnect, showConnectMo
     }
   };
 
+  const handleSync = async (id) => {
+    setSyncingIds(prev => new Set([...prev, id]));
+    try {
+      await onSync(id);
+    } finally {
+      setSyncingIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(id);
+        return newSet;
+      });
+    }
+  };
+
   return (
     <div className="space-y-6">
-    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-      <div>
-        <h2 className="text-lg font-medium text-gray-900">Email Accounts</h2>
-        <p className="text-sm text-gray-500">Connect email accounts to import CVs automatically</p>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <div>
+          <h2 className="text-lg font-medium text-gray-900">Email Accounts</h2>
+          <p className="text-sm text-gray-500">Connect email accounts to import CVs automatically</p>
+        </div>
+        <button
+          onClick={() => setShowConnectModal(true)}
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors w-full sm:w-auto"
+        >
+          <Plus className="h-4 w-4" />
+          <span>Connect Email</span>
+        </button>
       </div>
-      <button
-        onClick={() => setShowConnectModal(true)}
-        className="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors w-full sm:w-auto"
-      >
-        <Plus className="h-4 w-4" />
-        <span>Connect Email</span>
-      </button>
-    </div>
-
 
       <ConnectEmailModal 
         isOpen={showConnectModal}
@@ -91,6 +105,20 @@ const EmailProvider = ({ connectedEmails, onConnect, onDisconnect, showConnectMo
                   `}>
                     {email.status.charAt(0).toUpperCase() + email.status.slice(1)}
                   </span>
+                  <button
+                    onClick={() => handleSync(email.id)}
+                    disabled={syncingIds.has(email.id) || email.status !== 'active'}
+                    className={`text-gray-400 hover:text-primary transition-colors
+                      ${(syncingIds.has(email.id) || email.status !== 'active') ? 'opacity-50 cursor-not-allowed' : ''}
+                    `}
+                    title={email.status !== 'active' ? 'Cannot sync inactive integration' : 'Sync now'}
+                  >
+                    {syncingIds.has(email.id) ? (
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <RotateCw className="h-5 w-5" />
+                    )}
+                  </button>
                   <button
                     onClick={() => onDisconnect(email.id)}
                     className="text-gray-400 hover:text-red-500 transition-colors"
