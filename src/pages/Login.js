@@ -152,10 +152,7 @@ const Login = () => {
               <a href="https://www.rightcruiter.com/privacy-policy" className="text-primary hover:text-primary-dark underline">
                 Privacy Policy
               </a>
-              , and{' '}
-              <a href="https://www.rightcruiter.com/refund-policy" className="text-primary hover:text-primary-dark underline">
-                Refund Policy
-              </a>
+  
             </p>
           </div>
         </div>
