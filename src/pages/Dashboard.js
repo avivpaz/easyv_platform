@@ -170,23 +170,16 @@ const Dashboard = () => {
     );
   };
 
+ 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header Section */}
-      <div className="bg-gradient-to-r from-primary to-primary-light">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <h1 className="text-2xl font-semibold text-white">Jobs Dashboard</h1>
-          <p className="text-secondary-light mt-1">View and manage all your job listings</p>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search and Create Section */}
         <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
           <div className="flex items-center gap-4 flex-1">
-            <h2 className="text-lg font-medium text-gray-900 whitespace-nowrap">
+            <h1 className="text-2xl font-semibold text-gray-900">
               Jobs ({pagination.total})
-            </h2>
+            </h1>
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
@@ -256,7 +249,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Modals */}
+      {/* Modals remain the same */}
       {isCreateModalOpen && (
         <CreateJobModal 
           isOpen={isCreateModalOpen} 
@@ -268,7 +261,7 @@ const Dashboard = () => {
           onSuccess={(jobId) => {
             navigate(`/jobs/${jobId}`);
           }}
-            initialDescription={initialJobDescription}
+          initialDescription={initialJobDescription}
           autoSubmit={autoSubmit}
         />
       )}

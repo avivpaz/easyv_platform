@@ -14,15 +14,15 @@ import TawkToChat from './components/TawkToChat';
 import GoogleCallback from './components/GoogleCallback';
 import HelpWidget from './components/HelpWidget';
 import IntegrationsPage from './pages/IntegrationsPage';
-
+import Sidebar from './components/Sidebar'
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {isAuthenticated && <Header />}
-      <div className={isAuthenticated ? 'pt-16' : ''}>
+      {isAuthenticated && <Sidebar />}
+      <div className={`${isAuthenticated ? 'md:pl-64 pt-16 md:pt-0' : ''}`}>
         <Routes>
           <Route 
             path="/login" 
@@ -52,11 +52,10 @@ function AppRoutes() {
           />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/integrations" element={
-                        <PrivateRoute>
-                       <IntegrationsPage />
-                      </PrivateRoute>
+            <PrivateRoute>
+              <IntegrationsPage />
+            </PrivateRoute>
           } />
-
 
           <Route 
             path="/jobs/:id" 
