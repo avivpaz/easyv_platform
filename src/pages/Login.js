@@ -148,7 +148,7 @@ const Login = () => {
               <a href="https://www.rightcruiter.com/terms-of-use" className="text-primary hover:text-primary-dark underline">
                 Terms of Use
               </a>
-               and{' '}
+              {' '}and{' '}
               <a href="https://www.rightcruiter.com/privacy-policy" className="text-primary hover:text-primary-dark underline">
                 Privacy Policy
               </a>
