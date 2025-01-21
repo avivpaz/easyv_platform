@@ -155,7 +155,7 @@ const Login = () => {
   
             </p>
           </div>
-        </div>zz
+        </div>
       </div>
     </div>
   );
