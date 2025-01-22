@@ -14,6 +14,7 @@ import TawkToChat from './components/TawkToChat';
 import GoogleCallback from './components/GoogleCallback';
 import HelpWidget from './components/HelpWidget';
 import IntegrationsPage from './pages/IntegrationsPage';
+import { AuthProvider } from "react-oidc-context";
 
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
