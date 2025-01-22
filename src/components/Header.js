@@ -6,7 +6,7 @@ import {
   Settings,
   CreditCard,
   LogOut,
-  Crown,
+  Network,
   Home,
   X
 } from 'lucide-react';
@@ -61,15 +61,27 @@ const Header = () => {
                 <span className="text-xl font-bold text-gray-900">RightCruiter</span>
               </Link>
               
-              <Link 
-                to="/dashboard" 
-                className={`hidden md:flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                  location.pathname === '/dashboard' ? 'text-primary bg-primary/5' : 'text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                <Home className="w-4 h-4" />
-                <span>Home</span>
-              </Link>
+            {/* After the Home link */}
+<Link 
+  to="/dashboard" 
+  className={`hidden md:flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
+    location.pathname === '/dashboard' ? 'text-primary bg-primary/5' : 'text-gray-700 hover:bg-gray-100'
+  }`}
+>
+  <Home className="w-4 h-4" />
+  <span>Home</span>
+</Link>
+
+<Link 
+  to="/integrations" 
+  className={`hidden md:flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
+    location.pathname === '/integrations' ? 'text-primary bg-primary/5' : 'text-gray-700 hover:bg-gray-100'
+  }`}
+>
+  <Network className="w-4 h-4" />
+  <span>Integrations</span>
+</Link>
+              
             </div>
 
             {/* Desktop Navigation */}

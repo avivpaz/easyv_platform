@@ -13,6 +13,7 @@ import BillingPage from './pages/BillingPage';
 import TawkToChat from './components/TawkToChat';
 import GoogleCallback from './components/GoogleCallback';
 import HelpWidget from './components/HelpWidget';
+import IntegrationsPage from './pages/IntegrationsPage';
 
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
@@ -50,7 +51,13 @@ function AppRoutes() {
             } 
           />
           <Route path="/dashboard" element={<Dashboard />} />
-          
+          <Route path="/integrations" element={
+                        <PrivateRoute>
+                       <IntegrationsPage />
+                      </PrivateRoute>
+          } />
+
+
           <Route 
             path="/jobs/:id" 
             element={
