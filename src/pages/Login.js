@@ -3,35 +3,50 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { UserCircle2, Building, ShareIcon } from 'lucide-react';
 import { useGoogleLogin } from '@react-oauth/google';
-
 const Login = () => {
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const googleLogin = useGoogleLogin({
-    flow: 'auth-code',  // This is required for redirect flow
+    flow: 'auth-code',
     ux_mode: 'redirect',
     select_account: true,
     redirect_uri: process.env.REACT_APP_GOOGLE_REDIRECT_URL,
-    scope: 'email profile', // Add required scopes
+    scope: 'email profile openid',  // Added openid scope
+    access_type: 'offline', // Request refresh token
+    prompt: 'consent',  // Force consent screen
     onError: error => {
       console.error('Google login error:', error);
-      setError('Failed to authenticate with Google');
+      // More detailed error handling
+      if (error.error === 'popup_closed_by_user') {
+        setError('Login window was closed. Please try again.');
+      } else if (error.error === 'access_denied') {
+        setError('Permission to access Google account was denied.');
+      } else {
+        setError(`Authentication failed: ${error.error_description || error.error}`);
+      }
       setLoading(false);
     },
     onNonOAuthError: error => {
       console.error('Non-OAuth error:', error);
-      setError('An error occurred during authentication');
+      setError('An error occurred during authentication. Please ensure cookies are enabled and try again.');
       setLoading(false);
     }
   });
 
-  const handleLoginClick = () => {
-    setLoading(true);
-    setError('');
-    googleLogin();
+  const handleLoginClick = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      await googleLogin();
+    } catch (err) {
+      console.error('Login handler error:', err);
+      setError('Failed to initialize login. Please try again.');
+      setLoading(false);
+    }
   };
+
 
   return (
     <div className="min-h-screen flex bg-gray-50">
