@@ -85,7 +85,7 @@ const JobDetail = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className=" min-h-screen flex items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
       </div>
     );
@@ -93,15 +93,15 @@ const JobDetail = () => {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen p-4">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 max-w-md w-full">
+      <div className=" min-h-screen flex items-center justify-center p-4">
+        <div className="bg-white p-6 rounded-lg shadow-sm max-w-md w-full">
           <div className="bg-red-50 text-red-700 p-4 rounded-lg mb-4">
             <p className="font-medium">Error</p>
             <p>{error}</p>
           </div>
           <button 
             onClick={() => navigate('/dashboard')}
-            className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light"
+            className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
           >
             Back to Dashboard
           </button>
@@ -113,97 +113,136 @@ const JobDetail = () => {
   if (!job) return null;
 
   return (
-    <div className="bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Job Header */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
-          <div className="p-6">
-            <div className="flex flex-col space-y-4">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <h1 className="text-2xl font-bold text-gray-900">{job.title}</h1>
+    <div className=" min-h-screen bg-gray-50 p-14">
+      {/* Top Bar */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center">
+              <h1 className="text-xl font-semibold text-gray-900">Job Details</h1>
+            </div>
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={() => setShowShareModal(true)}
+                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              >
+                <Share2 className="h-4 w-4 mr-2" />
+                Share
+              </button>
+              <button
+                onClick={() => setShowEditModal(true)}
+                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              >
+                <Edit2 className="h-4 w-4 mr-2" />
+                Edit
+              </button>
+              <a
+                href={longUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90"
+              >
+                <User2 className="h-4 w-4 mr-2" />
+                View as Candidate
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-3 gap-6">
+          {/* Left Column */}
+          <div className="col-span-2 space-y-6">
+            {/* Job Header */}
+            <div className="bg-white rounded-lg shadow">
+              <div className="px-6 py-5 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-900">{job.title}</h2>
+                    <div className="mt-1 flex items-center text-sm text-gray-500">
+                      <Building className="h-4 w-4 mr-1" />
+                      <span>{organization?.name || 'Company Name'}</span>
+                    </div>
+                  </div>
                   <JobStatusDropdown 
                     currentStatus={job.status}
                     onStatusChange={handleStatusUpdate}
                     isUpdating={isUpdatingStatus}
                   />
                 </div>
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => setShowEditModal(true)}
-                    className="p-2 text-gray-700 rounded-lg hover:bg-gray-100 border border-gray-200 md:px-4 md:flex md:items-center md:gap-2 text-sm"
-                  >
-                    <Edit2 className="h-4 w-4" />
-                    <span className="hidden md:inline">Edit</span>
-                  </button>
-                </div>
               </div>
-
-              <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-6 text-sm text-gray-600">
-                {/* ... existing job details remain the same ... */}
+              <div className="px-6 py-5">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center text-sm text-gray-500">
+                    <MapPin className="h-4 w-4 mr-2" />
+                    <span>{job.location}</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Clock className="h-4 w-4 mr-2" />
+                    <span>{job.type}</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Briefcase className="h-4 w-4 mr-2" />
+                    <span>{job.experience}</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <DollarSign className="h-4 w-4 mr-2" />
+                    <span>{job.salary || 'Not specified'}</span>
+                  </div>
+                </div>
               </div>
             </div>
 
+            {/* CVs Section */}
+            <div className="bg-white rounded-lg shadow">
+              <div className="px-6 py-5">
+                <JobCVs jobId={job._id} />
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-6">
             {/* Skills Section */}
-            <div className="grid md:grid-cols-2 gap-6 mt-6 p-6 bg-gray-50 rounded-xl">
-              <div>
-                <h3 className="text-sm font-medium text-gray-700 mb-2">Required Skills</h3>
+            <div className="bg-white rounded-lg shadow">
+              <div className="px-6 py-5 border-b border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900">Required Skills</h3>
+              </div>
+              <div className="px-6 py-5">
                 <div className="flex flex-wrap gap-2">
                   {job.requiredSkills.map((skill, index) => (
-                    <span key={index} className="px-2 py-1 rounded-lg text-xs md:text-sm font-medium bg-gray-200 text-gray-700">
+                    <span 
+                      key={index} 
+                      className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-blue-50 text-blue-700"
+                    >
                       {skill}
                     </span>
                   ))}
                 </div>
               </div>
-              
-              {job.niceToHaveSkills?.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">Nice to Have</h3>
+            </div>
+
+            {job.niceToHaveSkills?.length > 0 && (
+              <div className="bg-white rounded-lg shadow">
+                <div className="px-6 py-5 border-b border-gray-200">
+                  <h3 className="text-lg font-medium text-gray-900">Nice to Have</h3>
+                </div>
+                <div className="px-6 py-5">
                   <div className="flex flex-wrap gap-2">
                     {job.niceToHaveSkills.map((skill, index) => (
-                      <span key={index} className="px-2 py-1 rounded-lg text-xs md:text-sm font-medium bg-primary/10 text-primary">
+                      <span 
+                        key={index} 
+                        className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-green-50 text-green-700"
+                      >
                         {skill}
                       </span>
                     ))}
                   </div>
                 </div>
-              )}
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex justify-end gap-3 mt-6">
-              <button
-                onClick={() => setShowShareModal(true)}
-                className="flex items-center gap-2 px-4 py-2 text-primary bg-primary/5 rounded-lg hover:bg-primary/10 text-sm font-medium"
-              >
-                <Share2 className="h-4 w-4" />
-                Share
-              </button>
-              <a
-                href={longUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark text-sm font-medium"
-              >
-                <User2 className="h-4 w-4" />
-                View as Candidate
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Organization Setup Alert */}
-        {organization?.needsSetup && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            {/* ... existing organization alert content ... */}
-          </div>
-        )}
-
-        {/* CVs Section */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-          <div className="p-6">
-            <JobCVs jobId={job._id} />
+              </div>
+            )}
           </div>
         </div>
       </div>
