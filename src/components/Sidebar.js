@@ -68,13 +68,13 @@ const Sidebar = () => {
       </div>
 
       {/* Sidebar */}
-      <aside className={`fixed left-0 top-0 z-40 h-screen w-72 transform bg-primary transition-transform duration-300 ease-in-out
+      <aside className={`fixed left-0 top-0 z-40 h-screen w-72 transform bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         <div className="flex h-full flex-col">
           {/* Logo Section */}
-          <div className="hidden md:flex items-center space-x-3 px-6 py-6 border-b border-white/10">
+          <div className="hidden md:flex items-center space-x-3 px-6 py-6 border-b border-gray-200">
             <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
-            <span className="text-2xl font-bold text-white">RightCruiter</span>
+            <span className="text-2xl font-bold text-gray-900">RightCruiter</span>
           </div>
 
           {/* Navigation Section */}
@@ -83,8 +83,8 @@ const Sidebar = () => {
               to="/dashboard"
               className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                 location.pathname === '/dashboard' 
-                  ? 'bg-white text-primary shadow-sm' 
-                  : 'text-white hover:bg-white/10'
+                  ? 'bg-gray-100 text-gray-900' 
+                  : 'text-gray-600 hover:bg-gray-50'
               }`}
             >
               <Home className="w-5 h-5" />
@@ -95,8 +95,8 @@ const Sidebar = () => {
               to="/integrations"
               className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                 location.pathname === '/integrations' 
-                  ? 'bg-white text-primary shadow-sm' 
-                  : 'text-white hover:bg-white/10'
+                  ? 'bg-gray-100 text-gray-900' 
+                  : 'text-gray-600 hover:bg-gray-50'
               }`}
             >
               <Network className="w-5 h-5" />
@@ -107,8 +107,8 @@ const Sidebar = () => {
               to="/settings"
               className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                 location.pathname === '/settings' 
-                  ? 'bg-white text-primary shadow-sm' 
-                  : 'text-white hover:bg-white/10'
+                  ? 'bg-gray-100 text-gray-900' 
+                  : 'text-gray-600 hover:bg-gray-50'
               }`}
             >
               <Settings className="w-5 h-5" />
@@ -117,15 +117,15 @@ const Sidebar = () => {
           </nav>
 
           {/* Credits Section */}
-          <div className="px-4 py-4 border-t border-white/10">
-            <div className="bg-white/10 rounded-lg p-4">
+          <div className="px-4 py-4 border-t border-gray-200">
+            <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-white">Credits Available</span>
-                <span className="text-lg font-bold text-white">{credits}</span>
+                <span className="text-sm font-medium text-gray-700">Credits Available</span>
+                <span className="text-lg font-bold text-gray-900">{credits}</span>
               </div>
               <button
                 onClick={() => setIsPricingOpen(true)}
-                className="w-full bg-white text-primary py-2 px-4 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"
+                className="w-full bg-gray-900 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
               >
                 Purchase Credits
               </button>
@@ -133,30 +133,30 @@ const Sidebar = () => {
           </div>
 
           {/* User Profile Section */}
-          <div className="border-t border-white/10 p-4">
+          <div className="border-t border-gray-200 p-4">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center space-x-3 w-full p-2 rounded-lg hover:bg-white/5 transition-colors"
+              className="flex items-center space-x-3 w-full p-2 rounded-lg hover:bg-gray-50 transition-colors"
             >
-              <div className="w-10 h-10 bg-white text-primary rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-gray-100 text-gray-700 rounded-full flex items-center justify-center">
                 <span className="text-sm font-medium">{userInfo.avatar}</span>
               </div>
               <div className="flex-1 text-left">
-                <p className="text-sm font-medium text-white">{userInfo.name}</p>
-                <p className="text-xs text-white/70 truncate">{userInfo.email}</p>
+                <p className="text-sm font-medium text-gray-900">{userInfo.name}</p>
+                <p className="text-xs text-gray-500 truncate">{userInfo.email}</p>
               </div>
               <ChevronDown 
-                className={`w-5 h-5 text-white/70 transition-transform duration-200 ${
+                className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
                   isDropdownOpen ? 'rotate-180' : ''
                 }`} 
               />
             </button>
 
             {isDropdownOpen && (
-              <div className="mt-2 space-y-1 bg-white/5 rounded-lg overflow-hidden">
+              <div className="mt-2 space-y-1 bg-gray-50 rounded-lg overflow-hidden">
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-3 px-4 py-3 text-sm text-white hover:bg-white/10 w-full transition-colors"
+                  className="flex items-center space-x-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 w-full transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Sign out</span>
