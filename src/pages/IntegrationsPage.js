@@ -162,15 +162,15 @@ const IntegrationsPage = () => {
   
 
   return (
-    <div className="min-h-screen bg-gray-50 px-0">
-      <div className="bg-gradient-to-r from-primary to-primary-light px-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-          <h1 className="text-xl sm:text-2xl font-semibold text-white">Integrations</h1>
-          <p className="text-secondary-light mt-1 text-sm sm:text-base">Connect your services to import candidates automatically</p>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+<div className="bg-gradient-to-r from-primary to-primary-light">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5">
+    <h1 className="text-xl sm:text-2xl font-semibold text-white mb-1">Integrations</h1>
+    <p className="text-sm text-secondary-light">Connect your services to import candidates automatically</p>
+  </div>
+</div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-6">
+    <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Desktop Navigation */}
           <div className="hidden lg:block w-64 flex-shrink-0">

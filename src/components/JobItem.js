@@ -36,16 +36,16 @@ const JobItem = ({ job, onStatusChange }) => {
 
   return (
     <div className="group bg-white border border-gray-200 rounded-lg hover:border-primary/20 hover:shadow-sm transition-all cursor-pointer">
-      <div className="p-5">
+      <div className="p-4 sm:p-5">
         <div className="flex items-start gap-4">
-          <div className="shrink-0">
+          <div className="shrink-0 hidden sm:block">
             <div className="w-10 h-10 bg-primary/5 rounded-lg flex items-center justify-center">
               <Briefcase className="h-5 w-5 text-primary/70" />
             </div>
           </div>
           <div className="min-w-0 flex-1">
-            <div className="flex items-center justify-between gap-4 mb-2">
-              <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 mb-2">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                 <h2 className="text-lg font-medium text-gray-900 truncate group-hover:text-primary transition-colors">
                   {job.title}
                 </h2>
@@ -60,7 +60,7 @@ const JobItem = ({ job, onStatusChange }) => {
               </div>
             </div>
             
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-500 mb-3">
+            <div className="grid grid-cols-1 sm:flex sm:flex-wrap items-start sm:items-center gap-2 sm:gap-x-6 text-sm text-gray-500 mb-3">
               {job.location && (
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4" />
@@ -78,7 +78,7 @@ const JobItem = ({ job, onStatusChange }) => {
               {(job.salaryMin || job.salaryMax) && (
                 <div className="flex items-center gap-2">
                   <DollarSign className="h-4 w-4" />
-                  <span>{formatSalary()} / {job.salaryPeriod}</span>
+                  <span className="truncate">{formatSalary()} / {job.salaryPeriod}</span>
                 </div>
               )}
             </div>
@@ -86,11 +86,11 @@ const JobItem = ({ job, onStatusChange }) => {
             {(job.requiredSkills?.length > 0 || job.niceToHaveSkills?.length > 0) && (
               <div className="space-y-2">
                 {job.requiredSkills?.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {job.requiredSkills.map((skill, index) => (
                       <span
                         key={`req-${index}`}
-                        className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-primary/10 text-primary border border-primary/20"
+                        className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-md text-xs font-medium bg-primary/10 text-primary border border-primary/20"
                       >
                         {skill}
                       </span>
@@ -98,11 +98,11 @@ const JobItem = ({ job, onStatusChange }) => {
                   </div>
                 )}
                 {job.niceToHaveSkills?.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {job.niceToHaveSkills.map((skill, index) => (
                       <span
                         key={`nice-${index}`}
-                        className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-50 text-gray-600"
+                        className="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-50 text-gray-600"
                       >
                         {skill}
                       </span>
@@ -117,5 +117,6 @@ const JobItem = ({ job, onStatusChange }) => {
     </div>
   );
 };
+
 
 export default JobItem;

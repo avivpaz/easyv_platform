@@ -52,7 +52,7 @@ const Sidebar = () => {
   return (
     <>
       {/* Mobile Header */}
-      <div className="fixed top-0 left-0 z-50 w-full bg-white md:hidden border-b border-gray-200">
+      <div className="fixed top-0 left-0 z-99999 w-full bg-white md:hidden border-b border-gray-200">
         <div className="px-4 py-3 flex items-center justify-between">
           <Link to="/dashboard" className="flex items-center space-x-3">
             <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />
@@ -66,30 +66,41 @@ const Sidebar = () => {
           </button>
         </div>
       </div>
+  {/* Overlay for mobile menu - added new */}
+  {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-gray-900/50 z-50 md:hidden" 
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
 
       {/* Sidebar */}
-      <aside className={`fixed left-0 top-0 z-40 h-screen w-72 transform bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out
+      <aside className={`fixed left-0 top-0 z-50 h-full w-72 transform bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
-        <div className="flex h-full flex-col">
-          {/* Logo Section */}
-          <div className="hidden md:flex items-center space-x-3 px-6 py-6 border-b border-gray-200">
-            <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
-            <span className="text-2xl font-bold text-gray-900">RightCruiter</span>
-          </div>
-
+        <div className="h-full flex flex-col">
+          {/* Mobile top spacing */}
+          <div className="h-16 md:h-0 md:hidden" />
+        
+        {/* Logo Section */}
+        <div className="sticky top-0 z-10 flex md:flex items-center space-x-3 px-6 py-6 bg-white">
+          <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
+          <span className="text-2xl font-bold text-gray-900">RightCruiter</span>
+        </div>
+        <div className="h-full flex flex-col">
           {/* Navigation Section */}
-          <nav className="flex-1 space-y-2 px-4 py-6">
-            <Link
-              to="/dashboard"
-              className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                location.pathname === '/dashboard' 
-                  ? 'bg-primary/10 text-primary' 
-                  : 'text-gray-600 hover:bg-primary/5 hover:text-primary'
-              }`}
-            >
-              <Home className="w-5 h-5" />
-              <span>Dashboard</span>
-            </Link>
+          <nav className="flex-1 space-y-2 px-4 py-6 overflow-y-auto relative">
+  <Link
+    to="/dashboard"
+    className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+      location.pathname === '/dashboard' 
+        ? 'bg-primary/10 text-primary' 
+        : 'text-gray-600 hover:bg-primary/5 hover:text-primary'
+    }`}
+  >
+    <Home className="w-5 h-5" />
+    <span>Dashboard</span>
+  </Link>
 
             <Link
               to="/integrations"
@@ -115,7 +126,6 @@ const Sidebar = () => {
               <span>Settings</span>
             </Link>
           </nav>
-
           {/* Credits Section */}
           <div className="px-4 py-4 border-t border-gray-200">
             <div className="bg-primary/5 rounded-lg p-4">
@@ -164,6 +174,7 @@ const Sidebar = () => {
               </div>
             )}
           </div>
+        </div>
         </div>
       </aside>
 

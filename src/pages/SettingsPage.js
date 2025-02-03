@@ -106,38 +106,51 @@ const SettingsPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 pt-20 pb-12">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="bg-white rounded-lg shadow">
-                    {/* Tabs */}
-                    <div className="border-b border-gray-200">
-                        <nav className="flex -mb-px">
-                            <button
-                                onClick={() => handleTabChange('profile')}
-                                className={`py-4 px-6 border-b-2 font-medium text-sm ${
-                                    activeTab === 'profile'
-                                        ? 'border-primary text-primary'
-                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                } flex items-center space-x-2`}
-                            >
-                                <User className="w-4 h-4" />
-                                <span>Profile Settings</span>
-                            </button>
-                            <button
-                                onClick={() => handleTabChange('organization')}
-                                className={`py-4 px-6 border-b-2 font-medium text-sm ${
-                                    activeTab === 'organization'
-                                        ? 'border-primary text-primary'
-                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                } flex items-center space-x-2`}
-                            >
-                                <Building2 className="w-4 h-4" />
-                                <span>Organization Settings</span>
-                            </button>
-                        </nav>
-                    </div>
+        <div className="min-h-screen bg-gray-50">
+        {/* Header Section */}
+        <div className="bg-gradient-to-r from-primary to-primary-light">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5">
+    <h1 className="text-xl sm:text-2xl font-semibold text-white mb-1">Settings</h1>
+    <p className="text-sm text-secondary-light">Manage your profile and organization settings</p>
+  </div>
+</div>
+        {/* Main Content */}
+        <div className="max-w-4xl mx-auto px-6 py-8">
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+                {/* Improved Tabs */}
+                <div className="bg-gray-50 border-b border-gray-200">
+                    <nav className="flex space-x-1 px-4 py-3">
+                        <button
+                            onClick={() => handleTabChange('profile')}
+                            className={`flex-1 relative px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 
+                                ${activeTab === 'profile' 
+                                    ? 'bg-white text-primary shadow-sm' 
+                                    : 'text-gray-600 hover:bg-white/50 hover:text-gray-900'
+                                } flex items-center justify-center gap-2`}
+                        >
+                            <User className={`w-4 h-4 transition-colors duration-200 
+                                ${activeTab === 'profile' ? 'text-primary' : 'text-gray-400'}`} 
+                            />
+                            <span>Profile Settings</span>
+                        </button>
+                        <button
+                            onClick={() => handleTabChange('organization')}
+                            className={`flex-1 relative px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 
+                                ${activeTab === 'organization' 
+                                    ? 'bg-white text-primary shadow-sm' 
+                                    : 'text-gray-600 hover:bg-white/50 hover:text-gray-900'
+                                } flex items-center justify-center gap-2`}
+                        >
+                            <Building2 className={`w-4 h-4 transition-colors duration-200 
+                                ${activeTab === 'organization' ? 'text-primary' : 'text-gray-400'}`} 
+                            />
+                            <span>Organization Settings</span>
+                        </button>
+                    </nav>
+                </div>
 
-                    <div className="p-6">
+
+                <div className="p-8">
                         {activeTab === 'profile' ? (
                             <div className="space-y-6">
                                 <div>

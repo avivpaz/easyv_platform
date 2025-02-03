@@ -22,7 +22,7 @@ function AppRoutes() {
   return (
     <div className="min-h-screen bg-gray-50">
       {isAuthenticated && <Sidebar />}
-      <div className={`${isAuthenticated ? 'md:pl-64 pt-16 md:pt-0' : ''}`}>
+      <main className={`min-h-screen ${isAuthenticated ? 'md:ml-72 pt-16 md:pt-0' : ''}`}>
         <Routes>
           <Route 
             path="/login" 
@@ -95,7 +95,7 @@ function AppRoutes() {
           
           <Route path="/" element={<Navigate to="/dashboard" />} />
         </Routes>
-      </div>
+      </main>
       {isAuthenticated && <HelpWidget />}
     </div>
   );
