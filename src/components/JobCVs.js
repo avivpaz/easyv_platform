@@ -316,11 +316,15 @@ const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')
           </div>
           <input
             type="text"
-            placeholder="Search by name or email..."
+            placeholder={activeTab === 'pending' ? 'Search disabled for pending tab' : 'Search by name or email...'}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm placeholder-gray-400
-              focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300"
+            disabled={activeTab === 'pending'}
+            className={`w-full pl-10 pr-4 py-2.5 border rounded-xl text-sm transition-all duration-300 ${
+              activeTab === 'pending' 
+                ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
+                : 'bg-white border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary'
+            }`}
           />
         </div>
         
