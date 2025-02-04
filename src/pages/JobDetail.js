@@ -25,6 +25,7 @@ const JobDetail = () => {
   const { organization } = useAuth();
   const longUrl = `${process.env.REACT_APP_FRONTEND_URL}/${organization?.id}/jobs/${id}`;
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+  const [activeTab, setActiveTab] = useState('info'); // 'info' or 'applications'
 
   useEffect(() => {
     const shortenAndFetch = async () => {
@@ -173,9 +174,13 @@ const JobDetail = () => {
       <div className="bg-gradient-to-r from-primary to-primary-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-xl sm:text-2xl font-semibold text-white mb-1">{job.title}</h1>
-             
+          <div className="flex items-center gap-3">
+              <h1 className="text-xl sm:text-2xl font-semibold text-white">{job.title}</h1>
+              <JobStatusDropdown 
+                currentStatus={job.status}
+                onStatusChange={handleStatusUpdate}
+                isUpdating={isUpdatingStatus}
+              />
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
               <button
@@ -206,77 +211,67 @@ const JobDetail = () => {
         </div>
       </div>
 
+      {/* Tabs Navigation */}
+      <div className="border-b border-gray-200 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex space-x-8">
+            <button
+              onClick={() => setActiveTab('info')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'info'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Job Information
+            </button>
+            <button
+              onClick={() => setActiveTab('applications')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'applications'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Applications
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <h3 className="text-lg font-medium text-gray-900">Job Information</h3>
-                  <JobStatusDropdown 
-                    currentStatus={job.status}
-                    onStatusChange={handleStatusUpdate}
-                    isUpdating={isUpdatingStatus}
-                  />
-                </div>
-              </div>
-              <div className="p-6 space-y-6">
-                {/* Conditional Key Details */}
-                {renderDetails()}
-
-                {/* Description - Only show if exists */}
-                {job.description && (
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-900 mb-2">Description</h4>
-                    <p className="text-sm text-gray-600 whitespace-pre-wrap">{job.description}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-
-            {/* CVs Section */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="px-6 py-4">
-                <JobCVs jobId={job._id} />
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column */}
-          <div className="space-y-6">
-            {/* Required Skills */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">Required Skills</h3>
-              </div>
-              <div className="px-6 py-4">
-                <div className="flex flex-wrap gap-2">
-                  {job.requiredSkills.map((skill, index) => (
-                    <span 
-                      key={index} 
-                      className="inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium bg-primary/10 text-primary"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Nice to Have Skills */}
-            {job.niceToHaveSkills?.length > 0 && (
+        {activeTab === 'info' ? (
+          // Job Information Tab
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200">
                 <div className="px-6 py-4 border-b border-gray-200">
-                  <h3 className="text-lg font-medium text-gray-900">Nice to Have</h3>
+                  <h3 className="text-lg font-medium text-gray-900">Job Information</h3>
+                </div>
+                <div className="p-6 space-y-6">
+                  {renderDetails()}
+                  {job.description && (
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-900 mb-2">Description</h4>
+                      <p className="text-sm text-gray-600 whitespace-pre-wrap">{job.description}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div className="px-6 py-4 border-b border-gray-200">
+                  <h3 className="text-lg font-medium text-gray-900">Required Skills</h3>
                 </div>
                 <div className="px-6 py-4">
                   <div className="flex flex-wrap gap-2">
-                    {job.niceToHaveSkills.map((skill, index) => (
+                    {job.requiredSkills.map((skill, index) => (
                       <span 
                         key={index} 
-                        className="inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium bg-gray-100 text-gray-700"
+                        className="inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium bg-primary/10 text-primary"
                       >
                         {skill}
                       </span>
@@ -284,9 +279,36 @@ const JobDetail = () => {
                   </div>
                 </div>
               </div>
-            )}
+
+              {job.niceToHaveSkills?.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                  <div className="px-6 py-4 border-b border-gray-200">
+                    <h3 className="text-lg font-medium text-gray-900">Nice to Have</h3>
+                  </div>
+                  <div className="px-6 py-4">
+                    <div className="flex flex-wrap gap-2">
+                      {job.niceToHaveSkills.map((skill, index) => (
+                        <span 
+                          key={index} 
+                          className="inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium bg-gray-100 text-gray-700"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          // Applications Tab
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="px-6 py-4">
+              <JobCVs jobId={job._id} />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Modals */}

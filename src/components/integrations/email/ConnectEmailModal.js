@@ -41,11 +41,10 @@ const ConnectEmailModal = ({ isOpen, onClose, onConnect }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="fixed inset-0 bg-black bg-opacity-25 transition-opacity" onClick={onClose} />
-
-      <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative w-full max-w-xl transform rounded-xl bg-white shadow-xl transition-all">
+// In ConnectEmailModal, update to:
+<div className="fixed inset-0 z-50 overflow-y-auto">
+  <div className="fixed inset-0 bg-black bg-opacity-25 transition-opacity z-40" onClick={onClose} />
+  <div className="flex min-h-full items-center justify-center p-4 z-50 relative">      <div className="relative w-full max-w-xl transform rounded-xl bg-white shadow-xl transition-all">
           <div className="border-b border-gray-200 px-6 py-4">
             <div className="flex items-center justify-between">
               <div>

@@ -9,20 +9,23 @@ import JobDetail from './pages/JobDetail';
 import PrivateRoute from './components/PrivateRoute';
 import Header from './components/Header';
 import SettingsPage from './pages/SettingsPage';
+import BrandingPage from './pages/BrandingPage';
 import BillingPage from './pages/BillingPage';
 import TawkToChat from './components/TawkToChat';
 import GoogleCallback from './components/GoogleCallback';
 import HelpWidget from './components/HelpWidget';
 import IntegrationsPage from './pages/IntegrationsPage';
 import Sidebar from './components/Sidebar'
+import React, { useState } from 'react';
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {isAuthenticated && <Sidebar />}
-      <main className={`min-h-screen ${isAuthenticated ? 'md:ml-72 pt-16 md:pt-0' : ''}`}>
+      {isAuthenticated && <Sidebar onCollapse={setIsSidebarCollapsed} />}
+      <main className={`min-h-screen ${isAuthenticated ? (isSidebarCollapsed ? 'md:ml-20' : 'md:ml-72') + ' pt-16 md:pt-0' : ''}`}>
         <Routes>
           <Route 
             path="/login" 
@@ -74,6 +77,14 @@ function AppRoutes() {
                   <Route path="organization" element={<SettingsPage />} />
                 </Routes>
               </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/brand-kit" 
+            element={
+              <PrivateRoute>
+              <BrandingPage/>
+            </PrivateRoute>
             } 
           />
           <Route 

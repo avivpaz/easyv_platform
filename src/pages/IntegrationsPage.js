@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Mail, AlertCircle, Check, Loader2, Plus, Trash2, Facebook, Linkedin, AtSign, Share2, ChevronDown } from 'lucide-react';
 import EmailProvider from '../components/integrations/email/EmailProvider';
 import integrationsService from '../services/integrationsService';
-import ConnectEmailModal from '../components/integrations/email/ConnectEmailModal';
 
 
 const IntegrationsPage = () => {
@@ -272,11 +271,6 @@ const IntegrationsPage = () => {
         )}
       </div>
 
-      <ConnectEmailModal 
-        isOpen={showConnectModal}
-        onClose={() => setShowConnectModal(false)}
-        onConnect={handleConnect}
-      />
     </div>
   );
 };
