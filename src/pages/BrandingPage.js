@@ -60,7 +60,7 @@ const BrandingPage = () => {
         <div className="min-h-screen bg-gray-50">
             <div className="bg-gradient-to-r from-primary to-primary-light">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5">
-                    <h1 className="text-xl sm:text-2xl font-semibold text-white mb-1">Brand Portal</h1>
+                    <h1 className="text-xl sm:text-2xl font-semibold text-white mb-1">Brand Kit</h1>
                     <p className="text-sm text-secondary-light">Manage your organization's identity and presence</p>
                 </div>
             </div>
@@ -227,4 +227,4 @@ const BrandingPage = () => {
     );
 };
 
-export default BrandingPage;
+    export default BrandingPage;
