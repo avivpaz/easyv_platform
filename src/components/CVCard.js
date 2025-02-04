@@ -26,75 +26,56 @@ const UnlockButton = ({ onUnlock, creditsRequired = 1, loading = false }) => (
 );
 
 const EducationCard = ({ education }) => (
-  <div className="group bg-white rounded-xl border border-gray-200 hover:border-primary/30 shadow-sm hover:shadow-md transition-all duration-300">
-    <div className="p-4">
-      <div className="flex items-start gap-4">
-        <div className="p-3 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg group-hover:from-primary/20 group-hover:to-primary/10 transition-colors duration-300">
-          <GraduationCap className="h-5 w-5 text-primary" />
-        </div>
-        <div className="space-y-2">
-          <h4 className="font-semibold text-gray-900">{education.degree}</h4>
-          <p className="text-sm text-gray-600">{education.institution}</p>
-          {education.year && (
-            <div className="inline-flex items-center px-3 py-1 bg-gray-50 group-hover:bg-gray-100 rounded-full transition-colors duration-300">
-              <span className="text-xs font-medium text-gray-700">{education.year}</span>
-            </div>
-          )}
-        </div>
+  <div className="bg-white rounded-xl border border-gray-200 p-4 hover:border-primary/30 transition-all duration-300">
+    <h5 className="font-semibold text-gray-900">{education.degree}</h5>
+    <p className="text-sm text-gray-600 mt-1">{education.institution}</p>
+    {education.year && (
+      <div className="inline-flex items-center px-3 py-1 mt-2 bg-gray-50 rounded-full">
+        <span className="text-xs font-medium text-gray-700">{education.year}</span>
       </div>
-    </div>
+    )}
   </div>
 );
 
 const ExperienceCard = ({ experience, isExpanded, onToggle }) => (
-  <div className="group bg-white rounded-xl border border-gray-200 hover:border-primary/30 shadow-sm hover:shadow-md transition-all duration-300">
+  <div className="bg-white rounded-xl border border-gray-200 hover:border-primary/30 transition-all duration-300">
     <button
       className="w-full p-4 text-left hover:bg-gray-50/50 transition-colors duration-300"
       onClick={onToggle}
     >
       <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-4">
-          <div className="p-3 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg group-hover:from-primary/20 group-hover:to-primary/10 transition-colors duration-300">
-            <Briefcase className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <h4 className="font-semibold text-gray-900">{experience.position}</h4>
-              {experience.isRelevant && (
-                <span className="inline-flex items-center px-3 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100">
-                  Relevant
-                </span>
-              )}
-            </div>
-            <p className="text-sm text-gray-600 mt-1">{experience.company}</p>
-            {experience.dates && (
-              <div className="inline-flex items-center px-3 py-1 mt-2 bg-gray-50 group-hover:bg-gray-100 rounded-full transition-colors duration-300">
-                <span className="text-xs font-medium text-gray-700">{experience.dates}</span>
-              </div>
+        <div>
+          <div className="flex items-center gap-2">
+            <h5 className="font-semibold text-gray-900">{experience.position}</h5>
+            {experience.isRelevant && (
+              <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 rounded-full">
+                Relevant
+              </span>
             )}
           </div>
+          <p className="text-sm text-gray-600 mt-1">{experience.company}</p>
+          {experience.dates && (
+            <div className="inline-flex items-center px-3 py-1 mt-2 bg-gray-50 rounded-full">
+              <span className="text-xs font-medium text-gray-700">{experience.dates}</span>
+            </div>
+          )}
         </div>
         {experience.responsibilities?.length > 0 && (
           <ChevronDown 
-            className={`h-5 w-5 text-gray-400 transition-transform duration-300
-            ${isExpanded ? 'rotate-180' : ''}`} 
+            className={`h-5 w-5 text-gray-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 
           />
         )}
       </div>
     </button>
     
     {isExpanded && experience.responsibilities && (
-      <div className="border-t border-gray-100">
-        <div className="p-4 space-y-3 bg-gray-50/50">
-          {experience.responsibilities.map((resp, idx) => (
-            <div key={idx} className="flex items-start gap-3 group/item">
-              <ArrowRight className="h-4 w-4 text-primary/60 mt-1 flex-shrink-0 group-hover/item:text-primary transition-colors duration-300" />
-              <p className="text-sm text-gray-600 leading-relaxed">
-                {resp}
-              </p>
-            </div>
-          ))}
-        </div>
+      <div className="border-t border-gray-100 p-4 bg-gray-50/50">
+        {experience.responsibilities.map((resp, idx) => (
+          <div key={idx} className="flex items-start gap-3 mt-2 first:mt-0">
+            <ArrowRight className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
+            <p className="text-sm text-gray-600">{resp}</p>
+          </div>
+        ))}
       </div>
     )}
   </div>
@@ -107,16 +88,14 @@ const CVCard = ({
   updateCVStatus, 
   onUnlock,
   isReviewMode = false,
-  onNext,
-  onPrevious,
-  currentIndex,
-  total
 }) => {
   const [expandedExp, setExpandedExp] = useState(null);
   const [isPdfOpen, setIsPdfOpen] = useState(false);
   const [isTextOpen, setIsTextOpen] = useState(false);
   const [unlocking, setUnlocking] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const isLocked = cv.visibility === 'locked';
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -130,24 +109,6 @@ const CVCard = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
-  const handleKeep = async () => {
-    try {
-      await updateCVStatus(cv._id, 'approved');
-      if (isReviewMode && onNext) onNext();
-    } catch (error) {
-      console.error('Error approving CV:', error);
-    }
-  };
-  
-  const handleRemove = async () => {
-    try {
-      await updateCVStatus(cv._id, 'rejected');
-      if (isReviewMode && onNext) onNext();
-    } catch (error) {
-      console.error('Error rejecting CV:', error);
-    }
-  };
 
   const handleUnlock = async (e) => {
     e.stopPropagation();
@@ -168,7 +129,7 @@ const CVCard = ({
       
       {/* Header */}
       <div 
-        className={`p-6 bg-gradient-to-br from-gray-50 to-white ${!isReviewMode ? 'cursor-pointer hover:from-gray-100 hover:to-gray-50' : ''} transition-colors duration-300`}
+        className={`p-6 bg-gradient-to-br from-gray-50 to-white ${!isReviewMode && 'cursor-pointer hover:bg-gray-50/50'} transition-colors duration-300`}
         onClick={!isReviewMode ? onToggle : undefined}
       >
         <div className="flex items-start gap-6">
@@ -191,28 +152,27 @@ const CVCard = ({
                 </div>
               </div>
               <div className="flex items-center gap-3 flex-shrink-0">
-                {cv.visibility === 'locked' && (
+                {isLocked && (
                   <UnlockButton onUnlock={handleUnlock} loading={unlocking} />
                 )}
-                {!isReviewMode && cv.visibility !== 'locked' && (
-                  <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
+                {!isReviewMode && (
+                  <ChevronDown 
+                    className={`h-5 w-5 text-gray-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 
+                  />
                 )}
               </div>
             </div>
 
-            {/* Contact Information */}
-            {cv.visibility === 'locked' ? (
-              <div className="mt-3 space-y-2">
-                <p className="text-sm text-gray-600">{cv.candidate.experience} years experience</p>
-                <p className="text-sm text-gray-500">{cv.candidate.skills} skills listed</p>
-              </div>
-            ) : (
+            {/* Contact Information - Only shown when unlocked */}
+            {!isLocked && (
               <div className="mt-3 flex flex-wrap gap-4">
-                <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-gray-400" />
-                  <p className="text-sm text-gray-600">{cv.candidate.email}</p>
-                  <CopyButton text={cv.candidate.email} label="email" />
-                </div>
+                {cv.candidate.email && (
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-gray-400" />
+                    <p className="text-sm text-gray-600">{cv.candidate.email}</p>
+                    <CopyButton text={cv.candidate.email} label="email" />
+                  </div>
+                )}
                 {cv.candidate.phone && (
                   <div className="flex items-center gap-2">
                     <Phone className="h-4 w-4 text-gray-400" />
@@ -229,120 +189,105 @@ const CVCard = ({
       {/* Content */}
       {(isExpanded || isReviewMode) && (
         <div className="flex-1 overflow-auto">
-          {cv.visibility === 'locked' ? (
-            <div className="p-12 text-center">
-              <div className="bg-gradient-to-br from-primary/10 to-primary/5 p-6 rounded-2xl max-w-lg mx-auto">
-                <Lock className="h-16 w-16 mx-auto text-primary mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Unlock CV Profile</h3>
-                <p className="text-gray-600">
-                  Get full access to this candidate's details including contact information,
-                  complete experience, education history, and skill set.
-                </p>
+          <div className="divide-y divide-gray-100">
+            {/* Summary */}
+            {cv.candidate.summary && (
+              <div className="p-6">
+                <div className="bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl border border-gray-100">
+                  <h4 className="font-semibold text-gray-900 mb-3">Professional Summary</h4>
+                  <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">
+                    {cv.candidate.summary}
+                  </p>
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-100">
-              {/* Summary */}
-              {cv.candidate.summary && (
-                <div className="p-6">
-                  <div className="bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl border border-gray-100">
-                    <h4 className="font-semibold text-gray-900 mb-3">Professional Summary</h4>
-                    <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">{cv.candidate.summary}</p>
-                  </div>
-                </div>
-              )}
+            )}
 
-              {/* Main Content Grid */}
-              <div className="grid md:grid-cols-3 gap-8 p-6">
-                {/* Education */}
+            {/* Main Content Grid */}
+            <div className="grid md:grid-cols-3 gap-8 p-6">
+              {/* Education */}
+              <div className="space-y-4">
+                <h4 className="flex items-center gap-2 font-semibold text-gray-900 mb-4">
+                  <GraduationCap className="h-5 w-5 text-primary" />
+                  Education
+                </h4>
                 <div className="space-y-4">
-                  <h4 className="flex items-center gap-2 font-semibold text-gray-900 mb-4">
-                    <GraduationCap className="h-5 w-5 text-primary" />
-                    Education
-                  </h4>
-                  <div className="space-y-4">
-                    {cv.candidate.education?.map((edu, index) => (
-                      <EducationCard key={index} education={edu} />
-                    ))}
-                  </div>
+                  {cv.candidate.education?.map((edu, index) => (
+                    <EducationCard key={index} education={edu} />
+                  ))}
                 </div>
+              </div>
 
-                {/* Experience */}
+              {/* Experience */}
+              <div className="space-y-4">
+                <h4 className="flex items-center gap-2 font-semibold text-gray-900 mb-4">
+                  <Briefcase className="h-5 w-5 text-primary" />
+                  Experience
+                </h4>
                 <div className="space-y-4">
-                  <h4 className="flex items-center gap-2 font-semibold text-gray-900 mb-4">
-                    <Briefcase className="h-5 w-5 text-primary" />
-                    Experience
-                  </h4>
-                  <div className="space-y-4">
-                    {cv.candidate.experience?.map((exp, index) => (
-                      <ExperienceCard
-                        key={index}
-                        experience={exp}
-                        isExpanded={expandedExp === index}
-                        onToggle={() => setExpandedExp(expandedExp === index ? null : index)}
-                      />
-                    ))}
-                  </div>
+                  {cv.candidate.experience?.map((exp, index) => (
+                    <ExperienceCard
+                      key={index}
+                      experience={exp}
+                      isExpanded={expandedExp === index}
+                      onToggle={() => setExpandedExp(expandedExp === index ? null : index)}
+                    />
+                  ))}
                 </div>
+              </div>
 
-                {/* Skills */}
-                <div className="space-y-4">
-                  <h4 className="flex items-center gap-2 font-semibold text-gray-900 mb-4">
-                    <Code className="h-5 w-5 text-primary" />
-                    Skills
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {cv.candidate.skills?.map((skill, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1.5 text-sm font-medium bg-gradient-to-br from-primary/10 to-primary/5 text-primary-dark rounded-lg hover:from-primary/20 hover:to-primary/10 transition-colors duration-300"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
+              {/* Skills */}
+              <div className="space-y-4">
+                <h4 className="flex items-center gap-2 font-semibold text-gray-900 mb-4">
+                  <Code className="h-5 w-5 text-primary" />
+                  Skills
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {cv.candidate.skills?.map((skill, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1.5 text-sm font-medium bg-gradient-to-br from-primary/10 to-primary/5 text-primary-dark rounded-lg hover:from-primary/20 hover:to-primary/10 transition-colors duration-300"
+                    >
+                      {skill}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       )}
 
       {/* Footer */}
-      <div className="bg-gradient-to-br from-gray-50 to-white border-t border-gray-100 p-6 flex flex-col md:flex-row gap-4 justify-between">
-        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-          <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-gray-100 shadow-sm">
-            <Clock className="h-4 w-4 text-gray-400" />
-            <span>Applied {new Date(cv.createdAt).toLocaleDateString()}</span>
-          </div>
-          
-          {(cv.submissionType || cv.fileUrl || cv.rawText) && (
-            <CustomTooltip 
-              content={cv.submissionType === "text" ? 
-                "View the original website application submission" : 
-                "View the original uploaded CV document"}
-            >
-              <button
-                onClick={() => cv.submissionType === "text" ? setIsTextOpen(true) : setIsPdfOpen(true)}
-                className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-100 shadow-sm hover:border-primary/30 rounded-lg transition-all duration-300"
+      <div className="bg-gradient-to-br from-gray-50 to-white border-t border-gray-100 p-6">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-gray-100 shadow-sm">
+              <Clock className="h-4 w-4 text-gray-400" />
+              <span>Applied {new Date(cv.createdAt).toLocaleDateString()}</span>
+            </div>
+            
+            {(cv.submissionType || cv.fileUrl || cv.rawText) && (
+              <CustomTooltip 
+                content={cv.submissionType === "text" ? 
+                  "View the original website application submission" : 
+                  "View the original uploaded CV document"}
               >
-                <FileText className="h-4 w-4 text-primary" />
-                <span className="text-gray-700">
-                  {cv.submissionType === "text" ? "Website Application" : "CV Upload"}
-                </span>
-              </button>
-            </CustomTooltip>
-          )}
-        </div>
-        
-        {cv.visibility !== 'locked' && (
+                <button
+                  onClick={() => cv.submissionType === "text" ? setIsTextOpen(true) : setIsPdfOpen(true)}
+                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-100 hover:border-primary/30 rounded-lg transition-all duration-300"
+                >
+                  <FileText className="h-4 w-4 text-primary" />
+                  <span>{cv.submissionType === "text" ? "Website Application" : "CV Upload"}</span>
+                </button>
+              </CustomTooltip>
+            )}
+          </div>
+
+          {/* Status Controls */}
           <div className="relative status-dropdown">
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsDropdownOpen(!isDropdownOpen);
-              }}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 bg-white border border-gray-200 rounded-lg hover:border-primary/30 shadow-sm hover:shadow-md transition-all duration-300"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:border-primary/30 shadow-sm hover:shadow-md transition-all duration-300"
             >
               <span className="flex items-center gap-2">
                 {cv.status === 'approved' && <ThumbsUp className="h-4 w-4 text-emerald-500" />}
@@ -355,11 +300,10 @@ const CVCard = ({
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute right-0 bottom-full mb-2 w-48 bg-white rounded-xl border border-gray-100 shadow-lg overflow-hidden">
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl border border-gray-100 shadow-lg overflow-hidden z-10">
                 {cv.status !== 'pending' && (
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
+                    onClick={() => {
                       updateCVStatus(cv._id, 'pending');
                       setIsDropdownOpen(false);
                     }}
@@ -371,9 +315,8 @@ const CVCard = ({
                 )}
                 {cv.status !== 'approved' && (
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleKeep();
+                    onClick={() => {
+                      updateCVStatus(cv._id, 'approved');
                       setIsDropdownOpen(false);
                     }}
                     className="w-full flex items-center gap-2 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-300"
@@ -384,9 +327,8 @@ const CVCard = ({
                 )}
                 {cv.status !== 'rejected' && (
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemove();
+                    onClick={() => {
+                      updateCVStatus(cv._id, 'rejected');
                       setIsDropdownOpen(false);
                     }}
                     className="w-full flex items-center gap-2 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-300"
@@ -398,7 +340,7 @@ const CVCard = ({
               </div>
             )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Modals */}
