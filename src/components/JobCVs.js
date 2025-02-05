@@ -307,7 +307,7 @@ const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')
   };
 
   return (
-    <div className="space-y-6">
+    <div className="">
       {/* Header Controls */}
       <div className="flex flex-col sm:flex-row gap-4 items-center">
         <div className="relative flex-1 w-full">
