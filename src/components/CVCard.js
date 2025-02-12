@@ -173,13 +173,15 @@ const CVCard = ({
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900">
-                      {cv.candidate.fullName}
-                    </h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-xl font-semibold text-gray-900">
+                        {cv.candidate.fullName}
+                      </h3>
+                      {cv.ranking && cv.ranking.category && (
+                        <RankingBadge category={cv.ranking.category} />
+                      )}
+                    </div>
                   </div>
-                  {cv.ranking && cv.ranking.category && (
-                    <RankingBadge category={cv.ranking.category} />
-                  )}
                 </div>
 
                 {/* AI Assessment */}
