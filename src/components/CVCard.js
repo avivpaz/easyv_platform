@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { 
   FileText, Clock, GraduationCap, Briefcase, 
   ChevronDown, ArrowRight, Code, Lock, Users,
-  ThumbsUp, ThumbsDown, Unlock, Mail, Phone
+  ThumbsUp, ThumbsDown, Unlock, Mail, Phone, Sparkles
 } from 'lucide-react';
 import CopyButton from './CopyButton';
 import PDFViewerModal from './PDFViewerModal';
 import TextViewerModal from './TextViewerModal';
 import CustomTooltip from './CustomTooltip';
 import RankingBadge from './RankingBadge';
+import CVDetailsModal from './CVDetailsModal';
 
 const UnlockButton = ({ onUnlock, creditsRequired = 1, loading = false }) => (
   <button
@@ -94,6 +95,8 @@ const CVCard = ({
   const [isTextOpen, setIsTextOpen] = useState(false);
   const [unlocking, setUnlocking] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [expandedSection, setExpandedSection] = useState(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
 
   const isLocked = cv.visibility === 'locked';
 
@@ -123,38 +126,34 @@ const CVCard = ({
   };
 
   return (
-    <div className={`bg-white rounded-xl border border-gray-200 shadow-lg flex flex-col transition-all duration-300 
-      ${isExpanded || isReviewMode ? 'max-h-[85vh]' : 'h-auto'} 
-      ${!isReviewMode && 'hover:border-primary/30'} relative overflow-hidden`}>
-      
-      {/* Header */}
+    <>
       <div 
-        className={`p-6 bg-gradient-to-br from-gray-50 to-white ${!isReviewMode && 'cursor-pointer hover:bg-gray-50/50'} transition-colors duration-300`}
-        onClick={!isReviewMode ? onToggle : undefined}
+        className={`bg-white rounded-xl border border-gray-200 shadow-lg cursor-pointer
+          hover:border-primary/30 transition-all duration-300`}
+        onClick={() => setShowDetailsModal(true)}
       >
-        <div className="flex items-start gap-6">
-          <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center flex-shrink-0">
-            <Users className="h-7 w-7 text-primary" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-col sm:flex-row sm:items-start gap-3">
-              <div className="flex-1">
-                <div className="flex items-center gap-3">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {cv.candidate.fullName}
-                  </h3>
-                  {cv.ranking && cv.ranking.justification && (
-                    <RankingBadge 
-                      category={cv.ranking.category} 
-                      justification={cv.ranking.justification}
-                    />
-                  )}
+        {/* Header Section - Fixed */}
+        <div className="flex-none">
+          <div 
+            className={`p-6 ${!isReviewMode && 'cursor-pointer'}`}
+            onClick={!isReviewMode ? onToggle : undefined}
+          >
+            {/* Top Bar - Status and Actions */}
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center gap-3">
+                <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  cv.status === 'approved' ? 'bg-emerald-50 text-emerald-700' :
+                  cv.status === 'rejected' ? 'bg-red-50 text-red-700' :
+                  'bg-yellow-50 text-yellow-700'
+                }`}>
+                  {cv.status ? cv.status.charAt(0).toUpperCase() + cv.status.slice(1) : 'Pending'}
+                </div>
+                <div className="text-xs text-gray-500">
+                  Applied {new Date(cv.createdAt).toLocaleDateString()}
                 </div>
               </div>
-              <div className="flex items-center gap-3 flex-shrink-0">
-                {isLocked && (
-                  <UnlockButton onUnlock={handleUnlock} loading={unlocking} />
-                )}
+              <div className="flex items-center gap-3">
+                {isLocked && <UnlockButton onUnlock={handleUnlock} loading={unlocking} />}
                 {!isReviewMode && (
                   <ChevronDown 
                     className={`h-5 w-5 text-gray-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 
@@ -163,198 +162,56 @@ const CVCard = ({
               </div>
             </div>
 
-            {/* Contact Information - Only shown when unlocked */}
-            {!isLocked && (
-              <div className="mt-3 flex flex-wrap gap-4">
-                {cv.candidate.email && (
-                  <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-gray-400" />
-                    <p className="text-sm text-gray-600">{cv.candidate.email}</p>
-                    <CopyButton text={cv.candidate.email} label="email" />
+            {/* Main Info */}
+            <div className="flex gap-6">
+              {/* Avatar/Icon */}
+              <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center flex-shrink-0 border border-primary/10">
+                <Users className="h-8 w-8 text-primary" />
+              </div>
+
+              {/* Candidate Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900">
+                      {cv.candidate.fullName}
+                    </h3>
+                  </div>
+                  {cv.ranking && cv.ranking.category && (
+                    <RankingBadge category={cv.ranking.category} />
+                  )}
+                </div>
+
+                {/* AI Assessment */}
+                {cv.ranking && cv.ranking.justification && (
+                  <div className="mt-4 bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 rounded-xl p-5 border border-blue-100 shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="p-1.5 bg-blue-100 rounded-lg">
+                        <Sparkles className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <h4 className="font-semibold text-blue-900">AI Assessment</h4>
+                    </div>
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      {cv.ranking.justification}
+                    </p>
                   </div>
                 )}
-                {cv.candidate.phone && (
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-gray-400" />
-                    <p className="text-sm text-gray-600">{cv.candidate.phone}</p>
-                    <CopyButton text={cv.candidate.phone} label="phone" />
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Content */}
-      {(isExpanded || isReviewMode) && (
-        <div className="flex-1 overflow-auto">
-          <div className="divide-y divide-gray-100">
-            {/* Summary */}
-            {cv.candidate.summary && (
-              <div className="p-6">
-                <div className="bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl border border-gray-100">
-                  <h4 className="font-semibold text-gray-900 mb-3">Professional Summary</h4>
-                  <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">
-                    {cv.candidate.summary}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* Main Content Grid */}
-            <div className="grid md:grid-cols-3 gap-8 p-6">
-              {/* Education */}
-              <div className="space-y-4">
-                <h4 className="flex items-center gap-2 font-semibold text-gray-900 mb-4">
-                  <GraduationCap className="h-5 w-5 text-primary" />
-                  Education
-                </h4>
-                <div className="space-y-4">
-                  {cv.candidate.education?.map((edu, index) => (
-                    <EducationCard key={index} education={edu} />
-                  ))}
-                </div>
-              </div>
-
-              {/* Experience */}
-              <div className="space-y-4">
-                <h4 className="flex items-center gap-2 font-semibold text-gray-900 mb-4">
-                  <Briefcase className="h-5 w-5 text-primary" />
-                  Experience
-                </h4>
-                <div className="space-y-4">
-                  {cv.candidate.experience?.map((exp, index) => (
-                    <ExperienceCard
-                      key={index}
-                      experience={exp}
-                      isExpanded={expandedExp === index}
-                      onToggle={() => setExpandedExp(expandedExp === index ? null : index)}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* Skills */}
-              <div className="space-y-4">
-                <h4 className="flex items-center gap-2 font-semibold text-gray-900 mb-4">
-                  <Code className="h-5 w-5 text-primary" />
-                  Skills
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {cv.candidate.skills?.map((skill, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1.5 text-sm font-medium bg-gradient-to-br from-primary/10 to-primary/5 text-primary-dark rounded-lg hover:from-primary/20 hover:to-primary/10 transition-colors duration-300"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
               </div>
             </div>
           </div>
         </div>
-      )}
-
-      {/* Footer */}
-      <div className="bg-gradient-to-br from-gray-50 to-white border-t border-gray-100 p-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-gray-100 shadow-sm">
-              <Clock className="h-4 w-4 text-gray-400" />
-              <span>Applied {new Date(cv.createdAt).toLocaleDateString()}</span>
-            </div>
-            
-            {(cv.submissionType || cv.fileUrl || cv.rawText) && (
-              <CustomTooltip 
-                content={cv.submissionType === "text" ? 
-                  "View the original website application submission" : 
-                  "View the original uploaded CV document"}
-              >
-                <button
-                  onClick={() => cv.submissionType === "text" ? setIsTextOpen(true) : setIsPdfOpen(true)}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-100 hover:border-primary/30 rounded-lg transition-all duration-300"
-                >
-                  <FileText className="h-4 w-4 text-primary" />
-                  <span>{cv.submissionType === "text" ? "Website Application" : "CV Upload"}</span>
-                </button>
-              </CustomTooltip>
-            )}
-          </div>
-
-          {/* Status Controls */}
-          <div className="relative status-dropdown">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:border-primary/30 shadow-sm hover:shadow-md transition-all duration-300"
-            >
-              <span className="flex items-center gap-2">
-                {cv.status === 'approved' && <ThumbsUp className="h-4 w-4 text-emerald-500" />}
-                {cv.status === 'rejected' && <ThumbsDown className="h-4 w-4 text-red-500" />}
-                {cv.status === 'pending' && <Clock className="h-4 w-4 text-yellow-500" />}
-                {!cv.status && <Users className="h-4 w-4 text-gray-400" />}
-                {cv.status ? cv.status.charAt(0).toUpperCase() + cv.status.slice(1) : 'Set Status'}
-              </span>
-              <ChevronDown className="h-4 w-4" />
-            </button>
-
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl border border-gray-100 shadow-lg overflow-hidden z-10">
-                {cv.status !== 'pending' && (
-                  <button
-                    onClick={() => {
-                      updateCVStatus(cv._id, 'pending');
-                      setIsDropdownOpen(false);
-                    }}
-                    className="w-full flex items-center gap-2 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-300"
-                  >
-                    <Clock className="h-4 w-4 text-yellow-500" />
-                    Mark as Pending
-                  </button>
-                )}
-                {cv.status !== 'approved' && (
-                  <button
-                    onClick={() => {
-                      updateCVStatus(cv._id, 'approved');
-                      setIsDropdownOpen(false);
-                    }}
-                    className="w-full flex items-center gap-2 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-300"
-                  >
-                    <ThumbsUp className="h-4 w-4 text-emerald-500" />
-                    Approve
-                  </button>
-                )}
-                {cv.status !== 'rejected' && (
-                  <button
-                    onClick={() => {
-                      updateCVStatus(cv._id, 'rejected');
-                      setIsDropdownOpen(false);
-                    }}
-                    className="w-full flex items-center gap-2 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-300"
-                  >
-                    <ThumbsDown className="h-4 w-4 text-red-500" />
-                    Reject
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
       </div>
 
-      {/* Modals */}
-      <TextViewerModal
-        isOpen={isTextOpen}
-        onClose={() => setIsTextOpen(false)}
-        text={cv.rawText}
+      {/* Add the modal */}
+      <CVDetailsModal
+        isOpen={showDetailsModal}
+        onClose={() => setShowDetailsModal(false)}
+        cv={cv}
+        updateCVStatus={updateCVStatus}
+        isLocked={isLocked}
+        onUnlock={onUnlock}
       />
-      <PDFViewerModal
-        isOpen={isPdfOpen}
-        onClose={() => setIsPdfOpen(false)}
-        fileUrl={cv.fileUrl}
-      />
-    </div>
+    </>
   );
 };
 

@@ -1,6 +1,4 @@
-import CustomTooltip from './CustomTooltip';
-
-const RankingBadge = ({ category, justification }) => {
+const RankingBadge = ({ category }) => {
     const variants = {
       'Highly Relevant': 'bg-green-50 text-green-700 border-green-200',
       'Relevant': 'bg-blue-50 text-blue-700 border-blue-200',
@@ -8,12 +6,10 @@ const RankingBadge = ({ category, justification }) => {
     };
   
     return (
-      <CustomTooltip content={justification}>
-        <span className={`${variants[category]} px-2 py-1 text-xs font-medium rounded-full border cursor-help`}>
-          {category}
-        </span>
-      </CustomTooltip>
+      <span className={`${variants[category]} px-2 py-1 text-xs font-medium rounded-full border`}>
+        {category}
+      </span>
     );
-  };
+};
 
-  export default RankingBadge
+export default RankingBadge;

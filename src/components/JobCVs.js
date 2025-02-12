@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
     FileText, AlertCircle, Upload, Grid, List,
-    ChevronLeft, ChevronRight,Search,ChevronFirst,ChevronLast,AlertTriangle
+    ChevronLeft, ChevronRight,Search,ChevronFirst,ChevronLast,AlertTriangle, Users
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
 import { cvService } from '../services/cvService';
@@ -19,10 +19,8 @@ const JobCVs = ({ jobId }) => {
   const [unlockError, setUnlockError] = useState(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showPricingModal, setShowPricingModal] = useState(false);
-  const [expandedCvId, setExpandedCvId] = useState(null);
-  const [isReviewMode, setIsReviewMode] = useState(false);
+  const [expandedCV, setExpandedCV] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [activeTab, setActiveTab] = useState('pending');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
 const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')) || 1);
@@ -33,6 +31,8 @@ const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')
     page: 1,
     limit: 10
   });
+  const [activeTab, setActiveTab] = useState('pending');
+
   const fetchCVs = async () => {
     try {
       setLoading(true);
@@ -141,11 +141,14 @@ const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')
   const getAllCVs = () => {
     const allCVs = [...cvData.unlocked, ...cvData.locked];
     return allCVs
-      .filter(cv => cv.status === activeTab)
+      .filter(cv => {
+        if (activeTab === 'pending') return cv.status === 'pending' || !cv.status;
+        return cv.status === activeTab;
+      })
       .filter(cv => 
         searchQuery === '' || 
-        cv.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        cv.email?.toLowerCase().includes(searchQuery.toLowerCase())
+        cv.candidate.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        cv.candidate.email?.toLowerCase().includes(searchQuery.toLowerCase())
       );
   };
 
@@ -179,59 +182,97 @@ const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')
             <div className="p-4 bg-gray-50 rounded-full w-fit mx-auto mb-6">
               <FileText className="h-8 w-8 text-gray-400" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-3">No CVs Found</h3>
-            <p className="text-gray-600 leading-relaxed">
-              {searchQuery 
-                ? "No CVs match your search criteria. Try adjusting your filters or search terms."
-                : "Upload some CVs to get started with candidate review."}
-            </p>
-            <button
-              onClick={() => setShowUploadModal(true)}
-              className="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary-dark transition-colors"
-            >
-              <Upload className="h-4 w-4" />
-              Upload CVs
-            </button>
+            {searchQuery ? (
+              <>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">No Results Found</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Try adjusting your search terms or clear the search to see all candidates.
+                </p>
+              </>
+            ) : (
+              <>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">No CVs Found</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {activeTab === 'pending' ? 'No pending applications to review.' :
+                   activeTab === 'approved' ? 'No approved candidates yet.' :
+                   'No rejected applications.'}
+                </p>
+              </>
+            )}
           </div>
-        </div>
-      );
-    }
-
-    if (isReviewMode) {
-      return (
-        <div className="relative bg-white rounded-xl border border-gray-200 shadow-sm">
-          <CVCard 
-            cv={filteredCVs[currentIndex]}
-            isReviewMode={true}
-            onNext={handleNext}
-            onPrevious={handlePrevious}
-            currentIndex={currentIndex}
-            total={filteredCVs.length}
-            updateCVStatus={updateCVStatus}
-            onUnlock={handleUnlock}
-          />
         </div>
       );
     }
 
     return (
-      <div className="space-y-4">
-        {filteredCVs.map(cv => (
-          <div 
-            key={cv._id} 
-            className="transition-all duration-300 transform hover:-translate-y-1"
-          >
-            <CVCard 
-              cv={cv} 
-              isExpanded={expandedCvId === cv._id}
-              onToggle={() => setExpandedCvId(expandedCvId === cv._id ? null : cv._id)}
-              updateCVStatus={updateCVStatus}
-              onUnlock={handleUnlock}
-              showStatusButtons={true}
-              currentStatus={cv.status}
-            />
+      <div className="space-y-8">
+        {/* Pending Applications Section */}
+        {filteredCVs.filter(cv => cv.status === 'pending' || !cv.status).length > 0 && (
+          <section>
+            <div className="space-y-4">
+              {filteredCVs.filter(cv => cv.status === 'pending' || !cv.status).map(cv => (
+                <CVCard
+                  key={cv._id}
+                  cv={cv}
+                  isExpanded={expandedCV === cv._id}
+                  onToggle={() => setExpandedCV(expandedCV === cv._id ? null : cv._id)}
+                  updateCVStatus={updateCVStatus}
+                  onUnlock={handleUnlock}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Approved Applications Section */}
+        {filteredCVs.filter(cv => cv.status === 'approved').length > 0 && (
+          <section>
+            <div className="space-y-4">
+              {filteredCVs.filter(cv => cv.status === 'approved').map(cv => (
+                <CVCard
+                  key={cv._id}
+                  cv={cv}
+                  isExpanded={expandedCV === cv._id}
+                  onToggle={() => setExpandedCV(expandedCV === cv._id ? null : cv._id)}
+                  updateCVStatus={updateCVStatus}
+                  onUnlock={handleUnlock}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Rejected Applications - Collapsed by default */}
+        {filteredCVs.filter(cv => cv.status === 'rejected').length > 0 && (
+          <section className="border-t border-gray-200 pt-6">
+            <details className="group">
+              <summary className="flex items-center gap-3 cursor-pointer list-none mb-4">
+                <ChevronRight className="h-5 w-5 text-gray-400 transition-transform duration-300 group-open:rotate-90" />
+              </summary>
+              <div className="space-y-4">
+                {filteredCVs.filter(cv => cv.status === 'rejected').map(cv => (
+                  <CVCard
+                    key={cv._id}
+                    cv={cv}
+                    isExpanded={expandedCV === cv._id}
+                    onToggle={() => setExpandedCV(expandedCV === cv._id ? null : cv._id)}
+                    updateCVStatus={updateCVStatus}
+                    onUnlock={handleUnlock}
+                  />
+                ))}
+              </div>
+            </details>
+          </section>
+        )}
+
+        {/* Empty State */}
+        {filteredCVs.length === 0 && (
+          <div className="text-center py-12">
+            <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No Applications Yet</h3>
+            <p className="text-gray-600">Applications for this position will appear here.</p>
           </div>
-        ))}
+        )}
       </div>
     );
   };
@@ -309,90 +350,85 @@ const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')
   return (
     <div className="">
       {/* Header Controls */}
-      <div className="flex flex-col sm:flex-row gap-4 items-center">
-        <div className="relative flex-1 w-full">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 text-gray-400" />
-          </div>
-          <input
-            type="text"
-            placeholder={activeTab === 'pending' ? 'Search disabled for pending tab' : 'Search by name or email...'}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            disabled={activeTab === 'pending'}
-            className={`w-full pl-10 pr-4 py-2.5 border rounded-xl text-sm transition-all duration-300 ${
-              activeTab === 'pending' 
-                ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
-                : 'bg-white border-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary'
-            }`}
-          />
-        </div>
-        
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col gap-4 mb-6">
+        {/* Tabs */}
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => setIsReviewMode(!isReviewMode)}
-            className="inline-flex items-center px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-medium
-              text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-300"
+            onClick={() => setActiveTab('pending')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-all duration-300
+              ${activeTab === 'pending' 
+                ? 'bg-primary text-white shadow-sm' 
+                : 'bg-white text-gray-600 hover:bg-gray-50'}`}
           >
-            {isReviewMode ? (
-              <>
-                <List className="h-4 w-4 mr-2" />
-                List View
-              </>
-            ) : (
-              <>
-                <Grid className="h-4 w-4 mr-2" />
-                Review Mode
-              </>
-            )}
+            To Review
+            <span className={`px-2 py-0.5 rounded-full text-xs ${
+              activeTab === 'pending' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
+            }`}>
+              {cvData.stats.total}
+            </span>
           </button>
-          
-          <button
-            onClick={() => setShowUploadModal(true)}
-            className="inline-flex items-center px-4 py-2.5 bg-gradient-to-br from-primary to-primary-dark text-white 
-              rounded-xl text-sm font-medium hover:from-primary-dark hover:to-primary shadow-sm hover:shadow-md
-              transition-all duration-300"
-          >
-            <Upload className="h-4 w-4 mr-2" />
-            Upload CVs
-          </button>
-        </div>
-      </div>
 
-      {/* Status Tabs */}
-      <div className="bg-slate-50 p-1.5 rounded-lg border border-slate-200">
-        <div className="flex gap-1">
-          {['pending', 'approved', 'rejected'].map((status) => {
-            const count = [...cvData.unlocked, ...cvData.locked].filter(cv => cv.status === status).length;
-            return (
-              <button
-                key={status}
-                onClick={() => setActiveTab(status)}
-                className={`
-                  relative flex-1 py-2.5 px-4 rounded-md font-medium text-sm flex items-center justify-center gap-2
-                  transition-all duration-200
-                  ${activeTab === status
-                    ? 'bg-white text-primary shadow-sm'
-                    : 'text-slate-600 hover:bg-white/60 hover:text-slate-900'
-                  }
-                `}
-              >
-                {status.charAt(0).toUpperCase() + status.slice(1)}
-                <span className={`
-                  rounded-full px-2 py-0.5 text-xs font-medium
-                  ${activeTab === status
-                    ? 'bg-slate-100 text-slate-700'
-                    : 'bg-slate-200/80 text-slate-600'
-                  }
-                `}>
-                  {count}
-                </span>
-              </button>
-            );
-          })}
+          <button
+            onClick={() => setActiveTab('approved')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-all duration-300
+              ${activeTab === 'approved' 
+                ? 'bg-emerald-600 text-white shadow-sm' 
+                : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+          >
+            Approved
+            <span className={`px-2 py-0.5 rounded-full text-xs ${
+              activeTab === 'approved' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
+            }`}>
+              {cvData.unlocked.concat(cvData.locked).filter(cv => cv.status === 'approved').length}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('rejected')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-all duration-300
+              ${activeTab === 'rejected' 
+                ? 'bg-gray-600 text-white shadow-sm' 
+                : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+          >
+            Rejected
+            <span className={`px-2 py-0.5 rounded-full text-xs ${
+              activeTab === 'rejected' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
+            }`}>
+              {cvData.unlocked.concat(cvData.locked).filter(cv => cv.status === 'rejected').length}
+            </span>
+          </button>
+        </div>
+
+        {/* Search and Actions */}
+        <div className="flex flex-col sm:flex-row gap-4 items-center">
+          <div className="relative flex-1 w-full">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-4 w-4 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search by name or email..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 border rounded-xl text-sm bg-white border-gray-200 
+                placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
+                transition-all duration-300"
+            />
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowUploadModal(true)}
+              className="inline-flex items-center px-4 py-2.5 bg-gradient-to-br from-primary to-primary-dark text-white 
+                rounded-xl text-sm font-medium hover:from-primary-dark hover:to-primary shadow-sm hover:shadow-md
+                transition-all duration-300"
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              Upload CVs
+            </button>
+          </div>
         </div>
       </div>
-      
 
       {/* Error Alert */}
       {unlockError && (
@@ -407,37 +443,6 @@ const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')
 
       {/* Main Content */}
       <div className="relative group">
-        {/* Review Mode Navigation */}
-        {isReviewMode && (
-          <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-between pointer-events-none z-10 px-6">
-            <button
-              onClick={handlePrevious}
-              disabled={currentIndex === 0}
-              className={`pointer-events-auto opacity-0 group-hover:opacity-100 transition-all duration-300
-                p-3 rounded-full bg-white shadow-lg border border-gray-200 
-                ${currentIndex === 0 
-                  ? 'text-gray-300 cursor-not-allowed' 
-                  : 'text-gray-600 hover:bg-gray-50 hover:scale-105'
-                } transform -translate-x-6`}
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            
-            <button
-              onClick={handleNext}
-              disabled={currentIndex >= getAllCVs().length - 1}
-              className={`pointer-events-auto opacity-0 group-hover:opacity-100 transition-all duration-300
-                p-3 rounded-full bg-white shadow-lg border border-gray-200
-                ${currentIndex >= getAllCVs().length - 1
-                  ? 'text-gray-300 cursor-not-allowed'
-                  : 'text-gray-600 hover:bg-gray-50 hover:scale-105'
-                } transform translate-x-6`}
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
-        )}
-        
         {renderContent()}
       </div>
 
