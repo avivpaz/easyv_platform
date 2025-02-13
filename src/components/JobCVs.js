@@ -242,26 +242,21 @@ const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')
           </section>
         )}
 
-        {/* Rejected Applications - Collapsed by default */}
+        {/* Rejected Applications */}
         {filteredCVs.filter(cv => cv.status === 'rejected').length > 0 && (
-          <section className="border-t border-gray-200 pt-6">
-            <details className="group">
-              <summary className="flex items-center gap-3 cursor-pointer list-none mb-4">
-                <ChevronRight className="h-5 w-5 text-gray-400 transition-transform duration-300 group-open:rotate-90" />
-              </summary>
-              <div className="space-y-4">
-                {filteredCVs.filter(cv => cv.status === 'rejected').map(cv => (
-                  <CVCard
-                    key={cv._id}
-                    cv={cv}
-                    isExpanded={expandedCV === cv._id}
-                    onToggle={() => setExpandedCV(expandedCV === cv._id ? null : cv._id)}
-                    updateCVStatus={updateCVStatus}
-                    onUnlock={handleUnlock}
-                  />
-                ))}
-              </div>
-            </details>
+          <section>
+            <div className="space-y-4">
+              {filteredCVs.filter(cv => cv.status === 'rejected').map(cv => (
+                <CVCard
+                  key={cv._id}
+                  cv={cv}
+                  isExpanded={expandedCV === cv._id}
+                  onToggle={() => setExpandedCV(expandedCV === cv._id ? null : cv._id)}
+                  updateCVStatus={updateCVStatus}
+                  onUnlock={handleUnlock}
+                />
+              ))}
+            </div>
           </section>
         )}
 
