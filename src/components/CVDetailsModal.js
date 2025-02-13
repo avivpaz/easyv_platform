@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   X, FileText, GraduationCap, Briefcase, Code,
-  ThumbsUp, ThumbsDown, Clock, ChevronDown, Users, Mail, Phone, Unlock
+  ThumbsUp, ThumbsDown, Clock, ChevronDown, Users, Mail, Phone, Unlock, Sparkles
 } from 'lucide-react';
 import CopyButton from './CopyButton';
 import PDFViewerModal from './PDFViewerModal';
@@ -86,8 +86,18 @@ const CVDetailsModal = ({ isOpen, onClose, cv, updateCVStatus, isLocked, onUnloc
                         cv.status === 'rejected' ? 'bg-red-50 text-red-700' :
                         'bg-yellow-50 text-yellow-700'
                       }`}>
-                        {cv.status ? cv.status.charAt(0).toUpperCase() + cv.status.slice(1) : 'Pending'}
+                        {cv.status ? cv.status.charAt(0).toUpperCase() + cv.status.slice(1) : 'Pending  '}
                       </div>
+                      {cv.ranking && cv.ranking.category && (
+                        <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          cv.ranking.category === 'Excellent Match' ? 'bg-emerald-50 text-emerald-700' :
+                          cv.ranking.category === 'Good Match' ? 'bg-emerald-50 text-emerald-700' :
+                          cv.ranking.category === 'Potential Match' ? 'bg-emerald-50 text-emerald-700' :
+                          'bg-emerald-50 text-emerald-700'
+                        }`}>
+                          {cv.ranking.category}
+                        </div>
+                      )}
                       <div className="flex items-center gap-2 text-sm text-gray-500">
                         <Clock className="h-4 w-4" />
                         Applied {new Date(cv.createdAt).toLocaleDateString()}
@@ -145,6 +155,21 @@ const CVDetailsModal = ({ isOpen, onClose, cv, updateCVStatus, isLocked, onUnloc
           {/* Content */}
           <div className="flex-1 overflow-y-auto">
             <div className="p-4 sm:p-6 space-y-6 sm:space-y-8">
+              {/* AI Assessment */}
+              {cv.ranking && cv.ranking.justification && (
+                <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 rounded-xl p-4 border border-blue-100 shadow-sm">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="p-1.5 bg-blue-100 rounded-lg">
+                      <Sparkles className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <h4 className="font-semibold text-blue-900">AI Assessment</h4>
+                  </div>
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    {cv.ranking.justification}
+                  </p>
+                </div>
+              )}
+
               {/* Summary Section */}
               {cv.candidate.summary && (
                 <section>
@@ -177,7 +202,7 @@ const CVDetailsModal = ({ isOpen, onClose, cv, updateCVStatus, isLocked, onUnloc
                           <div className="flex items-center gap-2 flex-wrap mb-1">
                             <h5 className="font-semibold text-gray-900">{exp.position}</h5>
                             {exp.isRelevant && (
-                              <span className="px-2 py-0.5 text-xs bg-emerald-50 text-emerald-700 rounded-md border border-emerald-100">
+                              <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 rounded-full">
                                 Relevant
                               </span>
                             )}
@@ -215,14 +240,23 @@ const CVDetailsModal = ({ isOpen, onClose, cv, updateCVStatus, isLocked, onUnloc
                     </div>
                     <span className="text-lg font-semibold text-gray-900">Education</span>
                   </h4>
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {cv.candidate.education?.map((edu, index) => (
-                      <div key={index} className="bg-gray-50/50 rounded-lg p-4">
-                        <h5 className="font-semibold text-gray-900">{edu.degree}</h5>
-                        <p className="text-sm text-gray-600 mt-1">{edu.institution}</p>
-                        {edu.year && (
-                          <div className="text-sm text-gray-500 mt-1">{edu.year}</div>
-                        )}
+                      <div key={index} className="relative pl-4 border-l-2 border-gray-200">
+                        <div className="mb-3">
+                          <div className="flex items-center gap-2 flex-wrap mb-1">
+                            <h5 className="font-semibold text-gray-900">{edu.degree}</h5>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
+                            <span className="font-medium">{edu.institution}</span>
+                            {edu.year && (
+                              <>
+                                <span className="text-gray-300 hidden sm:inline">•</span>
+                                <span className="text-gray-500 w-full sm:w-auto">{edu.year}</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>

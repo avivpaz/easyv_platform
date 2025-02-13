@@ -542,10 +542,10 @@ const renderStep3 = () => (
                 {loading ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Publishing...
+                    Creating...
                   </>
                 ) : (
-                  'Publish Job'
+                  'Create'
                 )}
               </button>
             )}
