@@ -352,55 +352,57 @@ const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')
       {/* Header Controls */}
       <div className="flex flex-col gap-4 mb-6">
         {/* Tabs */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setActiveTab('pending')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-all duration-300
-              ${activeTab === 'pending' 
-                ? 'bg-primary text-white shadow-sm' 
-                : 'bg-white text-gray-600 hover:bg-gray-50'}`}
-          >
-            To Review
-            <span className={`px-2 py-0.5 rounded-full text-xs ${
-              activeTab === 'pending' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
-            }`}>
-              {cvData.stats.total}
-            </span>
-          </button>
+        <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 py-1">
+          <div className="flex items-center gap-2 min-w-max pb-1">
+            <button
+              onClick={() => setActiveTab('pending')}
+              className={`px-3 sm:px-4 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 transition-all duration-300 whitespace-nowrap
+                ${activeTab === 'pending' 
+                  ? 'bg-primary text-white shadow-sm' 
+                  : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+            >
+              To Review
+              <span className={`px-2 py-0.5 rounded-full text-xs ${
+                activeTab === 'pending' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
+              }`}>
+                {cvData.stats.total}
+              </span>
+            </button>
 
-          <button
-            onClick={() => setActiveTab('approved')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-all duration-300
-              ${activeTab === 'approved' 
-                ? 'bg-emerald-600 text-white shadow-sm' 
-                : 'bg-white text-gray-600 hover:bg-gray-50'}`}
-          >
-            Approved
-            <span className={`px-2 py-0.5 rounded-full text-xs ${
-              activeTab === 'approved' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
-            }`}>
-              {cvData.unlocked.concat(cvData.locked).filter(cv => cv.status === 'approved').length}
-            </span>
-          </button>
+            <button
+              onClick={() => setActiveTab('approved')}
+              className={`px-3 sm:px-4 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 transition-all duration-300 whitespace-nowrap
+                ${activeTab === 'approved' 
+                  ? 'bg-emerald-600 text-white shadow-sm' 
+                  : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+            >
+              Approved
+              <span className={`px-2 py-0.5 rounded-full text-xs ${
+                activeTab === 'approved' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
+              }`}>
+                {cvData.unlocked.concat(cvData.locked).filter(cv => cv.status === 'approved').length}
+              </span>
+            </button>
 
-          <button
-            onClick={() => setActiveTab('rejected')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-all duration-300
-              ${activeTab === 'rejected' 
-                ? 'bg-gray-600 text-white shadow-sm' 
-                : 'bg-white text-gray-600 hover:bg-gray-50'}`}
-          >
-            Rejected
-            <span className={`px-2 py-0.5 rounded-full text-xs ${
-              activeTab === 'rejected' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
-            }`}>
-              {cvData.unlocked.concat(cvData.locked).filter(cv => cv.status === 'rejected').length}
-            </span>
-          </button>
+            <button
+              onClick={() => setActiveTab('rejected')}
+              className={`px-3 sm:px-4 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 transition-all duration-300 whitespace-nowrap
+                ${activeTab === 'rejected' 
+                  ? 'bg-gray-600 text-white shadow-sm' 
+                  : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+            >
+              Rejected
+              <span className={`px-2 py-0.5 rounded-full text-xs ${
+                activeTab === 'rejected' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'
+              }`}>
+                {cvData.unlocked.concat(cvData.locked).filter(cv => cv.status === 'rejected').length}
+              </span>
+            </button>
+          </div>
         </div>
 
         {/* Search and Actions */}
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
+        <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
           <div className="relative flex-1 w-full">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-4 w-4 text-gray-400" />
@@ -416,10 +418,10 @@ const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')
             />
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-stretch sm:items-center gap-3">
             <button
               onClick={() => setShowUploadModal(true)}
-              className="inline-flex items-center px-4 py-2.5 bg-gradient-to-br from-primary to-primary-dark text-white 
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-br from-primary to-primary-dark text-white 
                 rounded-xl text-sm font-medium hover:from-primary-dark hover:to-primary shadow-sm hover:shadow-md
                 transition-all duration-300"
             >
@@ -432,7 +434,7 @@ const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')
 
       {/* Error Alert */}
       {unlockError && (
-        <div className="bg-gradient-to-br from-red-50 to-red-50/50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+        <div className="bg-gradient-to-br from-red-50 to-red-50/50 border border-red-200 rounded-xl p-4 flex items-start gap-3 mb-6">
           <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
           <div>
             <h3 className="text-red-800 font-medium mb-1">Error Unlocking CV</h3>
@@ -442,12 +444,78 @@ const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')
       )}
 
       {/* Main Content */}
-      <div className="relative group">
+      <div className="relative">
         {renderContent()}
       </div>
 
       {/* Pagination */}
-      <PaginationControls />
+      <div className="mt-8 flex flex-col sm:flex-row items-center justify-between bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 px-4 sm:px-6 py-4 gap-4">
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
+          <p className="text-sm text-gray-600 text-center sm:text-left">
+            Showing <span className="font-medium text-gray-900">{Math.min((currentPage - 1) * 10 + 1, cvData.stats.total)}</span>
+            {' '}-{' '}
+            <span className="font-medium text-gray-900">{Math.min(currentPage * 10, cvData.stats.total)}</span>
+            {' '}of{' '}
+            <span className="font-medium text-gray-900">{cvData.stats.total}</span> results
+          </p>
+          
+          <div className="inline-flex items-center gap-1 rounded-lg shadow-sm mx-auto sm:mx-0 sm:ml-auto">
+            <button
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+              className="relative inline-flex items-center rounded-l-lg border border-gray-200 bg-white p-2 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:hover:bg-white transition-colors"
+            >
+              <ChevronFirst className="h-4 w-4" />
+            </button>
+            
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="relative inline-flex items-center border border-gray-200 bg-white p-2 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:hover:bg-white transition-colors"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            
+            <div className="hidden sm:flex">
+              {Array.from({ length: Math.min(5, Math.ceil(cvData.stats.total / 10)) }, (_, i) => {
+                const pageNum = i + 1;
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`relative inline-flex items-center border border-gray-200 px-4 py-2 text-sm font-medium transition-colors
+                      ${currentPage === pageNum 
+                        ? 'bg-gradient-to-br from-primary to-primary-dark text-white border-primary' 
+                        : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+            </div>
+            
+            <div className="sm:hidden px-4 py-2 text-sm font-medium text-gray-600 border-t border-b border-gray-200 bg-white">
+              Page {currentPage}
+            </div>
+            
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === Math.ceil(cvData.stats.total / 10)}
+              className="relative inline-flex items-center border border-gray-200 bg-white p-2 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:hover:bg-white transition-colors"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+            
+            <button
+              onClick={() => handlePageChange(Math.ceil(cvData.stats.total / 10))}
+              disabled={currentPage === Math.ceil(cvData.stats.total / 10)}
+              className="relative inline-flex items-center rounded-r-lg border border-gray-200 bg-white p-2 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:hover:bg-white transition-colors"
+            >
+              <ChevronLast className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* Modals */}
       {showUploadModal && (

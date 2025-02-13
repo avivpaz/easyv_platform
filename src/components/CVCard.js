@@ -163,7 +163,7 @@ const CVCard = ({
             </div>
 
             {/* Main Info */}
-            <div className="flex gap-6">
+            <div className="flex flex-col sm:flex-row gap-6">
               {/* Avatar/Icon */}
               <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center flex-shrink-0 border border-primary/10">
                 <Users className="h-8 w-8 text-primary" />
@@ -171,9 +171,9 @@ const CVCard = ({
 
               {/* Candidate Info */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                   <div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <h3 className="text-xl font-semibold text-gray-900">
                         {cv.candidate.fullName}
                       </h3>
@@ -186,7 +186,7 @@ const CVCard = ({
 
                 {/* AI Assessment */}
                 {cv.ranking && cv.ranking.justification && (
-                  <div className="mt-4 bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 rounded-xl p-5 border border-blue-100 shadow-sm">
+                  <div className="mt-4 bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 rounded-xl p-4 sm:p-5 border border-blue-100 shadow-sm">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="p-1.5 bg-blue-100 rounded-lg">
                         <Sparkles className="h-4 w-4 text-blue-600" />
