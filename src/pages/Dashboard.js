@@ -279,10 +279,10 @@ const Dashboard = () => {
             setInitialJobDescription('');
             setAutoSubmit(false);
           }}
-          onSuccess={(jobId) => {
-            navigate(`/jobs/${jobId}`);
+          onSuccess={(jobId, state) => {
+            navigate(`/jobs/${jobId}`, { state });
           }}
-            initialDescription={initialJobDescription}
+          initialDescription={initialJobDescription}
           autoSubmit={autoSubmit}
         />
       )}

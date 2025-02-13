@@ -272,10 +272,10 @@ const CreateJobModal = ({
         employmentType: 'full-time'
       });
       
-      // Close modal and trigger success callback with job ID
+      // Close modal and trigger success callback with job ID and title
       onClose();
       if (onSuccess) {
-        onSuccess(jobId);
+        onSuccess(jobId, { justCreated: true, jobTitle: response.title });
       }
     } catch (err) {
       throw err;
@@ -334,7 +334,7 @@ const CreateJobModal = ({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Here’s what we’ve got so far! Edit or add more details about the role if needed</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Here's what we've got so far! Edit or add more details about the role if needed</label>
         <textarea
           required
           value={formData.description}

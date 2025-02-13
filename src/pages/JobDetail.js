@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { 
   MapPin, Clock, Briefcase, User2, Calendar,
   Building, Share2, Edit2, Loader2, DollarSign
@@ -11,10 +11,12 @@ import ShareModal from '../components/ShareModal';
 import EditJobModal from '../components/EditJobModal';
 import { urlShortenerService } from '../services/urlShortenerService';
 import JobStatusDropdown from '../components/JobStatusDropdown';
+import JobCreatedModal from '../components/JobCreatedModal';
 
 const JobDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,23 +25,60 @@ const JobDetail = () => {
   const [shortUrl, setShortUrl] = useState('');
   const [shorteningUrl, setShorteningUrl] = useState(false);
   const { organization } = useAuth();
-  const longUrl = `${process.env.REACT_APP_FRONTEND_URL}/${organization?.id}/jobs/${id}`;
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
   const [activeTab, setActiveTab] = useState('info'); // 'info' or 'applications'
+  const [showCreatedModal, setShowCreatedModal] = useState(false);
+
+  // Get search params once, not on every render
+  const searchParams = new URLSearchParams(location.search);
+  const justCreated = location.state?.justCreated || searchParams.get('justCreated') === 'true';
 
   useEffect(() => {
-    const shortenAndFetch = async () => {
+    const fetchJobAndInit = async () => {
       try {
-        const shortened = await urlShortenerService.shortenUrl(longUrl);
-        setShortUrl(shortened);
-        await fetchJob();
-      } catch (error) {
-        console.error('Error in shortenAndFetch:', error);
+        setLoading(true);
+        // Fetch job data
+        const data = await jobService.getJob(id);
+        setJob(data);
+        setError(null);
+        
+        // Show the created modal if we just created this job or if justCreated is in the URL
+        if (justCreated) {
+          setShowCreatedModal(true);
+          // Remove justCreated from URL without refreshing the page
+          const newSearchParams = new URLSearchParams(location.search);
+          newSearchParams.delete('justCreated');
+          const newSearch = newSearchParams.toString();
+          const newPath = location.pathname + (newSearch ? `?${newSearch}` : '');
+          navigate(newPath, { replace: true, state: {} });
+        }
+
+        // Only try to shorten URL if we have the organization
+        if (organization?.id) {
+          try {
+            const jobUrl = `${process.env.REACT_APP_FRONTEND_URL}/${organization.id}/jobs/${id}`;
+            const shortened = await urlShortenerService.shortenUrl(jobUrl);
+            setShortUrl(shortened);
+          } catch (error) {
+            console.error('Error shortening URL:', error);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching job:', err);
+        setError('Failed to load job details');
+      } finally {
+        setLoading(false);
       }
     };
-  
-    shortenAndFetch();
-  }, [id]);
+
+    fetchJobAndInit();
+  }, [id, justCreated, organization?.id, location.pathname, location.search, navigate]);
+
+  // Compute the longUrl only when needed
+  const getLongUrl = () => {
+    if (!organization?.id) return '';
+    return `${process.env.REACT_APP_FRONTEND_URL}/${organization.id}/jobs/${id}`;
+  };
 
   const renderDetails = () => {
     const details = [];
@@ -128,7 +167,7 @@ const JobDetail = () => {
     });
   };
 
-  const formatSalary = (min, max, currency, period) => {
+  const formatSalary = (min, max, currency = 'USD', period = 'year') => {
     if (!min && !max) return 'Not specified';
     const formatNum = (num) => num.toLocaleString();
     const range = min && max 
@@ -141,15 +180,18 @@ const JobDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3 p-6 bg-white rounded-xl shadow-lg">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <span className="text-base font-medium text-gray-700">Loading job details...</span>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="bg-white p-6 rounded-lg shadow-sm max-w-md w-full">
           <div className="bg-red-50 text-red-700 p-4 rounded-lg mb-4">
             <p className="font-medium">Error</p>
@@ -198,7 +240,7 @@ const JobDetail = () => {
                 Edit
               </button>
               <a
-                href={longUrl}
+                href={getLongUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center px-4 py-2 bg-white text-primary hover:bg-white/90 rounded-md text-sm font-medium transition-colors"
@@ -312,12 +354,26 @@ const JobDetail = () => {
       </div>
 
       {/* Modals */}
+      <JobCreatedModal 
+        isOpen={showCreatedModal}
+        onClose={() => setShowCreatedModal(false)}
+        job={job}
+        onShare={() => {
+          setShowCreatedModal(false);
+          setShowShareModal(true);
+        }}
+        onViewAsCandidate={() => {
+          const url = getLongUrl();
+          if (url) window.open(url, '_blank');
+          setShowCreatedModal(false);
+        }}
+      />
       <ShareModal 
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
         job={job}
         shortUrl={shortUrl}
-        longUrl={longUrl}
+        longUrl={getLongUrl()}
         shorteningUrl={shorteningUrl}
       />
 
