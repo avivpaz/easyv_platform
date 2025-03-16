@@ -2,32 +2,22 @@ import React, { useState } from 'react';
 import { X, UserCircle2, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/authService';
-import { useGoogleLogin } from '@react-oauth/google';
 
 const LoginModal = ({ isOpen, onClose, onSuccess }) => {
-  const { login } = useAuth();
+  const { setUser, setOrganization } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: response => handleGoogleLogin(response.access_token),
-    onError: error => {
-      console.error('Google login error:', error);
-      setError('Failed to authenticate with Google');
-    }
-  });
-
-  const handleGoogleLogin = async (token) => {
-    setError('');
-    setLoading(true);
+  const handleGoogleLogin = async () => {
     try {
-      const response = await authService.googleLogin(token);
-      await login(response);
-      if (onSuccess) onSuccess();
+      setError('');
+      setLoading(true);
+      await authService.googleLogin();
+      // The redirect will happen automatically
+      // onSuccess will be called after the redirect back
     } catch (err) {
       console.error('Google login error:', err);
-      setError(err.response?.data?.error || 'Failed to authenticate with Google');
-    } finally {
+      setError('Failed to initialize login. Please try again.');
       setLoading(false);
     }
   };
@@ -58,7 +48,7 @@ const LoginModal = ({ isOpen, onClose, onSuccess }) => {
         )}
 
         <button
-          onClick={() => googleLogin()}
+          onClick={handleGoogleLogin}
           disabled={loading}
           className="w-full flex items-center justify-center gap-3 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors disabled:opacity-50"
         >

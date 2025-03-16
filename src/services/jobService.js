@@ -149,6 +149,14 @@ export const jobService = {
       console.error('Error generating social share text:', error);
       throw new Error(error.response?.data?.error || 'Failed to generate social share text');
     }
+  },
+  async getPostingPlatformSuggestions(jobId) {
+    try {
+      const response = await api.get(`/jobs/${jobId}/posting-platforms`);
+      return response.data;
+    } catch (error) {
+      console.error('Error getting posting platform suggestions:', error);
+      throw new Error(error.response?.data?.error || 'Failed to get posting platform suggestions');
+    }
   }
-
 };

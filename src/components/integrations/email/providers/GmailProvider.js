@@ -1,5 +1,5 @@
-import { useGoogleLogin } from '@react-oauth/google';
 import integrationsService from '../../../../services/integrationsService';
+import supabase from '../../../../services/supabaseClient';
 
 const GmailIcon = () => (
   <svg className="h-5 w-5" viewBox="0 0 24 24">
@@ -11,25 +11,29 @@ const GmailIcon = () => (
 );
 
 const GmailProvider = ({ onConnect, onError }) => {
-  const gmailLogin = useGoogleLogin({
-    flow: 'auth-code',
-    ux_mode: 'redirect',
-    scope: 'https://www.googleapis.com/auth/gmail.readonly',
-    redirect_uri: process.env.REACT_APP_GOOGLE_REDIRECT_URL,
-    state: 'gmail_integration',
-    onSuccess: async (codeResponse) => {
-      try {
-        const result = await integrationsService.connectGmail(codeResponse.code);
-        onConnect(result);
-      } catch (error) {
-        onError(error.message);
+  const connectGmail = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin + '/integrations/gmail/callback',
+          scopes: 'https://www.googleapis.com/auth/gmail.readonly',
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent'
+          }
+        }
+      });
+
+      if (error) {
+        console.error('Gmail integration error:', error);
+        onError('Failed to connect to Gmail');
       }
-    },
-    onError: (error) => {
+    } catch (error) {
       console.error('Gmail integration error:', error);
       onError('Failed to connect to Gmail');
     }
-  });
+  };
 
   return {
     id: 'gmail',
@@ -39,7 +43,7 @@ const GmailProvider = ({ onConnect, onError }) => {
     backgroundColor: 'bg-red-50',
     textColor: 'text-red-600',
     available: true,
-    connect: () => gmailLogin()
+    connect: connectGmail
   };
 };
 

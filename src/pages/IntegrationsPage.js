@@ -73,8 +73,8 @@ const IntegrationsPage = () => {
       id: 'email', 
       name: 'Email Accounts', 
       icon: AtSign, 
-      count: connectedEmails.length, 
-      available: true 
+      count: 0, 
+      available: false 
     },
     { 
       id: 'social', 
@@ -100,62 +100,46 @@ const IntegrationsPage = () => {
       );
     }
 
-    switch (activeCategory) {
-      case 'email':
-        return (
-          <EmailProvider
-            connectedEmails={connectedEmails}
-            onConnect={handleConnect}
-            onDisconnect={handleDisconnect}
-            onSync={handleSync}  // Add this line
-            showConnectModal={showConnectModal}
-            setShowConnectModal={setShowConnectModal}
-          />
-        );
-      case 'social':
-        return (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-lg font-medium text-gray-900">Social Media</h2>
-              <p className="text-sm text-gray-500">Connect social media accounts to import candidates</p>
-            </div>
-            
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="bg-white rounded-lg border border-gray-200 p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="h-8 w-8 bg-blue-50 rounded-lg flex items-center justify-center">
-                    <Facebook className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900">Facebook Jobs</h3>
-                    <p className="text-sm text-gray-500">Import candidates from Facebook Jobs</p>
-                  </div>
-                </div>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                  Coming Soon
-                </span>
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-lg font-medium text-gray-900">Integrations Coming Soon</h2>
+          <p className="text-sm text-gray-500">We're working hard to bring you powerful integrations. Stay tuned!</p>
+        </div>
+        
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-8 w-8 bg-blue-50 rounded-lg flex items-center justify-center">
+                <AtSign className="h-4 w-4 text-blue-600" />
               </div>
-
-              <div className="bg-white rounded-lg border border-gray-200 p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="h-8 w-8 bg-blue-50 rounded-lg flex items-center justify-center">
-                    <Linkedin className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900">LinkedIn</h3>
-                    <p className="text-sm text-gray-500">Import candidates from LinkedIn</p>
-                  </div>
-                </div>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                  Coming Soon
-                </span>
+              <div>
+                <h3 className="font-medium text-gray-900">Email Integration</h3>
+                <p className="text-sm text-gray-500">Import candidates from email accounts</p>
               </div>
             </div>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+              Coming Soon
+            </span>
           </div>
-        );
-      default:
-        return null;
-    }
+
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-8 w-8 bg-blue-50 rounded-lg flex items-center justify-center">
+                <Share2 className="h-4 w-4 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="font-medium text-gray-900">Social Media</h3>
+                <p className="text-sm text-gray-500">Import candidates from social platforms</p>
+              </div>
+            </div>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+              Coming Soon
+            </span>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   

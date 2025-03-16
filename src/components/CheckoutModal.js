@@ -118,8 +118,7 @@ const CheckoutModal = ({ isOpen, onClose, purchaseDetails, onPurchaseComplete })
               layout: 'vertical',
               color: 'blue',
               shape: 'rect',
-              label: 'pay',
-              tagline: false
+              label: 'pay'
             }}
             createOrder={handleCreateOrder}
             onApprove={handleApprove}

@@ -1,3 +1,5 @@
+const SUPABASE_SESSION_KEY = 'supabase_session';
+
 const storageService = {
   // Access Token
   getAccessToken() {
@@ -51,6 +53,17 @@ const storageService = {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     localStorage.removeItem('organization');
+    localStorage.removeItem(SUPABASE_SESSION_KEY);
+  },
+
+  setSupabaseSession(session) {
+    if (!session) return;
+    localStorage.setItem(SUPABASE_SESSION_KEY, JSON.stringify(session));
+  },
+
+  getSupabaseSession() {
+    const sessionStr = localStorage.getItem(SUPABASE_SESSION_KEY);
+    return sessionStr ? JSON.parse(sessionStr) : null;
   }
 };
 

@@ -16,10 +16,13 @@ export const integrationsService = {
     }
   },
 
-  // Legacy Gmail connection support
-  async connectGmail(code) {
+  // Updated Gmail connection to work with Supabase tokens
+  async connectGmail(tokens) {
     try {
-      const response = await api.post('/integrations/gmail/connect', { code });
+      const response = await api.post('/integrations/gmail/connect', { 
+        access_token: tokens.access_token,
+        refresh_token: tokens.refresh_token
+      });
       return response.data;
     } catch (error) {
       console.error('Gmail connection error:', error);

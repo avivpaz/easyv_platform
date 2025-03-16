@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { 
   MapPin, Clock, Briefcase, User2, Calendar,
-  Building, Share2, Edit2, Loader2, DollarSign
+  Building, Share2, Edit2, Loader2, DollarSign,
+  Globe
 } from 'lucide-react';
 import { jobService } from '../services/jobService';
 import JobCVs from '../components/JobCVs';
@@ -12,6 +13,7 @@ import EditJobModal from '../components/EditJobModal';
 import { urlShortenerService } from '../services/urlShortenerService';
 import JobStatusDropdown from '../components/JobStatusDropdown';
 import JobCreatedModal from '../components/JobCreatedModal';
+import PlatformSuggestionsModal from '../components/PlatformSuggestionsModal';
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -28,6 +30,7 @@ const JobDetail = () => {
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
   const [activeTab, setActiveTab] = useState('info'); // 'info' or 'applications'
   const [showCreatedModal, setShowCreatedModal] = useState(false);
+  const [showPlatformSuggestionsModal, setShowPlatformSuggestionsModal] = useState(false);
 
   // Get search params once, not on every render
   const searchParams = new URLSearchParams(location.search);
@@ -216,7 +219,7 @@ const JobDetail = () => {
       <div className="bg-gradient-to-r from-primary to-primary-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <h1 className="text-xl sm:text-2xl font-semibold text-white">{job.title}</h1>
               <JobStatusDropdown 
                 currentStatus={job.status}
@@ -224,29 +227,39 @@ const JobDetail = () => {
                 isUpdating={isUpdatingStatus}
               />
             </div>
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-2 sm:mt-0">
               <button
                 onClick={() => setShowShareModal(true)}
-                className="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition-colors"
+                className="flex items-center px-4 py-2.5 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all shadow-sm border border-white/20 backdrop-blur-sm"
               >
                 <Share2 className="h-4 w-4 mr-2" />
-                Share
+                <span className="font-medium">Share</span>
               </button>
+              
+              <button
+                onClick={() => setShowPlatformSuggestionsModal(true)}
+                className="flex items-center px-4 py-2.5 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all shadow-sm border border-white/20 backdrop-blur-sm"
+              >
+                <Globe className="h-4 w-4 mr-2" />
+                <span className="font-medium">Where to Post</span>
+              </button>
+              
               <button
                 onClick={() => setShowEditModal(true)}
-                className="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition-colors"
+                className="flex items-center px-4 py-2.5 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all shadow-sm border border-white/20 backdrop-blur-sm"
               >
                 <Edit2 className="h-4 w-4 mr-2" />
-                Edit
+                <span className="font-medium">Edit</span>
               </button>
+              
               <a
                 href={getLongUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center px-4 py-2 bg-white text-primary hover:bg-white/90 rounded-md text-sm font-medium transition-colors"
+                className="flex items-center px-4 py-2.5 bg-white text-primary rounded-lg hover:bg-white/90 transition-all shadow-sm font-medium"
               >
                 <User2 className="h-4 w-4 mr-2" />
-                View as Candidate
+                <span>Preview</span>
               </a>
             </div>
           </div>
@@ -383,6 +396,14 @@ const JobDetail = () => {
           onClose={() => setShowEditModal(false)}
           onSuccess={handleEditSuccess}
           job={job}
+        />
+      )}
+
+      {showPlatformSuggestionsModal && (
+        <PlatformSuggestionsModal
+          jobId={id}
+          isOpen={showPlatformSuggestionsModal}
+          onClose={() => setShowPlatformSuggestionsModal(false)}
         />
       )}
     </div>

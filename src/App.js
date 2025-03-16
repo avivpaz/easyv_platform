@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
@@ -12,11 +11,13 @@ import SettingsPage from './pages/SettingsPage';
 import BrandingPage from './pages/BrandingPage';
 import BillingPage from './pages/BillingPage';
 import TawkToChat from './components/TawkToChat';
-import GoogleCallback from './components/GoogleCallback';
+import AuthCallback from './pages/AuthCallback';
+import GmailCallback from './pages/GmailCallback';
 import HelpWidget from './components/HelpWidget';
 import IntegrationsPage from './pages/IntegrationsPage';
 import Sidebar from './components/Sidebar'
 import React, { useState } from 'react';
+
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
@@ -39,8 +40,13 @@ function AppRoutes() {
           />
           
           <Route 
-            path="/auth/google/callback" 
-            element={<GoogleCallback />} 
+            path="/auth/callback" 
+            element={<AuthCallback />} 
+          />
+          
+          <Route 
+            path="/integrations/gmail/callback" 
+            element={<GmailCallback />} 
           />
           
           <Route 
@@ -53,6 +59,7 @@ function AppRoutes() {
               )
             } 
           />
+
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/integrations" element={
             <PrivateRoute>
@@ -120,19 +127,16 @@ function App() {
     "enable-funding": "card,credit",
     "disable-funding": "paylater",
     "data-page-type": "product-details",
-
   };
 
   return (
-    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-      <PayPalScriptProvider options={paypalOptions}>
-        <Router>
-          <AuthProvider>
-            <AppRoutes />
-          </AuthProvider>
-        </Router>
-      </PayPalScriptProvider>
-    </GoogleOAuthProvider>
+    <Router>
+      <AuthProvider>
+        <PayPalScriptProvider options={paypalOptions}>
+          <AppRoutes />
+        </PayPalScriptProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 
